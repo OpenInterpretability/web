@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 12, 10, 9;
+  --background-start-rgb: 250, 250, 249;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 250, 250, 249;
+    --background-start-rgb: 3, 7, 18;
+    --background-end-rgb: 12, 10, 9;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      rgb(var(--background-start-rgb)),
+      rgb(var(--background-end-rgb))
+    )
+    fixed;
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-600 to-accent-500;
+  }
+
+  .card {
+    @apply rounded-xl border border-black/5 dark:border-white/10 bg-white/60 dark:bg-ink-950/60 backdrop-blur-sm;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset;
+  }
+
+  .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-feature-settings: 'ss01';
+  }
+}
+
+/* Subtle grid background */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(99, 102, 241, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.bg-grid-dark {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Glow for hero */
+.glow {
+  box-shadow: 0 0 80px 10px rgba(99, 102, 241, 0.25);
+}
