@@ -46,8 +46,8 @@ export const pillars: Pillar[] = [
         name: 'Circuit Canvas',
         slug: '/observatory/circuits',
         blurb:
-          'Figma-style attribution graphs. Nodes = features, edges = strength. Click a token, see the circuit that produced it. Shareable by URL.',
-        status: 'q2',
+          'Figma-style attribution graphs. Nodes = features, edges = strength. Click a node, see the circuit that produced the output. AtP* + Sparse Feature Circuits pipeline.',
+        status: 'live',
       },
       {
         name: 'Atlas',
