@@ -5,7 +5,7 @@ export const site = {
   description:
     'We build open tools, validated SAEs on hybrid architectures, and feature-based RL rewards that make mechanistic interpretability operational — not just observed.',
   url: 'https://openinterp.org',
-  github: 'https://github.com/caiovicentino/mechreward',
+  github: 'https://github.com/OpenInterpretability/mechreward',
   huggingface: 'https://huggingface.co/caiovicentino1',
   twitter: 'https://twitter.com/openinterp',
   discord: '#', // placeholder

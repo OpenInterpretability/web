@@ -16,7 +16,7 @@ const packs = [
     features: '10 helpful + 10 harmful',
     discoveredOn: '50 GSM8K responses (raw Q/A)',
     jsonUrl:
-      'https://github.com/caiovicentino/mechreward/blob/main/catalogs/qwen3.5-4b/reasoning_pack.json',
+      'https://github.com/OpenInterpretability/mechreward/blob/main/catalogs/qwen3.5-4b/reasoning_pack.json',
     sae: 'caiovicentino1/Qwen3.5-4B-SAE-L18-topk',
   },
   {
@@ -31,7 +31,7 @@ const packs = [
     features: '10 helpful + 10 harmful',
     discoveredOn: '50 SuperGPQA responses (thinking mode)',
     jsonUrl:
-      'https://github.com/caiovicentino/mechreward/blob/main/catalogs/qwen3.6-35b-a3b/reasoning_pack.json',
+      'https://github.com/OpenInterpretability/mechreward/blob/main/catalogs/qwen3.6-35b-a3b/reasoning_pack.json',
     sae: 'caiovicentino1/Qwen3.6-35B-A3B-SAE-L23-topk-wip',
   },
   {
@@ -139,7 +139,7 @@ export default function CatalogPage() {
           If you train a SAE on a new model + architecture and run Stage Gate 1 on a labeled
           benchmark, open a PR to the{' '}
           <Link
-            href="https://github.com/caiovicentino/mechreward/tree/main/catalogs"
+            href="https://github.com/OpenInterpretability/mechreward/tree/main/catalogs"
             target="_blank"
             rel="noopener noreferrer"
             className="underline text-brand-600"

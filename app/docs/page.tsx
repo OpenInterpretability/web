@@ -126,17 +126,17 @@ trainer.train()`}
           <li>
             <Link
               className="inline-flex items-center gap-1 text-brand-600 hover:text-brand-700"
-              href="https://github.com/caiovicentino/mechreward"
+              href="https://github.com/OpenInterpretability/mechreward"
               target="_blank"
               rel="noopener noreferrer"
             >
-              GitHub: caiovicentino/mechreward <ExternalLink className="h-3.5 w-3.5" />
+              GitHub: OpenInterpretability/mechreward <ExternalLink className="h-3.5 w-3.5" />
             </Link>
           </li>
           <li>
             <Link
               className="inline-flex items-center gap-1 text-brand-600 hover:text-brand-700"
-              href="https://github.com/caiovicentino/mechreward/blob/main/README.md"
+              href="https://github.com/OpenInterpretability/mechreward/blob/main/README.md"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -146,7 +146,7 @@ trainer.train()`}
           <li>
             <Link
               className="inline-flex items-center gap-1 text-brand-600 hover:text-brand-700"
-              href="https://github.com/caiovicentino/mechreward/tree/main/notebooks"
+              href="https://github.com/OpenInterpretability/mechreward/tree/main/notebooks"
               target="_blank"
               rel="noopener noreferrer"
             >

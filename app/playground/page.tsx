@@ -34,7 +34,7 @@ export default function PlaygroundPage() {
           ship after Stage Gate 2 completes on Qwen3.6-35B-A3B. The feature IDs and labels
           below are real and pulled from{' '}
           <Link
-            href="https://github.com/caiovicentino/mechreward/blob/main/catalogs/qwen3.5-4b/reasoning_pack.json"
+            href="https://github.com/OpenInterpretability/mechreward/blob/main/catalogs/qwen3.5-4b/reasoning_pack.json"
             target="_blank"
             rel="noopener noreferrer"
             className="underline text-amber-700 dark:text-amber-300"

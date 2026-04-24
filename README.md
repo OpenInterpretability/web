@@ -2,7 +2,7 @@
 
 Next.js 14 App Router site for **OpenInterpretability** — open research infrastructure for mechanistic interpretability.
 
-Companion to the [`mechreward`](https://github.com/caiovicentino/mechreward) library and the public SAE releases on HuggingFace.
+Companion to the [`mechreward`](https://github.com/OpenInterpretability/mechreward) library and the public SAE releases on HuggingFace.
 
 ## Quick deploy
 
@@ -87,5 +87,5 @@ Apache-2.0 for code. Content under CC-BY 4.0.
 
 ## Sibling projects
 
-- [caiovicentino/mechreward](https://github.com/caiovicentino/mechreward) — Python library for SAE-as-reward RL
+- [OpenInterpretability/mechreward](https://github.com/OpenInterpretability/mechreward) — Python library for SAE-as-reward RL
 - HuggingFace: [caiovicentino1](https://huggingface.co/caiovicentino1) — trained SAEs + LoRA adapters

@@ -84,7 +84,7 @@ export default function RoadmapPage() {
             Read the manifesto
           </Link>
           <a
-            href="https://github.com/caiovicentino/mechreward/issues/new"
+            href="https://github.com/OpenInterpretability/mechreward/issues/new"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-colors"

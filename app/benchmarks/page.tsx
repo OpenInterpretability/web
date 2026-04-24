@@ -63,7 +63,7 @@ export default function BenchmarksPage() {
             </p>
           </div>
           <Link
-            href="https://github.com/caiovicentino/mechreward/blob/main/figures/s4/s4_g1_summary.json"
+            href="https://github.com/OpenInterpretability/mechreward/blob/main/figures/s4/s4_g1_summary.json"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-sm text-brand-600 hover:text-brand-700"

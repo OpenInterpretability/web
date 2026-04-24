@@ -9,7 +9,7 @@ const artifacts = [
     venue: 'GitHub release · mechreward catalog',
     status: 'Published artifact',
     url:
-      'https://github.com/caiovicentino/mechreward/blob/main/catalogs/qwen3.6-35b-a3b/reasoning_pack.json',
+      'https://github.com/OpenInterpretability/mechreward/blob/main/catalogs/qwen3.6-35b-a3b/reasoning_pack.json',
     summary:
       'First SAE on triple-hybrid MoE + GDN + Gated-Attention architecture. Matches Qwen3.5-4B correlation level with 46% of the training budget.',
   },
@@ -18,7 +18,7 @@ const artifacts = [
     venue: 'GitHub · mechreward',
     status: 'Upstream issue pending',
     url:
-      'https://github.com/caiovicentino/mechreward/blob/main/circuit_tracer_gap_report.md',
+      'https://github.com/OpenInterpretability/mechreward/blob/main/circuit_tracer_gap_report.md',
     summary:
       'Integration audit of Anthropic\'s circuit-tracer against our hybrid-GDN SAEs. Four actionable gaps with reproducers.',
   },
@@ -136,7 +136,7 @@ export default function ResearchPage() {
   author = {Vicentino, Caio and contributors},
   title  = {mechreward: Mechanistic interpretability as reward signal for RL},
   year   = {2026},
-  url    = {https://github.com/caiovicentino/mechreward},
+  url    = {https://github.com/OpenInterpretability/mechreward},
   note   = {OpenInterpretability project},
 }`}
         </pre>
