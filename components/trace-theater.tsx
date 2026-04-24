@@ -1,19 +1,42 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { Play, Pause, RotateCcw } from 'lucide-react'
-import { traceData } from '@/lib/trace-data'
+import { Play, Pause, RotateCcw, Stethoscope, Sigma, Code2, HelpCircle, ShieldAlert } from 'lucide-react'
+import { defaultScenario, type TraceScenario } from '@/lib/trace-data'
+import { extraScenarios } from '@/lib/trace-scenarios'
 
 const PLAYBACK_MS = 650
 
+const ALL_SCENARIOS: TraceScenario[] = [defaultScenario, ...extraScenarios]
+
+const categoryIcon = {
+  medical: Stethoscope,
+  math: Sigma,
+  code: Code2,
+  riddle: HelpCircle,
+  safety: ShieldAlert,
+} as const
+
 export function TraceTheater() {
+  const [scenarioId, setScenarioId] = useState<string>(defaultScenario.id)
   const [currentToken, setCurrentToken] = useState(0)
   const [selectedFeature, setSelectedFeature] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [alpha, setAlpha] = useState(1.0)
 
-  const { tokens, features, activations, counterfactuals, prompt, model, layer, sae_repo } =
-    traceData
+  const scenario = useMemo(
+    () => ALL_SCENARIOS.find((s) => s.id === scenarioId) ?? defaultScenario,
+    [scenarioId]
+  )
+  const { tokens, features, activations, counterfactuals, prompt, model, layer, sae_repo } = scenario
+
+  useEffect(() => {
+    // Reset playback + selection when switching scenarios
+    setCurrentToken(0)
+    setSelectedFeature(0)
+    setAlpha(1)
+    setPlaying(false)
+  }, [scenarioId])
 
   useEffect(() => {
     if (!playing) return
@@ -32,7 +55,7 @@ export function TraceTheater() {
   const rankedFeatures = useMemo(
     () =>
       features
-        .map((f, i) => ({ ...f, idx: i, v: activations[i][currentToken] }))
+        .map((f, i) => ({ ...f, idx: i, v: activations[i][currentToken] ?? 0 }))
         .sort((a, b) => b.v - a.v),
     [currentToken, features, activations]
   )
@@ -44,7 +67,7 @@ export function TraceTheater() {
       return `Counterfactual steering for ${f.id} requires a full Lab run — available when Sandbox ships in Q2 2026.`
     }
     const key = String(Math.round(alpha))
-    return cfs[key] ?? cfs['1']
+    return cfs[key] ?? cfs['1'] ?? 'No counterfactual available for this alpha.'
   }, [selectedFeature, alpha, features, counterfactuals])
 
   function reset() {
@@ -62,6 +85,31 @@ export function TraceTheater() {
 
   return (
     <div className="card overflow-hidden">
+      {/* Scenario picker */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] px-5 py-3">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50 mr-2">
+          Scenario
+        </span>
+        {ALL_SCENARIOS.map((s) => {
+          const Icon = categoryIcon[s.category]
+          const active = s.id === scenarioId
+          return (
+            <button
+              key={s.id}
+              onClick={() => setScenarioId(s.id)}
+              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                active
+                  ? 'bg-brand-600 text-white shadow-sm'
+                  : 'border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/5 text-ink-900/70 dark:text-ink-50/70'
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {s.label}
+            </button>
+          )
+        })}
+      </div>
+
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] px-5 py-3">
         <div className="flex items-center gap-2.5 text-xs font-mono text-ink-900/60 dark:text-ink-50/60">
@@ -96,17 +144,15 @@ export function TraceTheater() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px]">
         {/* Main */}
         <div className="space-y-4 border-b lg:border-b-0 lg:border-r border-black/5 dark:border-white/10 p-5">
-          {/* Prompt */}
           <div className="rounded-lg border border-black/5 dark:border-white/10 bg-white/50 dark:bg-white/[0.02] p-4">
             <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-1.5">
               Prompt
             </div>
-            <div className="text-sm text-ink-900/80 dark:text-ink-50/80 leading-relaxed">
+            <div className="text-sm text-ink-900/80 dark:text-ink-50/80 leading-relaxed whitespace-pre-wrap">
               {prompt}
             </div>
           </div>
 
-          {/* Response stream */}
           <div className="rounded-lg border border-black/5 dark:border-white/10 bg-white/50 dark:bg-white/[0.02] p-4">
             <div className="flex justify-between text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-2">
               <span>
@@ -129,20 +175,19 @@ export function TraceTheater() {
                       : 'text-ink-900/30 dark:text-ink-50/30'
                   }`}
                 >
-                  {t.replace(/ /g, ' ')}
+                  {t}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Heatmap */}
           <div className="rounded-lg border border-black/5 dark:border-white/10 bg-white/50 dark:bg-white/[0.02] p-4 overflow-x-auto">
             <div className="flex justify-between text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-3">
               <span>
                 Feature × Token heatmap · <span className="text-brand-600 dark:text-brand-400">{layer}</span>
               </span>
               <span className="font-mono normal-case tracking-normal">
-                orange = high activation · click any cell to inspect
+                orange = high activation · click any cell
               </span>
             </div>
             <div className="min-w-[600px] space-y-1">

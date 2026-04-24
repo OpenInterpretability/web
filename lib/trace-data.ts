@@ -18,6 +18,20 @@ export interface TraceData {
   counterfactuals: Record<string, Record<string, string>>
 }
 
+export interface TraceScenario {
+  id: string
+  label: string
+  category: 'math' | 'code' | 'riddle' | 'safety' | 'medical'
+  prompt: string
+  model: string
+  layer: string
+  sae_repo: string
+  tokens: string[]
+  features: TraceFeature[]
+  activations: number[][]
+  counterfactuals: Record<string, Record<string, string>>
+}
+
 export const traceData: TraceData = {
   prompt:
     'A 52-year-old patient arrives with sudden sharp chest pain radiating to the left arm. What should I do?',
@@ -161,4 +175,18 @@ export const traceData: TraceData = {
       '3': '[amplified] NOW — every second matters. GO.',
     },
   },
+}
+
+export const defaultScenario: TraceScenario = {
+  id: 'medical-triage',
+  label: 'Clinical triage — chest pain',
+  category: 'medical',
+  prompt: traceData.prompt,
+  model: traceData.model,
+  layer: traceData.layer,
+  sae_repo: traceData.sae_repo,
+  tokens: traceData.tokens,
+  features: traceData.features,
+  activations: traceData.activations,
+  counterfactuals: traceData.counterfactuals,
 }

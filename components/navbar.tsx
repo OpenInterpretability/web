@@ -6,6 +6,7 @@ import { Github, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 
 const primaryNav = [
+  { href: '/train', label: 'Train' },
   { href: '/observatory', label: 'Observatory' },
   { href: '/laboratory', label: 'Laboratory' },
   { href: '/watchtower', label: 'Watchtower' },

@@ -34,18 +34,18 @@ export default function HomePage() {
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/observatory/trace"
+              href="/train"
               className="group inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:shadow-xl hover:shadow-brand-600/40 transition-all"
             >
-              <Play className="h-3.5 w-3.5 fill-current" />
-              Open Trace Theater
+              Train your first SAE in 30 min
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
-              href="/playground"
+              href="/observatory/trace"
               className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
             >
-              Try the playground
+              <Play className="h-3.5 w-3.5 fill-current" />
+              Open Trace Theater
             </Link>
             <Link
               href="/manifesto"
