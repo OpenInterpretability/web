@@ -117,22 +117,22 @@ export const leaderboard: LeaderboardEntry[] = [
   {
     sae_repo: 'caiovicentino1/qwen36-27b-sae-papergrade',
     model: 'Qwen/Qwen3.6-27B',
-    layer: 'L31 (of 3)',
+    layer: 'L11 (of 3)',
     d_sae: 65536,
     k: 128,
-    tokens_trained: '70M (35%)',
+    tokens_trained: '200M',
     components: {
-      loss_recovered: 0.675,
-      alive: 0.992,
+      loss_recovered: 0.8433,
+      alive: 0.9945,
       l0_score: l0ScoreFromL0(128),
-      sparse_probing: 0.68,             // demo
-      tpp: 0.61,                         // demo
+      sparse_probing: 0.68,             // demo — pending notebook 18
+      tpp: 0.61,                         // demo — pending notebook 18
     },
     interp_score: 0,
-    submitted_at: '2026-04-23',
+    submitted_at: '2026-04-24',
     submitted_by: 'caiovicentino1',
-    notebook_version: 'training in progress — provisional',
-    notes: 'Paper-grade 3-layer SAE. Training 35% complete. Final InterpScore expected at 200M tokens.',
+    notebook_version: 'provisional · held-out validated · notebook 18 pending',
+    notes: 'Paper-grade 3-layer SAE at L11/L31/L55 — showing L11 (best). Held-out 1M-token val: L31=0.7135 (alive 0.9787), L55=0.8157 (alive 0.8881). 200M tokens.',
   },
   {
     sae_repo: 'google/gemma-scope-2b-pt-res',
