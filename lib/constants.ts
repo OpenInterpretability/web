@@ -1,11 +1,11 @@
 export const site = {
   name: 'OpenInterpretability',
-  shortName: 'OI',
-  tagline: 'Open research infrastructure for mechanistic interpretability.',
+  shortName: 'OpenInterp',
+  tagline: 'Watch language models think.',
   description:
-    'We build open tools, validated SAEs on hybrid architectures, and feature-based RL rewards that make mechanistic interpretability operational — not just observed.',
+    'Open source mechanistic interpretability — trace every feature, every circuit, every second of reasoning. Train SAEs in 30 min on free Colab or paper-grade on cloud. MIT licensed.',
   url: 'https://openinterp.org',
-  github: 'https://github.com/OpenInterpretability/mechreward',
+  github: 'https://github.com/OpenInterpretability',
   huggingface: 'https://huggingface.co/caiovicentino1',
   twitter: 'https://twitter.com/openinterp',
   discord: '#', // placeholder

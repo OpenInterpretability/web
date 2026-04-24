@@ -26,8 +26,23 @@ export const metadata: Metadata = {
     template: `%s · ${site.name}`,
   },
   description: site.description,
+  keywords: [
+    'mechanistic interpretability',
+    'sparse autoencoder',
+    'SAE',
+    'AI safety',
+    'LLM interpretability',
+    'trace',
+    'circuit',
+    'attribution patching',
+    'feature steering',
+    'open source',
+  ],
+  authors: [{ name: 'Caio Vicentino', url: site.huggingface }],
+  creator: 'Caio Vicentino + OpenInterpretability',
+  publisher: 'OpenInterpretability',
   openGraph: {
-    title: site.name,
+    title: `${site.name} — ${site.tagline}`,
     description: site.description,
     url: site.url,
     siteName: site.name,
@@ -36,10 +51,13 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: site.name,
+    site: '@openinterp',
+    creator: '@openinterp',
+    title: `${site.name} — ${site.tagline}`,
     description: site.description,
   },
   robots: { index: true, follow: true },
+  category: 'technology',
 }
 
 export const viewport: Viewport = {
