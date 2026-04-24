@@ -1,7 +1,12 @@
 import Link from 'next/link'
-import { ExternalLink, FileText } from 'lucide-react'
+import { ExternalLink, FileText, BookOpen } from 'lucide-react'
+import { paperTopics, paperCount } from '@/lib/papers'
 
-export const metadata = { title: 'Research' }
+export const metadata = {
+  title: 'Research — OpenInterp',
+  description:
+    `Published artifacts + canonical reading list (${paperCount} papers across SAE foundations, circuits, steering, probing, lenses, safety).`,
+}
 
 const artifacts = [
   {
@@ -123,6 +128,97 @@ export default function ResearchPage() {
               </ul>
             </article>
           ))}
+        </div>
+      </section>
+
+      {/* ===== Further reading (canonical papers) ===== */}
+      <section className="mt-20">
+        <div className="flex items-baseline justify-between gap-3 flex-wrap mb-3">
+          <h2 className="text-3xl font-semibold tracking-tight inline-flex items-center gap-2">
+            <BookOpen className="h-7 w-7 text-brand-600 dark:text-brand-400" />
+            Further reading
+          </h2>
+          <span className="text-xs font-mono text-ink-900/50 dark:text-ink-50/50">
+            {paperCount} canonical papers · curated
+          </span>
+        </div>
+        <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70 max-w-3xl leading-relaxed">
+          The reading list we wish we'd had when starting. Every paper cites a primary source (arxiv, transformer-circuits.pub, LessWrong, or an official blog). If you spot a dead link or a missing seminal paper, <Link href="https://github.com/OpenInterpretability/web/blob/main/lib/papers.ts" target="_blank" rel="noopener noreferrer" className="text-brand-600 dark:text-brand-400 hover:text-brand-700 underline decoration-dotted">open a PR editing <code className="font-mono text-xs">lib/papers.ts</code></Link>.
+        </p>
+
+        <div className="mt-10 space-y-12">
+          {paperTopics.map((topic) => (
+            <section key={topic.id} id={topic.id}>
+              <div className="border-l-2 border-brand-500 pl-4 mb-6">
+                <h3 className="text-2xl font-semibold tracking-tight">{topic.label}</h3>
+                <p className="mt-1 text-sm text-ink-900/60 dark:text-ink-50/60 leading-relaxed max-w-3xl">
+                  {topic.intro}
+                </p>
+              </div>
+
+              <div className="space-y-8">
+                {topic.groups.map((g) => (
+                  <div key={g.heading}>
+                    <div className="flex items-baseline gap-3 mb-3">
+                      <h4 className="text-base font-semibold tracking-tight text-ink-900 dark:text-ink-50">
+                        {g.heading}
+                      </h4>
+                      {g.sub && (
+                        <span className="text-xs text-ink-900/50 dark:text-ink-50/50 italic">
+                          · {g.sub}
+                        </span>
+                      )}
+                    </div>
+                    <ul className="space-y-3">
+                      {g.papers.map((p) => (
+                        <li key={p.url}>
+                          <a
+                            href={p.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group block card p-4 hover:border-brand-500/40 transition-colors"
+                          >
+                            <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                              <div className="flex-1 min-w-0">
+                                <h5 className="font-semibold text-sm leading-snug group-hover:text-brand-600 dark:group-hover:text-brand-400 inline-flex items-start gap-1.5">
+                                  <span>{p.title}</span>
+                                  <ExternalLink className="h-3 w-3 mt-1 shrink-0 opacity-50 group-hover:opacity-100" />
+                                </h5>
+                                <div className="mt-0.5 text-xs font-mono text-ink-900/50 dark:text-ink-50/50">
+                                  {p.authors} · {p.year}
+                                </div>
+                              </div>
+                            </div>
+                            <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
+                              {p.what}
+                            </p>
+                            <p className="mt-1.5 text-xs text-ink-900/55 dark:text-ink-50/55 italic leading-relaxed">
+                              → {p.why}
+                            </p>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+
+        <div className="mt-12 card p-5 bg-brand-500/5">
+          <p className="text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
+            This list is intentionally curated, not exhaustive. Seminal paper missing?{' '}
+            <a
+              href="https://github.com/OpenInterpretability/web/issues/new?title=Further+reading+-+suggest+a+paper"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-600 dark:text-brand-400 hover:text-brand-700 underline decoration-dotted"
+            >
+              Open an issue
+            </a>{' '}
+            with the arxiv/URL and one sentence on why it belongs. We'll review within 72h.
+          </p>
         </div>
       </section>
 
