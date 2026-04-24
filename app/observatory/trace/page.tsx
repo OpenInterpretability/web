@@ -78,7 +78,7 @@ export default function TracePage() {
         </h2>
         <p className="mt-3 text-base text-ink-900/70 dark:text-ink-50/70 max-w-2xl leading-relaxed">
           <code className="font-mono text-sm bg-black/5 dark:bg-white/5 px-1.5 py-0.5 rounded">pip install openinterp</code>{' '}
-          (v0.1.0, MIT) · point it at any HuggingFace SAE + a prompt, get back a{' '}
+          (v0.1.0+, Apache-2.0) · point it at any HuggingFace SAE + a prompt, get back a{' '}
           <code className="font-mono text-xs bg-black/5 dark:bg-white/5 px-1 py-0.5 rounded">Trace</code> JSON matching this viewer exactly. Shareable URL upload ships in v0.2.0 (Q2 2026).
         </p>
         <div className="mt-5 font-mono text-sm card px-5 py-3.5 inline-flex items-center gap-3 bg-black/[0.03] dark:bg-white/[0.03]">

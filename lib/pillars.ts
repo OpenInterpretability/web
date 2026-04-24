@@ -261,7 +261,7 @@ export const roadmap = [
 ]
 
 export const heroNew = {
-  eyebrow: 'Observatory · Laboratory · Watchtower · Academy — shipped MIT',
+  eyebrow: 'Observatory · Laboratory · Watchtower · Academy — shipped Apache-2.0',
   watchLine: 'Watch language models',
   thinkLine: 'think.',
   subBold: 'Trace every feature. Every circuit. Every second of reasoning.',

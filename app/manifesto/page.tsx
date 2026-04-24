@@ -137,7 +137,7 @@ export default function ManifestoPage() {
           What we uniquely bring
         </h2>
 
-        <p>Every claim below is grounded in a shipped, MIT-licensed, public artifact:</p>
+        <p>Every claim below is grounded in a shipped, Apache-2.0 licensed, public artifact:</p>
 
         <ul className="list-none space-y-3 pl-0">
           <li className="card p-5">
@@ -233,7 +233,7 @@ export default function ManifestoPage() {
             <div>
               <div className="font-semibold">Contribute on GitHub</div>
               <div className="mt-0.5 text-sm text-ink-900/60 dark:text-ink-50/60">
-                All code MIT. Every SAE public. Every Stage Gate reproducible.
+                All code Apache-2.0. Every SAE public. Every Stage Gate reproducible.
               </div>
             </div>
             <ArrowRight className="h-4 w-4 text-brand-600 dark:text-brand-400" />

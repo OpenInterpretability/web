@@ -84,7 +84,7 @@ export default async function Image() {
               lineHeight: 1.3,
             }}
           >
-            Trace every feature. Every circuit. Every second of reasoning. Open source interpretability — MIT.
+            Trace every feature. Every circuit. Every second of reasoning. Open source interpretability — Apache-2.0.
           </div>
         </div>
 

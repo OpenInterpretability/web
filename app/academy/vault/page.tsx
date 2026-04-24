@@ -25,7 +25,7 @@ export default function Page() {
         {
           heading: 'Trust model',
           body:
-            'We publish a Merkle tree of all vaulted artifacts monthly. Any researcher can verify their artifact hash matches what we serve. If we ever shut down, Vault dumps are published under MIT to the public IPFS network — the data outlives the company.',
+            'We publish a Merkle tree of all vaulted artifacts monthly. Any researcher can verify their artifact hash matches what we serve. If we ever shut down, Vault dumps are published under Apache-2.0 to the public IPFS network — the data outlives the company.',
         },
       ]}
     />

@@ -3,7 +3,7 @@ export const site = {
   shortName: 'OpenInterp',
   tagline: 'Watch language models think.',
   description:
-    'Open source mechanistic interpretability — trace every feature, every circuit, every second of reasoning. Train SAEs in 30 min on free Colab or paper-grade on cloud. MIT licensed.',
+    'Open source mechanistic interpretability — trace every feature, every circuit, every second of reasoning. Train SAEs in 30 min on free Colab or paper-grade on cloud. Apache-2.0 licensed.',
   url: 'https://openinterp.org',
   github: 'https://github.com/OpenInterpretability',
   huggingface: 'https://huggingface.co/caiovicentino1',

@@ -9,7 +9,7 @@
 [![Live site](https://img.shields.io/badge/live-openinterp.org-8b5cf6)](https://openinterp.org)
 [![Vercel](https://img.shields.io/badge/deploy-Vercel-black)](https://vercel.com)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org)
-[![License MIT](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
+[![License Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)](./LICENSE)
 [![Discussions](https://img.shields.io/github/discussions/OpenInterpretability/web)](https://github.com/OpenInterpretability/web/discussions)
 [![Good first issues](https://img.shields.io/github/issues/OpenInterpretability/web/good%20first%20issue)](https://github.com/OpenInterpretability/web/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 
@@ -261,6 +261,6 @@ CI runs `npx tsc --noEmit` + `npm run build` on every PR. Merging to `main` auto
 
 ## License
 
-**MIT** for code. **CC-BY 4.0** for docs and long-form copy.
+**Apache 2.0** for code. **CC-BY 4.0** for docs and long-form copy.
 
 Built by [Caio Vicentino](https://huggingface.co/caiovicentino1) + contributors · 2026 · [openinterp.org](https://openinterp.org)

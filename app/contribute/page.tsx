@@ -192,7 +192,7 @@ export default function ContributePage() {
         <div className="flex items-baseline justify-between gap-2 mb-6 flex-wrap">
           <h2 className="text-2xl font-semibold tracking-tight">Pick a repo</h2>
           <span className="text-xs text-ink-900/50 dark:text-ink-50/50 font-mono">
-            4 repos · MIT (code) · CC-BY 4.0 (docs)
+            4 repos · Apache-2.0 (code) · CC-BY 4.0 (docs)
           </span>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
@@ -306,7 +306,7 @@ export default function ContributePage() {
             <Github className="h-6 w-6 text-brand-600 dark:text-brand-400 mb-3" />
             <h3 className="font-semibold">GitHub organization</h3>
             <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70">
-              4 repos, MIT license, Discussions enabled on every repo. Star the ones you use.
+              4 repos, Apache-2.0 license, Discussions enabled on every repo. Star the ones you use.
             </p>
             <span className="mt-3 inline-flex items-center gap-1 text-sm text-brand-600 dark:text-brand-400">
               OpenInterpretability <ArrowRight className="h-3.5 w-3.5" />
