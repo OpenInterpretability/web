@@ -1,20 +1,29 @@
+'use client'
+
 import Link from 'next/link'
 import { site } from '@/lib/constants'
-import { Github } from 'lucide-react'
+import { Github, Menu, X } from 'lucide-react'
+import { useState } from 'react'
 
-const nav = [
-  { href: '/playground', label: 'Playground' },
-  { href: '/catalog', label: 'Catalog' },
-  { href: '/models', label: 'Models' },
-  { href: '/benchmarks', label: 'Benchmarks' },
-  { href: '/docs', label: 'Docs' },
+const primaryNav = [
+  { href: '/observatory', label: 'Observatory' },
+  { href: '/laboratory', label: 'Laboratory' },
+  { href: '/watchtower', label: 'Watchtower' },
+  { href: '/academy', label: 'Academy' },
+]
+
+const secondaryNav = [
+  { href: '/manifesto', label: 'Manifesto' },
+  { href: '/roadmap', label: 'Roadmap' },
   { href: '/research', label: 'Research' },
+  { href: '/docs', label: 'Docs' },
 ]
 
 export function Navbar() {
+  const [open, setOpen] = useState(false)
   return (
     <header className="sticky top-0 z-40 w-full border-b border-black/5 dark:border-white/10 bg-ink-50/80 dark:bg-ink-950/80 backdrop-blur-md">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <Logo />
           <span className="text-sm sm:text-base">
@@ -23,12 +32,24 @@ export function Navbar() {
           </span>
         </Link>
 
-        <ul className="hidden md:flex items-center gap-6 text-sm">
-          {nav.map((item) => (
+        {/* Primary (pillars) */}
+        <ul className="hidden lg:flex items-center gap-5 text-sm">
+          {primaryNav.map((item) => (
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="text-ink-900/70 dark:text-ink-50/70 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                className="text-ink-900/70 dark:text-ink-50/70 hover:text-brand-600 dark:hover:text-brand-400 transition-colors font-medium"
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+          <li aria-hidden className="h-4 w-px bg-black/10 dark:bg-white/10" />
+          {secondaryNav.map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className="text-ink-900/50 dark:text-ink-50/50 hover:text-ink-900 dark:hover:text-ink-50 transition-colors"
               >
                 {item.label}
               </Link>
@@ -36,7 +57,7 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Link
             href={site.github}
             target="_blank"
@@ -47,13 +68,74 @@ export function Navbar() {
             <Github className="h-4 w-4" />
           </Link>
           <Link
-            href="/playground"
+            href="/observatory/trace"
             className="hidden sm:inline-flex items-center gap-1 rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
           >
-            Try it
+            Open Trace Theater
           </Link>
+          <button
+            onClick={() => setOpen((o) => !o)}
+            className="lg:hidden p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
         </div>
       </nav>
+
+      {/* Mobile menu */}
+      {open && (
+        <div className="lg:hidden border-t border-black/5 dark:border-white/10 bg-ink-50/95 dark:bg-ink-950/95 backdrop-blur-md">
+          <div className="mx-auto max-w-7xl px-6 py-4">
+            <div className="grid gap-1">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-1.5 pt-2">
+                Pillars
+              </div>
+              {primaryNav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="py-2 text-sm font-medium text-ink-900 dark:text-ink-50 hover:text-brand-600"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-1.5 pt-4">
+                More
+              </div>
+              {secondaryNav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="py-2 text-sm text-ink-900/70 dark:text-ink-50/70 hover:text-brand-600"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-1.5 pt-4">
+                Classic
+              </div>
+              {[
+                { href: '/playground', label: 'Playground' },
+                { href: '/catalog', label: 'Catalog' },
+                { href: '/models', label: 'Models' },
+                { href: '/benchmarks', label: 'Benchmarks' },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="py-2 text-sm text-ink-900/60 dark:text-ink-50/60"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
