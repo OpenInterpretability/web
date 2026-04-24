@@ -188,22 +188,22 @@ export const pillars: Pillar[] = [
 
 export const threeMoats = [
   {
-    title: 'Cross-model Rosetta Stone',
+    title: 'Cross-model feature graph',
     body:
-      'A feature equivalence graph across Qwen, Gemma, Llama, Claude, Mistral. "Feature 2503 in Qwen ≈ feature 8901 in Gemma ≈ feature X in Claude" — rendered, searchable, citable. Compounds monthly. Years to replicate.',
-    meta: 'First rendering: Q2 2026 with 2 models, scales to 5+ by Q4',
+      'A feature-equivalence graph across Qwen, Gemma, Llama, Claude, Mistral. "Feature 2503 in Qwen ≈ feature 8901 in Gemma" — rendered, searchable, citable. Grows with every community-submitted SAE; the dataset gets more useful the more people contribute.',
+    meta: 'Q2 2026: first rendering with 2 models. Q4: 5+ models.',
   },
   {
-    title: 'Watchtower revenue flywheel',
+    title: 'Revenue that funds the free tier',
     body:
-      'B2B API revenue pays for the OSS tier indefinitely. Free where it matters (students, researchers, contributors); profitable where it sustains (Fortune 500 safety teams, AI-Act compliance, model vendor integration).',
-    meta: 'Target: first design partner Q3, first revenue Q4',
+      'A paid monitoring API (Watchtower) is designed to subsidize the OSS tier long-term — so students, researchers, and contributors never hit a paywall. Paid where it sustains (safety teams, compliance, vendor integration); free where it matters.',
+    meta: 'Target: first design partner Q3, first revenue Q4. Not yet proven.',
   },
   {
-    title: 'Model Partner Program',
+    title: 'Model partnerships',
     body:
-      'Agreements with Qwen, Gemma, Mistral, and forward-leaning labs to ship SAEs alongside every model release. "X launched with OpenInterp integration" becomes table stakes — voluntary lock-in to the ecosystem.',
-    meta: 'First partnership conversation active; first launch-day release Q4',
+      'Working with model vendors and research labs to ship SAEs alongside model releases. When an open-source SAE lands on the same day as the model, interpretability becomes part of the release process rather than an afterthought — a better default for everyone.',
+    meta: 'First partnership conversation active. Nothing signed yet.',
   },
 ]
 

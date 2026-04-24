@@ -348,18 +348,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== Three killer moats (NEW) ===== */}
+      {/* ===== Three structural bets (NEW) ===== */}
       <section className="mx-auto max-w-7xl px-6 mt-24">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-brand-600 dark:text-brand-400 mb-3">
-            The three killer moats
+            Three long-term bets
           </span>
           <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-balance">
-            What keeps OpenInterp ahead.
+            Where we think we can compound.
           </h2>
           <p className="mt-4 text-lg text-ink-900/70 dark:text-ink-50/70 text-balance leading-relaxed">
-            Six shipped artifacts above are the current moat. Below are the three structural moats
-            that compound — making it effectively impossible to front-run.
+            Six shipped artifacts above are the current work. Below are three structural bets we think get more valuable over time — built in public, open to being wrong.
           </p>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
@@ -371,7 +370,7 @@ export default function HomePage() {
               />
               <div className="relative">
                 <div className="font-mono text-xs font-semibold text-brand-600 dark:text-brand-400">
-                  0{i + 1} · MOAT
+                  0{i + 1} · BET
                 </div>
                 <h3 className="mt-3 text-xl font-semibold tracking-tight">{m.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-ink-900/70 dark:text-ink-50/70">

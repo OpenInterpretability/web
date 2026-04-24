@@ -113,7 +113,7 @@ export default function ManifestoPage() {
         </p>
 
         <h2 className="text-3xl font-semibold tracking-tight mt-14 text-ink-900 dark:text-white">
-          The three moats
+          Three structural bets
         </h2>
 
         <div className="not-prose grid gap-4 mt-6">
