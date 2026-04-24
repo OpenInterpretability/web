@@ -2,8 +2,8 @@
 
 import Link from 'next/link'
 import { site } from '@/lib/constants'
-import { Github, Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { Github, Menu, X, Sun, Moon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 const primaryNav = [
   { href: '/train', label: 'Train' },
@@ -24,6 +24,32 @@ const secondaryNav = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false)
+  type Theme = 'light' | 'dark'
+
+  const [theme, setTheme] = useState<Theme>('light')
+
+  useEffect(() => {
+    const saved = localStorage.getItem('theme') as Theme | null
+
+    if (saved) {
+      setTheme(saved)
+      document.documentElement.classList.toggle('dark', saved === 'dark')
+    } else {
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      const initial = systemDark ? 'dark' : 'light'
+
+      setTheme(initial)
+      document.documentElement.classList.toggle('dark', systemDark)
+    }
+  }, [])
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark'
+
+    setTheme(next)
+    localStorage.setItem('theme', next)
+    document.documentElement.classList.toggle('dark', next === 'dark')
+  }
   return (
     <header className="sticky top-0 z-40 w-full border-b border-black/5 dark:border-white/10 bg-ink-50/80 dark:bg-ink-950/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
@@ -61,6 +87,17 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </button>
           <Link
             href={site.github}
             target="_blank"
