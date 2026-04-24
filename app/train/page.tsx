@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight, Github, CheckCircle2, BookOpen, Upload } from 'lucide-react'
-import { notebooks, tierComparison } from '@/lib/notebooks'
+import { notebooks, tierComparison, supplementary, supplementaryGroups } from '@/lib/notebooks'
 import { site } from '@/lib/constants'
 
 export const metadata = {
@@ -196,6 +196,101 @@ export default function TrainPage() {
                   </div>
                 </div>
               </article>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* ===== Supplementary notebook library ===== */}
+      <section className="mx-auto max-w-7xl px-6 mt-20">
+        <div className="text-center mb-10">
+          <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-brand-600 dark:text-brand-400 mb-3">
+            Beyond the ladder
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
+            {supplementary.length} more notebooks for every step of your SAE journey.
+          </h2>
+          <p className="mt-4 text-base text-ink-900/70 dark:text-ink-50/70 max-w-2xl mx-auto leading-relaxed">
+            Post-train discovery, one-click steering, model coverage, research replication, safety monitoring — every notebook opens in Colab or Kaggle directly.
+          </p>
+        </div>
+
+        <div className="space-y-12">
+          {supplementaryGroups.map((group) => {
+            const items = supplementary.filter((s) => group.kinds.includes(s.kind))
+            if (items.length === 0) return null
+            return (
+              <div key={group.label}>
+                <div className="flex flex-wrap items-baseline justify-between gap-2 mb-4">
+                  <h3 className="text-xl font-semibold tracking-tight">{group.label}</h3>
+                  <span className="text-sm text-ink-900/60 dark:text-ink-50/60">{group.sub}</span>
+                </div>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {items.map((n) => {
+                    const Icon = n.icon
+                    return (
+                      <article
+                        key={n.notebookPath}
+                        className="card p-5 hover:border-brand-500/30 transition-colors flex flex-col"
+                      >
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                          <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-black/5 dark:border-white/10 bg-white/80 dark:bg-white/5 text-brand-600 dark:text-brand-400">
+                            <Icon className="h-5 w-5" />
+                          </div>
+                          <span className={`chip ring-inset text-[10px] ${
+                            n.difficulty === 'beginner'
+                              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30'
+                              : n.difficulty === 'intermediate'
+                              ? 'bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-brand-500/30'
+                              : 'bg-orange-500/10 text-orange-700 dark:text-orange-300 ring-orange-500/30'
+                          }`}>
+                            {n.difficulty}
+                          </span>
+                        </div>
+                        <h4 className="font-semibold tracking-tight">{n.title}</h4>
+                        <p className="mt-0.5 text-sm text-ink-900/60 dark:text-ink-50/60 italic">{n.tagline}</p>
+                        <p className="mt-3 text-sm leading-relaxed text-ink-900/70 dark:text-ink-50/70 flex-1">
+                          {n.description}
+                        </p>
+                        <div className="mt-4 text-xs font-mono text-ink-900/50 dark:text-ink-50/50 space-y-0.5">
+                          <div>⏱ {n.estimatedTime}</div>
+                          <div>▸ {n.platform}</div>
+                        </div>
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {n.colabUrl && (
+                            <a
+                              href={n.colabUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-[#F9AB00] hover:bg-[#E79100] px-3 py-1.5 text-xs font-semibold text-black transition-colors"
+                            >
+                              Open in Colab
+                            </a>
+                          )}
+                          {n.kaggleUrl && (
+                            <a
+                              href={n.kaggleUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-[#20BEFF] hover:bg-[#0EABED] px-3 py-1.5 text-xs font-semibold text-white transition-colors"
+                            >
+                              Run on Kaggle
+                            </a>
+                          )}
+                          <a
+                            href={n.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/5 px-3 py-1.5 text-xs font-semibold transition-colors"
+                          >
+                            <Github className="h-3 w-3" /> Source
+                          </a>
+                        </div>
+                      </article>
+                    )
+                  })}
+                </div>
+              </div>
             )
           })}
         </div>
