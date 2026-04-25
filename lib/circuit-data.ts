@@ -3,6 +3,8 @@
  * Matches the JSON emitted by scripts/circuit-*.ipynb in OpenInterpretability/notebooks.
  */
 
+import { getFeatureLabel } from './feature-catalog'
+
 export type CircuitNodeKind = 'feature' | 'error'
 
 export interface CircuitNode {
@@ -216,3 +218,26 @@ export const circuitScenarios: CircuitScenario[] = [
 
 /** Default export — medical triage. */
 export const demoCircuit: CircuitData = medicalCircuit
+
+// ────────────────────────────────────────────────────────────────────────────
+// Merge auto-interp labels (notebook 04b output) onto each node where present.
+// Coverage is partial (catalog covers top-500 most-active features per layer
+// in the FineWeb-Edu corpus; circuit features are selected by gradient × act
+// on a single scenario, so overlap is ~20-30%). Unlabeled nodes keep id-only.
+// ────────────────────────────────────────────────────────────────────────────
+function annotate(scenario: CircuitScenario): CircuitScenario {
+  scenario.data.nodes = scenario.data.nodes.map((n) => {
+    if (n.kind === 'error') return n
+    // id format: 'up.f12345' or 'down.f12345' — extract numeric suffix
+    const featStr = n.id.split('.').pop()?.replace(/^f/, '')
+    if (!featStr) return n
+    const label = getFeatureLabel(n.layer, featStr)
+    if (label && !label.startsWith('(refused')) {
+      return { ...n, name: label }
+    }
+    return n
+  })
+  return scenario
+}
+
+circuitScenarios.forEach(annotate)
