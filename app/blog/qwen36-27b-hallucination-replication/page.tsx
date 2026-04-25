@@ -380,14 +380,133 @@ UNKNOWN mean=6.03 tokens   median=6   range=4–10`}</Pre>
           </li>
         </ul>
 
+        <H2>Update — we tried the steering test (and it didn&apos;t work)</H2>
+
+        <Quote>
+          <strong>2026-04-25 follow-up:</strong> Same day as the original post. Causal evidence
+          is the right next test, so we ran it. Result: <strong>predictive but not
+          controllable</strong>. The feature&apos;s AUROC of 0.84 stands as a detection signal,
+          but it isn&apos;t a steering knob.
+        </Quote>
+
+        <p>
+          We tested two interventions on <CodeChip>L11/f61723</CodeChip> during generation, on 20
+          known + 20 unknown Wikidata entities (re-labelled with the v0.0.2 protocol):
+        </p>
+        <ul className="list-disc pl-5 space-y-2">
+          <li>
+            <strong>Clamp ±5</strong>: force the feature to 0 (&ldquo;treat as known&rdquo;) or
+            5.0 (&ldquo;treat as unknown&rdquo;)
+          </li>
+          <li>
+            <strong>Additive ±2</strong> (Anthropic biology-paper style): add ± 2 × W_dec[f61723]
+            to the residual at L11 — gentler, stays in-distribution
+          </li>
+        </ul>
+
+        <p>Refusal rates across conditions:</p>
+
+        <table className="not-prose w-full text-sm border-collapse my-6">
+          <thead>
+            <tr className="border-b border-black/10 dark:border-white/10 text-left">
+              <th className="py-2 pr-4 font-semibold">Class</th>
+              <th className="py-2 pr-4 font-semibold text-right">Baseline</th>
+              <th className="py-2 pr-4 font-semibold text-right">Ablate</th>
+              <th className="py-2 pr-4 font-semibold text-right">Amplify</th>
+            </tr>
+          </thead>
+          <tbody className="font-mono text-[13.5px]">
+            <tr className="border-b border-black/5 dark:border-white/5">
+              <td className="py-2 pr-4">Known (n=20)</td>
+              <td className="py-2 pr-4 text-right">0.0%</td>
+              <td className="py-2 pr-4 text-right">0.0%</td>
+              <td className="py-2 pr-4 text-right">0.0%</td>
+            </tr>
+            <tr>
+              <td className="py-2 pr-4">Unknown (n=20)</td>
+              <td className="py-2 pr-4 text-right">15.0%</td>
+              <td className="py-2 pr-4 text-right">20.0% / 25.0%</td>
+              <td className="py-2 pr-4 text-right">15.0% / 10.0%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p className="text-sm text-ink-900/65 dark:text-ink-50/65 italic">
+          Cells show additive ±2 / clamp ±5. Ablate on unknown was supposed to{' '}
+          <em>decrease</em> refusal (treat as known); it increased instead. Amplify on known was
+          supposed to <em>increase</em> refusal; nothing moved because the model never refused at
+          baseline on these niche-but-real entities.
+        </p>
+
+        <p>
+          But here&apos;s the nuance worth keeping:{' '}
+          <strong>the additive intervention changed the actual generation text in 60–65% of
+          cases</strong>. The feature is causally active — it shifts what facts the model
+          confabulates and how it phrases descriptions — just not on the binary refuse-vs-answer
+          decision the AUROC promised.
+        </p>
+
+        <p>Three readings of this, in increasing speculativeness:</p>
+        <ol className="list-decimal pl-5 space-y-2">
+          <li>
+            <strong>The feature is &ldquo;uncommon-token detector&rdquo;</strong>, not strictly
+            &ldquo;I don&apos;t know&rdquo;. Real causal effect on style and word choice, but
+            doesn&apos;t flip the model&apos;s binary commit-or-hedge behavior. AUROC was reading
+            a correlate of the latent we wanted, not the latent itself.
+          </li>
+          <li>
+            <strong>27B reasoning-tuned models route calibration through circuits, not single
+            features.</strong> Anthropic&apos;s{' '}
+            <ExtLink href="https://transformer-circuits.pub/2024/scaling-monosemanticity/">
+              Templeton et al. 2024
+            </ExtLink>{' '}
+            already flagged this on Claude 3 Sonnet — single-feature steering for
+            high-level model behaviors is hit-or-miss.
+          </li>
+          <li>
+            <strong>SAE feature decomposition is lossy.</strong> The 65k-feature dictionary may
+            capture an aspect of the &ldquo;I don&apos;t know&rdquo; semantic without isolating
+            the full causal pathway.
+          </li>
+        </ol>
+
+        <H3>What this changes for use cases</H3>
+        <ul className="list-disc pl-5 space-y-2">
+          <li>
+            <strong>Still valid:</strong> hallucination warning UI, RAG auto-trigger, production
+            monitoring. Predictive use stands — AUROC 0.84 wasn&apos;t invalidated.
+          </li>
+          <li>
+            <strong>Invalidated:</strong> steering API (&ldquo;amplify the feature to reduce
+            confabulation&rdquo;), RL reward shaper based on this feature, any
+            &ldquo;we control hallucination&rdquo; story.
+          </li>
+          <li>
+            <strong>Open:</strong> circuit-level interventions (multiple features at once),
+            attention-head steering, or constrained decoding remain to test. We didn&apos;t
+            disprove that <em>some</em> intervention controls calibration — just that this single
+            feature doesn&apos;t.
+          </li>
+        </ul>
+
+        <p className="text-sm text-ink-900/70 dark:text-ink-50/70">
+          The HF artifact is at{' '}
+          <ExtLink href="https://huggingface.co/caiovicentino1/qwen36-27b-sae-papergrade/blob/main/steering_v0_0_1.json">
+            steering_v0_0_1.json
+          </ExtLink>
+          ; the notebook is{' '}
+          <ExtLink href="https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/25_steering_f61723_calibration.ipynb">
+            25_steering_f61723_calibration.ipynb
+          </ExtLink>
+          .
+        </p>
+
         <H2>What&apos;s next</H2>
         <ul className="list-disc pl-5 space-y-2">
           <li>
-            <strong>Causal validation.</strong> Ablating f61723 on prompts about famous entities —
-            does it shift behavior toward refusal? Amplifying it on famous entities — does
-            confabulation increase? The probing AUROC is a correlational claim; the
-            interpretability literature is full of correlational features that don&apos;t turn
-            out to be causal.
+            <strong>Multi-feature steering.</strong> If single-feature didn&apos;t work, try
+            ablating the top-50 entity-recognition features at once. This is closer to what
+            Marks 2024 / sparse feature circuits do, and it&apos;s the natural next experiment.
           </li>
           <li>
             <strong>Larger held-out test.</strong> Re-run the pipeline at N ≥ 500/class, ideally
@@ -461,6 +580,12 @@ cd notebooks/notebooks
 function H2({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="text-2xl font-semibold tracking-tight mt-12 mb-4 text-balance">{children}</h2>
+  )
+}
+
+function H3({ children }: { children: React.ReactNode }) {
+  return (
+    <h3 className="text-lg font-semibold tracking-tight mt-6 mb-3 text-balance">{children}</h3>
   )
 }
 
