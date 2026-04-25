@@ -501,7 +501,46 @@ UNKNOWN mean=6.03 tokens   median=6   range=4–10`}</Pre>
           .
         </p>
 
-        <H2>Update 2 — multi-feature steering: circuit-level signal exists, but it&apos;s chaos</H2>
+        <H2>Update 2 — multi-feature steering: ⚠️ method caveat (controls pending)</H2>
+
+        <Quote>
+          <strong>Honest walk-back, same day, after literature review:</strong> the original
+          framing of this section overclaimed. The −15pp effect we report below is likely an
+          artefact of three confounds we have not yet ruled out — most importantly,{' '}
+          <strong>we have not run a random-feature ablation control</strong>, which is exactly
+          the test that{' '}
+          <ExtLink href="https://forum.effectivealtruism.org/posts/9vkEpghkuEv5QtfKG/entity-recognition-feature-steering-in-gemma-2-2b">
+            collapsed Ferrando 2024&apos;s large-K ablation
+          </ExtLink>{' '}
+          (4 697 random features at L9 of Gemma-2-2B gave −29.2pp, basically identical to
+          their 4 697 entity features → the &ldquo;circuit&rdquo; was generic perturbation).
+          Our K=200 of 65k latents (~0.3% of the SAE) is squarely in the regime where this
+          control has historically killed published findings. Until we run it, treat the
+          numbers below as <em>provisional</em>.
+        </Quote>
+        <p className="text-sm text-ink-900/65 dark:text-ink-50/65">
+          <strong>Other confounds we haven&apos;t ruled out:</strong> top-K by |Cohen&apos;s d|
+          mixes fires-on-known and fires-on-unknown features (Marks / Templeton / Ferrando all
+          sort by signed d, separately per direction); N=20 per class gives 95% CI of roughly
+          ±15pp on the −15pp effect (we are 1.5σ from null); features were selected on the
+          same prompts we evaluated refusal on, which our own{' '}
+          <ExtLink href="https://github.com/OpenInterpretability/notebooks">
+            prior memory note
+          </ExtLink>{' '}
+          documents inflates effects ~15pp through selection bias. Cumulatively the suspicions
+          are large enough that we cannot stand behind the &ldquo;circuit-level signal&rdquo;
+          framing yet. Notebook 27 (random-K control · direction-sorted sweep · anti-feature
+          control · 3-way split · confabulation-vs-correct labelling) is the next experiment.
+          ETA: same week.
+        </p>
+
+        <p className="text-sm text-ink-900/65 dark:text-ink-50/65 italic">
+          We&apos;re leaving the original section below for transparency. The replication-on-27B
+          result (Update 1) is unaffected by this caveat — it concerns only single-feature
+          steering and the multi-feature Update 2.
+        </p>
+
+        <hr className="my-6 border-amber-500/30" />
 
         <Quote>
           <strong>Same-day follow-up:</strong> if a single feature isn&apos;t the calibration
