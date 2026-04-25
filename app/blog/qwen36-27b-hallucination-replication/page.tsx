@@ -501,12 +501,179 @@ UNKNOWN mean=6.03 tokens   median=6   range=4–10`}</Pre>
           .
         </p>
 
+        <H2>Update 2 — multi-feature steering: circuit-level signal exists, but it&apos;s chaos</H2>
+
+        <Quote>
+          <strong>Same-day follow-up:</strong> if a single feature isn&apos;t the calibration
+          knob, maybe a <em>circuit</em> is. Anthropic Templeton 2024 already flagged that
+          high-level behaviors in Claude 3 Sonnet route through multiple features, not single
+          ones. We tested the obvious next step: ablate top-K simultaneously.
+        </Quote>
+
+        <p>
+          We swept K ∈ {`{0, 5, 20, 50, 200}`} simultaneously-ablated features (top by Cohen&apos;s
+          d after the Pile filter, mix of fires-on-known and fires-on-unknown), measured refusal
+          rate per condition. The aggregate result:
+        </p>
+
+        <table className="not-prose w-full text-sm border-collapse my-6">
+          <thead>
+            <tr className="border-b border-black/10 dark:border-white/10 text-left">
+              <th className="py-2 pr-4 font-semibold">K</th>
+              <th className="py-2 pr-4 font-semibold text-right">Known refusal</th>
+              <th className="py-2 pr-4 font-semibold text-right">Unknown refusal</th>
+              <th className="py-2 pr-4 font-semibold text-right">Δ unknown vs K=0</th>
+              <th className="py-2 pr-4 font-semibold text-right">Texts changed @ K (unknown)</th>
+            </tr>
+          </thead>
+          <tbody className="font-mono text-[13.5px]">
+            <tr className="border-b border-black/5 dark:border-white/5">
+              <td className="py-2 pr-4">0</td>
+              <td className="py-2 pr-4 text-right">10.0%</td>
+              <td className="py-2 pr-4 text-right">60.0%</td>
+              <td className="py-2 pr-4 text-right">—</td>
+              <td className="py-2 pr-4 text-right">—</td>
+            </tr>
+            <tr className="border-b border-black/5 dark:border-white/5">
+              <td className="py-2 pr-4">5</td>
+              <td className="py-2 pr-4 text-right">5.0%</td>
+              <td className="py-2 pr-4 text-right">60.0%</td>
+              <td className="py-2 pr-4 text-right">+0pp</td>
+              <td className="py-2 pr-4 text-right">45%</td>
+            </tr>
+            <tr className="border-b border-black/5 dark:border-white/5">
+              <td className="py-2 pr-4">20</td>
+              <td className="py-2 pr-4 text-right">5.0%</td>
+              <td className="py-2 pr-4 text-right">50.0%</td>
+              <td className="py-2 pr-4 text-right">−10pp</td>
+              <td className="py-2 pr-4 text-right">70%</td>
+            </tr>
+            <tr className="border-b border-black/5 dark:border-white/5">
+              <td className="py-2 pr-4">50</td>
+              <td className="py-2 pr-4 text-right">15.0%</td>
+              <td className="py-2 pr-4 text-right">50.0%</td>
+              <td className="py-2 pr-4 text-right">−10pp</td>
+              <td className="py-2 pr-4 text-right">80%</td>
+            </tr>
+            <tr>
+              <td className="py-2 pr-4 font-semibold">200</td>
+              <td className="py-2 pr-4 text-right">10.0%</td>
+              <td className="py-2 pr-4 text-right font-semibold">45.0%</td>
+              <td className="py-2 pr-4 text-right font-semibold">−15pp</td>
+              <td className="py-2 pr-4 text-right font-semibold">95%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          Δ refusal on unknown is <strong>monotonic in K</strong>, in the predicted direction
+          (ablating &ldquo;I don&apos;t know&rdquo; features → less hedging). At K=200,
+          <strong> 95% of generations differ</strong> from baseline. This is real causal effect
+          at circuit level, where single-feature wasn&apos;t.
+        </p>
+
+        <p>
+          But the qualitative is the more interesting part. Some examples at K=200:
+        </p>
+
+        <ul className="list-disc pl-5 space-y-2">
+          <li>
+            <strong>Danny Green</strong> (NBA player, known): model switches to{' '}
+            <em>baseball player Daniel Joseph Green</em>. Ablation didn&apos;t make the model
+            confabulate — it{' '}
+            <em>retrieved a different real person sharing the name</em>.
+          </li>
+          <li>
+            <strong>Dikembe Mutombo</strong> (known): adds the false claim that he is a{' '}
+            <em>&ldquo;physician&rdquo;</em>. He&apos;s a humanitarian, not a physician.
+            Ablation increased a specific kind of hallucination.
+          </li>
+          <li>
+            <strong>Luke Nevill</strong> (unknown, real Australian basketball player):
+            confabulation shifts <em>American → Australian</em>, names &ldquo;Kogan.com&rdquo;
+            instead of &ldquo;Neville Group&rdquo;. The geography drift was{' '}
+            <em>toward truth</em>, by accident.
+          </li>
+          <li>
+            <strong>Bambale Osby</strong> (unknown, real basketball player): description shifts
+            from &ldquo;basketball player on Spurs&rdquo; → &ldquo;actress, singer, dancer&rdquo;.
+            Ablation produced more, not less, hallucination.
+          </li>
+        </ul>
+
+        <p>
+          Three things this means:
+        </p>
+        <ol className="list-decimal pl-5 space-y-2">
+          <li>
+            <strong>Circuit-level signal is real.</strong> The refusal-rate Δ is small (−15pp at
+            K=200) but monotonic and in the right direction. Combined with 95% text-change rate,
+            this is unambiguously causal effect on behavior — just not the clean &ldquo;less
+            confabulation&rdquo; story we hoped for.
+          </li>
+          <li>
+            <strong>Even at circuit level, intervention is not a calibration knob.</strong>{' '}
+            Individual cases shift in <em>unpredictable directions</em>: sometimes toward truth
+            (Luke Nevill → Australian), sometimes toward more hallucination (Bambale Osby
+            actress), sometimes to a different real person (Danny Green NBA → baseball). The
+            aggregate looks like &ldquo;less hedging&rdquo;, but per-entity it&apos;s closer to
+            &ldquo;random perturbation of the entity-retrieval circuit&rdquo;.
+          </li>
+          <li>
+            <strong>This validates Templeton 2024&apos;s framing.</strong> They reported on
+            Claude 3 Sonnet that single-feature steering for high-level model behaviors is hit or
+            miss; multi-feature is closer to the right unit but still coarse. We replicate this
+            on a different architecture (Qwen3.6-27B dense reasoning-tuned, vs Sonnet&apos;s
+            unknown architecture).
+          </li>
+        </ol>
+
+        <H3>The full story arc</H3>
+        <ol className="list-decimal pl-5 space-y-2">
+          <li>
+            <strong>Predictive (AUROC 0.84):</strong> single SAE feature classifies known/unknown
+            cleanly after Pile filter. Ship-able as detector for UI / RAG / monitoring.
+          </li>
+          <li>
+            <strong>Single-feature steering: not causal.</strong> Clamping or perturbing f61723
+            alone changes 60% of generations but doesn&apos;t shift refusal rate in the predicted
+            direction. Feature is causally active for{' '}
+            <em>something</em>, but not for the &ldquo;I know vs I don&apos;t know&rdquo; binary.
+          </li>
+          <li>
+            <strong>Multi-feature (top-200) steering: partial causal, chaotic.</strong> −15pp on
+            unknown refusal at K=200, monotonic in K, but per-entity behavior is unpredictable
+            (truth, more hallucination, identity-swap, no change — all happen).
+          </li>
+        </ol>
+
+        <p>
+          Honest takeaway:{' '}
+          <strong>
+            in 27B reasoning models, hallucination calibration is distributed across many
+            features and lacks a clean steering interface — even at circuit scale. SAE-as-detector
+            works; SAE-as-knob doesn&apos;t, at least via straight ablation.
+          </strong>
+        </p>
+
+        <p className="text-sm text-ink-900/70 dark:text-ink-50/70">
+          HF artifact:{' '}
+          <ExtLink href="https://huggingface.co/caiovicentino1/qwen36-27b-sae-papergrade/blob/main/multi_feature_steering_v0_0_1.json">
+            multi_feature_steering_v0_0_1.json
+          </ExtLink>
+          ; notebook{' '}
+          <ExtLink href="https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/26_multi_feature_steering.ipynb">
+            26_multi_feature_steering.ipynb
+          </ExtLink>
+          .
+        </p>
+
         <H2>What&apos;s next</H2>
         <ul className="list-disc pl-5 space-y-2">
           <li>
-            <strong>Multi-feature steering.</strong> If single-feature didn&apos;t work, try
-            ablating the top-50 entity-recognition features at once. This is closer to what
-            Marks 2024 / sparse feature circuits do, and it&apos;s the natural next experiment.
+            <strong>Targeted-direction multi-feature.</strong> Top-K by |Cohen&apos;s d| mixes
+            fires-on-known and fires-on-unknown features. Ablating only the fires-on-unknown
+            ones (or only the fires-on-known) might give cleaner direction. Worth a notebook.
           </li>
           <li>
             <strong>Larger held-out test.</strong> Re-run the pipeline at N ≥ 500/class, ideally
