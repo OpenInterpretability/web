@@ -3,12 +3,13 @@ import {
   Search, Share2, Sliders, Compass, Flame, Feather, Beaker, GraduationCap, Scale, Shield,
   Network, GitBranch, Layers, Workflow,
   Award, Telescope, Eye, Ruler, ScanSearch, Wand2,
+  Tag, Crosshair, Microscope, BarChart3, AlertTriangle, Brain, Move, FlaskConical,
 } from 'lucide-react'
 
 export type NotebookTier = 'hobbyist' | 'explorer' | 'papergrade'
 export type NotebookSupplKind =
   | 'discover' | 'share' | 'steer' | 'pick' | 'coverage' | 'research' | 'safety' | 'circuits'
-  | 'score' | 'lens' | 'probing'
+  | 'score' | 'lens' | 'probing' | 'hallucination'
 
 const NOTEBOOK_REPO = 'OpenInterpretability/notebooks'
 const GITHUB_BASE = `https://github.com/${NOTEBOOK_REPO}/blob/main/notebooks`
@@ -196,6 +197,34 @@ export const supplementary: SupplNotebook[] = [
     colabUrl: colabFor('04_discover_features.ipynb'),
   },
   {
+    kind: 'discover',
+    title: 'Auto-interp at scale — paper-grade SAE',
+    tagline: '1500 features × 32 examples · Claude Opus 4.7 via OpenRouter',
+    icon: Tag,
+    description:
+      'The auto-interp pipeline behind feature-catalog.json (1500 labels, ~$80 OpenRouter spend). Streams top-activating examples from the Qwen3.6-27B SAE (L11/L31/L55), filters Pile-noise features, sends to Opus 4.7, and emits per-feature semantic labels. Apache-2.0.',
+    estimatedTime: '~6 h · Colab T4 (~$0 GPU + LLM credit)',
+    platform: 'Colab Free · OPENROUTER_API_KEY required',
+    difficulty: 'intermediate',
+    notebookPath: '04b_autointerp_qwen36_27b_papergrade.ipynb',
+    githubUrl: `${GITHUB_BASE}/04b_autointerp_qwen36_27b_papergrade.ipynb`,
+    colabUrl: colabFor('04b_autointerp_qwen36_27b_papergrade.ipynb'),
+  },
+  {
+    kind: 'discover',
+    title: 'Auto-interp targeted — circuit features',
+    tagline: 'Label only the features your circuit needs',
+    icon: Crosshair,
+    description:
+      'Smaller-budget variant of 04b — pass a list of (layer, feature_id) tuples (e.g., from Sparse Feature Circuits output) and get labels only for those. Used to fill in 36 missing labels for the medical / IOI / math / refusal circuits in the Circuit Canvas viewer.',
+    estimatedTime: '~10 min · Colab T4 (~$1 LLM credit)',
+    platform: 'Colab Free · OPENROUTER_API_KEY required',
+    difficulty: 'beginner',
+    notebookPath: '04c_autointerp_missing_circuit_features.ipynb',
+    githubUrl: `${GITHUB_BASE}/04c_autointerp_missing_circuit_features.ipynb`,
+    colabUrl: colabFor('04c_autointerp_missing_circuit_features.ipynb'),
+  },
+  {
     kind: 'share',
     title: 'Build a shareable Trace',
     tagline: 'Your SAE + your prompt → trace.json + shareable URL',
@@ -355,6 +384,19 @@ export const supplementary: SupplNotebook[] = [
   },
   {
     kind: 'circuits',
+    title: 'Sparse Feature Circuits — paper-grade 27B',
+    tagline: 'Marks 2024 method on Qwen3.6-27B / 65k features per layer',
+    icon: Microscope,
+    description:
+      'Scaled-up companion to notebook 15. Same SFC pipeline (node attribution via AtP, edge attribution via Marks Appendix A.1) but on the published Qwen3.6-27B SAE across L11/L31/L55. Emits the circuit JSON files consumed by /observatory/circuits (medical, IOI, math, refusal scenarios).',
+    estimatedTime: '~1 h · A100 / RTX 6000 Pro',
+    platform: 'Cloud GPU · ≥48 GB VRAM',
+    difficulty: 'advanced',
+    notebookPath: '15b_sfc_qwen36_27b_papergrade.ipynb',
+    githubUrl: `${GITHUB_BASE}/15b_sfc_qwen36_27b_papergrade.ipynb`,
+  },
+  {
+    kind: 'circuits',
     title: 'Train a Sparse Crosscoder',
     tagline: 'Lindsey 2024 · shared dictionary across 3+ layers',
     icon: Layers,
@@ -381,6 +423,90 @@ export const supplementary: SupplNotebook[] = [
     notebookPath: '18_interpscore_eval.ipynb',
     githubUrl: `${GITHUB_BASE}/18_interpscore_eval.ipynb`,
     colabUrl: colabFor('18_interpscore_eval.ipynb'),
+  },
+  {
+    kind: 'score',
+    title: 'InterpScore on the paper-grade 27B SAE',
+    tagline: 'Real numbers — L11=0.7788 / L31=0.7600 / L55=0.7507',
+    icon: BarChart3,
+    description:
+      'Computes InterpScore v0.0.1 on the public caiovicentino1/qwen36-27b-sae-papergrade SAE. Loss-recovered + alive features + L0 sweet spot + sparse probing + TPP causal faithfulness with proportional k=0.5% of d_sae. Emits interpscore.json identical to what we submitted to the public leaderboard.',
+    estimatedTime: '~3 h · A100 / RTX 6000 Pro',
+    platform: 'Cloud GPU · ≥48 GB VRAM',
+    difficulty: 'advanced',
+    notebookPath: '18b_interpscore_qwen36_27b_papergrade.ipynb',
+    githubUrl: `${GITHUB_BASE}/18b_interpscore_qwen36_27b_papergrade.ipynb`,
+  },
+  // Hallucination — the full research arc behind the 2026-04-25 blog post
+  {
+    kind: 'hallucination',
+    title: 'Entity-recognition v0.0.1 — the failed first try',
+    tagline: 'How a 2× tokenization confound gave a fake AUROC=1.0',
+    icon: AlertTriangle,
+    description:
+      'Educational "how NOT to do it" notebook. Synthetic Slavic-style fake-entity names had ~2× the token count of famous entities — even the best feature was just counting subword tokens. Posted unchanged so the failure mode is reproducible. The fix is in 24b.',
+    estimatedTime: '~30 min · Colab T4',
+    platform: 'Colab Free',
+    difficulty: 'intermediate',
+    notebookPath: '24_hallucination_entity_separation_qwen36_27b.ipynb',
+    githubUrl: `${GITHUB_BASE}/24_hallucination_entity_separation_qwen36_27b.ipynb`,
+    colabUrl: colabFor('24_hallucination_entity_separation_qwen36_27b.ipynb'),
+  },
+  {
+    kind: 'hallucination',
+    title: 'Ferrando 2024 replication on Qwen3.6-27B',
+    tagline: 'AUROC 0.8379 on real Wikidata entities (vs 0.732 baseline)',
+    icon: Brain,
+    description:
+      'The methodology fix for 24. Uses real known/unknown Wikidata entities from javiferran/sae_entities, labels via attribute recall on the 27B model, applies the Pile noise filter (>2% rate dropped), and ranks single latents by Cohen\'s d. Surfaces feature L11/f61723 — first proper Ferrando replication at 27B scale.',
+    estimatedTime: '~2 h · Colab A100',
+    platform: 'Colab Pro · A100 recommended',
+    difficulty: 'advanced',
+    notebookPath: '24b_hallucination_v002_ferrando_proper.ipynb',
+    githubUrl: `${GITHUB_BASE}/24b_hallucination_v002_ferrando_proper.ipynb`,
+    colabUrl: colabFor('24b_hallucination_v002_ferrando_proper.ipynb'),
+  },
+  {
+    kind: 'hallucination',
+    title: 'Single-feature steering — the null result',
+    tagline: 'Clamp ±5 on f61723 · no calibration effect',
+    icon: Move,
+    description:
+      'First steering test: clamp the entity-recognition feature to ±5 (additive ±2) at L11 and check whether refusal rate on unknown entities moves. It does not. Detection ≠ control. Sets up the multi-feature experiments in 26 / 27.',
+    estimatedTime: '~45 min · Colab A100',
+    platform: 'Colab Pro · A100 recommended',
+    difficulty: 'advanced',
+    notebookPath: '25_steering_f61723_calibration.ipynb',
+    githubUrl: `${GITHUB_BASE}/25_steering_f61723_calibration.ipynb`,
+    colabUrl: colabFor('25_steering_f61723_calibration.ipynb'),
+  },
+  {
+    kind: 'hallucination',
+    title: 'Multi-feature steering — top-K (no controls)',
+    tagline: '−15pp on unknown refusal · would have shipped overclaimed',
+    icon: Sliders,
+    description:
+      'Ablate top-K (K∈{5,20,50,200}) features sorted by Cohen\'s d. Naive read: −15pp on unknown-entity refusal at K=200 — looks like a calibration knob. We almost shipped it before adding controls. The honest version is 27.',
+    estimatedTime: '~1.5 h · Colab A100',
+    platform: 'Colab Pro · A100 recommended',
+    difficulty: 'advanced',
+    notebookPath: '26_multi_feature_steering.ipynb',
+    githubUrl: `${GITHUB_BASE}/26_multi_feature_steering.ipynb`,
+    colabUrl: colabFor('26_multi_feature_steering.ipynb'),
+  },
+  {
+    kind: 'hallucination',
+    title: 'Multi-feature steering with full controls',
+    tagline: 'Random-K null + direction-sort + Claude judge → it induces hallucination',
+    icon: FlaskConical,
+    description:
+      'The walk-back. Six controls: random-K (R=30 draws), direction-sorted (top positive-d / top negative-d / mixed |d|), 3-way split, anti-feature, Claude Haiku judge, permutation test. Top-K is 4-8σ outside random null — but the judge shows the "less hedging" is confident-wrong answers (62%→77% on incorrect refusal), not improved correctness. Hallucination-induction mechanism, not a calibration knob.',
+    estimatedTime: '~3 h · Colab A100',
+    platform: 'Colab Pro · A100 + ANTHROPIC_API_KEY',
+    difficulty: 'advanced',
+    notebookPath: '27_multi_feature_steering_with_controls.ipynb',
+    githubUrl: `${GITHUB_BASE}/27_multi_feature_steering_with_controls.ipynb`,
+    colabUrl: colabFor('27_multi_feature_steering_with_controls.ipynb'),
   },
   // Lenses
   {
@@ -515,6 +641,11 @@ export const supplementaryGroups: {
     label: 'Probing',
     sub: 'The supervised baselines that SAE features must beat.',
     kinds: ['probing'],
+  },
+  {
+    label: 'Hallucination — detection & steering',
+    sub: 'The full research arc behind the 2026-04-25 blog post: Ferrando replication on 27B, single-feature null, multi-feature ablation under random-K + Claude-judge controls.',
+    kinds: ['hallucination'],
   },
   {
     label: 'Safety + production',
