@@ -22,11 +22,11 @@ export const blogPosts: BlogPostMeta[] = [
     slug: 'qwen36-27b-hallucination-replication',
     title: 'Entity-recognition features in Qwen3.6-27B — a replication, and a methodology lesson',
     summary:
-      'AUROC 0.84 for the "I know this entity" feature on a 27B reasoning model — vs Ferrando 2024\'s 0.73 on Gemma-2-2B-IT. Three updates in one day: a tokenization confound that gave fake AUROC=1.0, then single-feature steering that didn\'t work, then multi-feature top-200 ablation that appeared to give −15pp on unknown refusal — but is now flagged with a method caveat after literature review showed the random-feature control we never ran has killed similar Ferrando-2024 large-K claims. Honest in-progress.',
+      'AUROC 0.84 for the "I know this entity" feature on Qwen3.6-27B — vs Ferrando 2024\'s 0.73 on Gemma-2-2B-IT. Two-day arc with three controls: a tokenization confound that gave fake AUROC=1.0, single-feature steering that didn\'t move calibration, and multi-feature top-200 ablation that beats the random-K null at 4-8σ — but the LLM judge shows the "less hedging" is purely additional incorrect answers, not correct ones. We found a hallucination-induction mechanism, not a calibration knob.',
     date: '2026-04-25',
     authors: ['Caio Vicentino', 'OpenInterpretability'],
-    tags: ['SAE', 'hallucination', 'Qwen3.6-27B', 'Ferrando 2024', 'methodology', 'steering', 'circuits'],
-    readingMinutes: 16,
+    tags: ['SAE', 'hallucination', 'Qwen3.6-27B', 'Ferrando 2024', 'methodology', 'steering', 'circuits', 'controls'],
+    readingMinutes: 18,
   },
 ]
 

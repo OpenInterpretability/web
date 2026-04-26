@@ -501,173 +501,214 @@ UNKNOWN mean=6.03 tokens   median=6   range=4–10`}</Pre>
           .
         </p>
 
-        <H2>Update 2 — multi-feature steering: ⚠️ method caveat (controls pending)</H2>
+        <H2>Update 2 — multi-feature steering with proper controls</H2>
 
         <Quote>
-          <strong>Honest walk-back, same day, after literature review:</strong> the original
-          framing of this section overclaimed. The −15pp effect we report below is likely an
-          artefact of three confounds we have not yet ruled out — most importantly,{' '}
-          <strong>we have not run a random-feature ablation control</strong>, which is exactly
-          the test that{' '}
-          <ExtLink href="https://forum.effectivealtruism.org/posts/9vkEpghkuEv5QtfKG/entity-recognition-feature-steering-in-gemma-2-2b">
-            collapsed Ferrando 2024&apos;s large-K ablation
-          </ExtLink>{' '}
-          (4 697 random features at L9 of Gemma-2-2B gave −29.2pp, basically identical to
-          their 4 697 entity features → the &ldquo;circuit&rdquo; was generic perturbation).
-          Our K=200 of 65k latents (~0.3% of the SAE) is squarely in the regime where this
-          control has historically killed published findings. Until we run it, treat the
-          numbers below as <em>provisional</em>.
+          <strong>Resolved 2026-04-26.</strong> The first version of this section claimed a
+          circuit-level effect and we walked it back the same day pending the random-feature
+          ablation control. We&apos;ve now run that control plus four others (notebook 27).
+          The headline below replaces the walk-back caveat.{' '}
+          <strong>The causal effect is real, but the direction reframes the whole story:
+          our intervention induces hallucination, it does not improve calibration.</strong>
         </Quote>
-        <p className="text-sm text-ink-900/65 dark:text-ink-50/65">
-          <strong>Other confounds we haven&apos;t ruled out:</strong> top-K by |Cohen&apos;s d|
-          mixes fires-on-known and fires-on-unknown features (Marks / Templeton / Ferrando all
-          sort by signed d, separately per direction); N=20 per class gives 95% CI of roughly
-          ±15pp on the −15pp effect (we are 1.5σ from null); features were selected on the
-          same prompts we evaluated refusal on, which our own{' '}
-          <ExtLink href="https://github.com/OpenInterpretability/notebooks">
-            prior memory note
-          </ExtLink>{' '}
-          documents inflates effects ~15pp through selection bias. Cumulatively the suspicions
-          are large enough that we cannot stand behind the &ldquo;circuit-level signal&rdquo;
-          framing yet. Notebook 27 (random-K control · direction-sorted sweep · anti-feature
-          control · 3-way split · confabulation-vs-correct labelling) is the next experiment.
-          ETA: same week.
-        </p>
 
-        <p className="text-sm text-ink-900/65 dark:text-ink-50/65 italic">
-          We&apos;re leaving the original section below for transparency. The replication-on-27B
-          result (Update 1) is unaffected by this caveat — it concerns only single-feature
-          steering and the multi-feature Update 2.
-        </p>
-
-        <hr className="my-6 border-amber-500/30" />
-
-        <Quote>
-          <strong>Same-day follow-up:</strong> if a single feature isn&apos;t the calibration
-          knob, maybe a <em>circuit</em> is. Anthropic Templeton 2024 already flagged that
-          high-level behaviors in Claude 3 Sonnet route through multiple features, not single
-          ones. We tested the obvious next step: ablate top-K simultaneously.
-        </Quote>
+        <H3>The result, in one paragraph</H3>
 
         <p>
-          We swept K ∈ {`{0, 5, 20, 50, 200}`} simultaneously-ablated features (top by Cohen&apos;s
-          d after the Pile filter, mix of fires-on-known and fires-on-unknown), measured refusal
-          rate per condition. The aggregate result:
+          Ablating the top-200 entity-recognition features (ranked by Cohen&apos;s d on a held-out
+          selection split, after Pile noise filter) at L11 of Qwen3.6-27B reduces refusal rate
+          on unknown entities by <strong>−16.7pp</strong> (top-|d| sweep) or{' '}
+          <strong>−8.3pp</strong> (fires-on-unknown sweep). Both effects are{' '}
+          <strong>4-8 standard deviations below the random-K null distribution</strong>{' '}
+          (R=30 random draws of 200 features each). The anti-feature control (bottom-|d|)
+          gives 0pp. So the ranking is selecting something causal — that part of the story
+          stood up.
+        </p>
+
+        <p>
+          But the LLM-judge analysis on the resulting generations reveals what
+          &ldquo;reduced refusal&rdquo; actually means: the model wasn&apos;t hedging because
+          it knew it didn&apos;t know — it was hedging on top of a baseline that already
+          confabulated 62-100% of the time when it spoke. After our intervention, the
+          incorrect-answer rate on known entities went from 62% to 77%, and the correct-answer
+          rate dropped from 8% to 0%. The &ldquo;extra non-refusals&rdquo; the intervention
+          buys are uniformly extra hallucinations, not extra correct answers.
+        </p>
+
+        <H3>Sweep table</H3>
+
+        <table className="not-prose w-full text-sm border-collapse my-6">
+          <thead>
+            <tr className="border-b border-black/10 dark:border-white/10 text-left">
+              <th className="py-2 pr-4 font-semibold">Ranking @ K=200</th>
+              <th className="py-2 pr-4 font-semibold text-right">Δ refusal (unknown)</th>
+              <th className="py-2 pr-4 font-semibold text-right">vs random null</th>
+              <th className="py-2 pr-4 font-semibold">Verdict</th>
+            </tr>
+          </thead>
+          <tbody className="font-mono text-[13.5px]">
+            <tr className="border-b border-black/5 dark:border-white/5">
+              <td className="py-2 pr-4">top |d| (mixed)</td>
+              <td className="py-2 pr-4 text-right font-semibold">−16.7pp</td>
+              <td className="py-2 pr-4 text-right">≈ 8σ below null</td>
+              <td className="py-2 pr-4">REAL</td>
+            </tr>
+            <tr className="border-b border-black/5 dark:border-white/5">
+              <td className="py-2 pr-4">top neg d (fires-on-unknown)</td>
+              <td className="py-2 pr-4 text-right font-semibold">−8.3pp</td>
+              <td className="py-2 pr-4 text-right">≈ 4σ below null</td>
+              <td className="py-2 pr-4">REAL · direction predicted</td>
+            </tr>
+            <tr className="border-b border-black/5 dark:border-white/5">
+              <td className="py-2 pr-4">top pos d (fires-on-known)</td>
+              <td className="py-2 pr-4 text-right">+8.3pp</td>
+              <td className="py-2 pr-4 text-right">p≈0.93</td>
+              <td className="py-2 pr-4">within null</td>
+            </tr>
+            <tr className="border-b border-black/5 dark:border-white/5">
+              <td className="py-2 pr-4">bottom |d| (anti-feature control)</td>
+              <td className="py-2 pr-4 text-right">0pp</td>
+              <td className="py-2 pr-4 text-right">at null minimum</td>
+              <td className="py-2 pr-4">control passes ✓</td>
+            </tr>
+            <tr>
+              <td className="py-2 pr-4 italic">random K=200 (R=30 draws)</td>
+              <td className="py-2 pr-4 text-right italic">+0.6pp ± 2.1pp</td>
+              <td className="py-2 pr-4 text-right italic">—</td>
+              <td className="py-2 pr-4 italic">null distribution</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p className="text-sm text-ink-900/65 dark:text-ink-50/65 italic">
+          K∈{`{5, 20, 50}`} produced 0pp effect for both top-K and random-K — at our SAE width
+          (65k latents), ablating 0.08% or fewer features is too sparse to disrupt the model in
+          either selection regime. The signal lives at K=200 (~0.3%).
+        </p>
+
+        <H3>The judge finding — confabulation-vs-correct</H3>
+
+        <p>
+          We asked Claude Haiku to score every non-refusal generation as correct, incorrect, or
+          unverifiable against Wikidata ground truth.
         </p>
 
         <table className="not-prose w-full text-sm border-collapse my-6">
           <thead>
             <tr className="border-b border-black/10 dark:border-white/10 text-left">
-              <th className="py-2 pr-4 font-semibold">K</th>
-              <th className="py-2 pr-4 font-semibold text-right">Known refusal</th>
-              <th className="py-2 pr-4 font-semibold text-right">Unknown refusal</th>
-              <th className="py-2 pr-4 font-semibold text-right">Δ unknown vs K=0</th>
-              <th className="py-2 pr-4 font-semibold text-right">Texts changed @ K (unknown)</th>
+              <th className="py-2 pr-4 font-semibold">Condition</th>
+              <th className="py-2 pr-4 font-semibold text-right">n</th>
+              <th className="py-2 pr-4 font-semibold text-right">correct</th>
+              <th className="py-2 pr-4 font-semibold text-right">incorrect</th>
+              <th className="py-2 pr-4 font-semibold text-right">unverifiable</th>
             </tr>
           </thead>
           <tbody className="font-mono text-[13.5px]">
             <tr className="border-b border-black/5 dark:border-white/5">
-              <td className="py-2 pr-4">0</td>
-              <td className="py-2 pr-4 text-right">10.0%</td>
-              <td className="py-2 pr-4 text-right">60.0%</td>
-              <td className="py-2 pr-4 text-right">—</td>
-              <td className="py-2 pr-4 text-right">—</td>
+              <td className="py-2 pr-4">Baseline · KNOWN entities</td>
+              <td className="py-2 pr-4 text-right">13</td>
+              <td className="py-2 pr-4 text-right">8%</td>
+              <td className="py-2 pr-4 text-right">62%</td>
+              <td className="py-2 pr-4 text-right">31%</td>
             </tr>
             <tr className="border-b border-black/5 dark:border-white/5">
-              <td className="py-2 pr-4">5</td>
-              <td className="py-2 pr-4 text-right">5.0%</td>
-              <td className="py-2 pr-4 text-right">60.0%</td>
-              <td className="py-2 pr-4 text-right">+0pp</td>
-              <td className="py-2 pr-4 text-right">45%</td>
+              <td className="py-2 pr-4 font-semibold">top_neg_d K=200 · KNOWN</td>
+              <td className="py-2 pr-4 text-right">13</td>
+              <td className="py-2 pr-4 text-right font-semibold">0%</td>
+              <td className="py-2 pr-4 text-right font-semibold">77%</td>
+              <td className="py-2 pr-4 text-right">23%</td>
             </tr>
             <tr className="border-b border-black/5 dark:border-white/5">
-              <td className="py-2 pr-4">20</td>
-              <td className="py-2 pr-4 text-right">5.0%</td>
-              <td className="py-2 pr-4 text-right">50.0%</td>
-              <td className="py-2 pr-4 text-right">−10pp</td>
-              <td className="py-2 pr-4 text-right">70%</td>
-            </tr>
-            <tr className="border-b border-black/5 dark:border-white/5">
-              <td className="py-2 pr-4">50</td>
-              <td className="py-2 pr-4 text-right">15.0%</td>
-              <td className="py-2 pr-4 text-right">50.0%</td>
-              <td className="py-2 pr-4 text-right">−10pp</td>
-              <td className="py-2 pr-4 text-right">80%</td>
+              <td className="py-2 pr-4">Baseline · UNKNOWN</td>
+              <td className="py-2 pr-4 text-right">7</td>
+              <td className="py-2 pr-4 text-right">0%</td>
+              <td className="py-2 pr-4 text-right">100%</td>
+              <td className="py-2 pr-4 text-right">0%</td>
             </tr>
             <tr>
-              <td className="py-2 pr-4 font-semibold">200</td>
-              <td className="py-2 pr-4 text-right">10.0%</td>
-              <td className="py-2 pr-4 text-right font-semibold">45.0%</td>
-              <td className="py-2 pr-4 text-right font-semibold">−15pp</td>
-              <td className="py-2 pr-4 text-right font-semibold">95%</td>
+              <td className="py-2 pr-4">top_neg_d K=200 · UNKNOWN</td>
+              <td className="py-2 pr-4 text-right">8</td>
+              <td className="py-2 pr-4 text-right">0%</td>
+              <td className="py-2 pr-4 text-right">100%</td>
+              <td className="py-2 pr-4 text-right">0%</td>
             </tr>
           </tbody>
         </table>
 
         <p>
-          Δ refusal on unknown is <strong>monotonic in K</strong>, in the predicted direction
-          (ablating &ldquo;I don&apos;t know&rdquo; features → less hedging). At K=200,
-          <strong> 95% of generations differ</strong> from baseline. This is real causal effect
-          at circuit level, where single-feature wasn&apos;t.
+          The intervention&apos;s &ldquo;less hedging&rdquo; effect is{' '}
+          <strong>not a calibration improvement</strong>. Per-condition correctness either
+          stays at zero or drops; per-condition wrong-answer rate goes up. We&apos;re not making
+          the model more honest about what it knows — we&apos;re making it less honest about
+          what it doesn&apos;t.
         </p>
+
+        <H3>How this connects to Ferrando 2024</H3>
 
         <p>
-          But the qualitative is the more interesting part. Some examples at K=200:
+          Ferrando&apos;s steering experiments showed that{' '}
+          <em>amplifying</em> &ldquo;known&rdquo; features on unknown entities causes the model
+          to confabulate, and ablating them on known entities causes refusal. Our finding is the
+          symmetric direction:{' '}
+          <em>ablating &ldquo;unknown&rdquo; features on unknown entities causes confabulation</em>.
+          Same mechanism, different end of the rope. Both directions are evidence for an
+          entity-recognition circuit that gates calibrated refusal — and both directions show
+          that perturbing the circuit doesn&apos;t produce honesty, it produces confidently
+          wrong outputs.
         </p>
 
+        <H3>Permutation-test caveat</H3>
+
+        <p>
+          One thing we want to flag honestly. We ran a label-permutation test on the
+          Cohen&apos;s d ranking (1000 shuffles of known/unknown labels, recompute top-200,
+          measure overlap with our real top-200). Random permutation gave a mean overlap of{' '}
+          <strong>36/200</strong>, vs <strong>0.6</strong> expected by chance over the
+          Pile-passing feature pool. That&apos;s 60× more overlap than chance — meaning a chunk
+          of our &ldquo;top entity-recognition features&rdquo; is dominated by{' '}
+          <em>baseline feature popularity</em> at L11, not by entity-recognition signal
+          specifically. The causal effect is still real (random-K with the same K gives ~0pp,
+          our top-K gives −8 to −16pp), but the {`"`}entity-recognition{`"`} interpretation of
+          which features we&apos;re ablating is partly contaminated. A cleaner v0.0.3 ranking
+          would residualize Cohen&apos;s d against feature firing rate first.
+        </p>
+
+        <H3>Bottom line, after controls</H3>
+
+        <p>
+          Three things hold up after the controls:
+        </p>
         <ul className="list-disc pl-5 space-y-2">
           <li>
-            <strong>Danny Green</strong> (NBA player, known): model switches to{' '}
-            <em>baseball player Daniel Joseph Green</em>. Ablation didn&apos;t make the model
-            confabulate — it{' '}
-            <em>retrieved a different real person sharing the name</em>.
+            <strong>Multi-feature SAE ablation has real causal effect on entity-retrieval
+            behavior</strong> at L11 of Qwen3.6-27B. Random-K, anti-feature, and direction-sorted
+            controls all line up.
           </li>
           <li>
-            <strong>Dikembe Mutombo</strong> (known): adds the false claim that he is a{' '}
-            <em>&ldquo;physician&rdquo;</em>. He&apos;s a humanitarian, not a physician.
-            Ablation increased a specific kind of hallucination.
+            <strong>The effect direction is hallucination-induction, not calibration improvement.</strong>{' '}
+            The model becomes more confidently wrong, not more honest. This is the symmetric of
+            Ferrando 2024&apos;s known-side ablation result.
           </li>
           <li>
-            <strong>Luke Nevill</strong> (unknown, real Australian basketball player):
-            confabulation shifts <em>American → Australian</em>, names &ldquo;Kogan.com&rdquo;
-            instead of &ldquo;Neville Group&rdquo;. The geography drift was{' '}
-            <em>toward truth</em>, by accident.
-          </li>
-          <li>
-            <strong>Bambale Osby</strong> (unknown, real basketball player): description shifts
-            from &ldquo;basketball player on Spurs&rdquo; → &ldquo;actress, singer, dancer&rdquo;.
-            Ablation produced more, not less, hallucination.
+            <strong>The L11 ranking is partly dominated by feature popularity</strong>, not pure
+            entity-recognition signal. Causal finding survives this; mechanistic interpretation
+            is more cautious.
           </li>
         </ul>
 
-        <p>
-          Three things this means:
+        <p className="text-sm text-ink-900/70 dark:text-ink-50/70">
+          Artifacts:{' '}
+          <ExtLink href="https://huggingface.co/caiovicentino1/qwen36-27b-sae-papergrade/blob/main/multi_feature_steering_v0_0_2.json">
+            multi_feature_steering_v0_0_2.json
+          </ExtLink>
+          ; notebook{' '}
+          <ExtLink href="https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/27_multi_feature_steering_with_controls.ipynb">
+            27_multi_feature_steering_with_controls.ipynb
+          </ExtLink>
+          .
         </p>
-        <ol className="list-decimal pl-5 space-y-2">
-          <li>
-            <strong>Circuit-level signal is real.</strong> The refusal-rate Δ is small (−15pp at
-            K=200) but monotonic and in the right direction. Combined with 95% text-change rate,
-            this is unambiguously causal effect on behavior — just not the clean &ldquo;less
-            confabulation&rdquo; story we hoped for.
-          </li>
-          <li>
-            <strong>Even at circuit level, intervention is not a calibration knob.</strong>{' '}
-            Individual cases shift in <em>unpredictable directions</em>: sometimes toward truth
-            (Luke Nevill → Australian), sometimes toward more hallucination (Bambale Osby
-            actress), sometimes to a different real person (Danny Green NBA → baseball). The
-            aggregate looks like &ldquo;less hedging&rdquo;, but per-entity it&apos;s closer to
-            &ldquo;random perturbation of the entity-retrieval circuit&rdquo;.
-          </li>
-          <li>
-            <strong>This validates Templeton 2024&apos;s framing.</strong> They reported on
-            Claude 3 Sonnet that single-feature steering for high-level model behaviors is hit or
-            miss; multi-feature is closer to the right unit but still coarse. We replicate this
-            on a different architecture (Qwen3.6-27B dense reasoning-tuned, vs Sonnet&apos;s
-            unknown architecture).
-          </li>
-        </ol>
 
-        <H3>The full story arc</H3>
+        <H3>Full story arc, after controls</H3>
         <ol className="list-decimal pl-5 space-y-2">
           <li>
             <strong>Predictive (AUROC 0.84):</strong> single SAE feature classifies known/unknown
@@ -676,36 +717,17 @@ UNKNOWN mean=6.03 tokens   median=6   range=4–10`}</Pre>
           <li>
             <strong>Single-feature steering: not causal.</strong> Clamping or perturbing f61723
             alone changes 60% of generations but doesn&apos;t shift refusal rate in the predicted
-            direction. Feature is causally active for{' '}
-            <em>something</em>, but not for the &ldquo;I know vs I don&apos;t know&rdquo; binary.
+            direction.
           </li>
           <li>
-            <strong>Multi-feature (top-200) steering: partial causal, chaotic.</strong> −15pp on
-            unknown refusal at K=200, monotonic in K, but per-entity behavior is unpredictable
-            (truth, more hallucination, identity-swap, no change — all happen).
+            <strong>Multi-feature steering with controls: real causal effect, but
+            hallucination-induction.</strong> Random-K control passes (top-K is 4-8σ outside
+            null at K=200, anti-feature gives 0pp). Direction predicted (less refusal). But the
+            judge analysis shows the &ldquo;less refusal&rdquo; is purely additional incorrect
+            answers, not correct ones — the intervention makes the model more confidently
+            wrong, not more honest.
           </li>
         </ol>
-
-        <p>
-          Honest takeaway:{' '}
-          <strong>
-            in 27B reasoning models, hallucination calibration is distributed across many
-            features and lacks a clean steering interface — even at circuit scale. SAE-as-detector
-            works; SAE-as-knob doesn&apos;t, at least via straight ablation.
-          </strong>
-        </p>
-
-        <p className="text-sm text-ink-900/70 dark:text-ink-50/70">
-          HF artifact:{' '}
-          <ExtLink href="https://huggingface.co/caiovicentino1/qwen36-27b-sae-papergrade/blob/main/multi_feature_steering_v0_0_1.json">
-            multi_feature_steering_v0_0_1.json
-          </ExtLink>
-          ; notebook{' '}
-          <ExtLink href="https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/26_multi_feature_steering.ipynb">
-            26_multi_feature_steering.ipynb
-          </ExtLink>
-          .
-        </p>
 
         <H2>What&apos;s next</H2>
         <ul className="list-disc pl-5 space-y-2">
