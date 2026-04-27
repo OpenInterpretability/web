@@ -12,6 +12,7 @@ const primaryNav = [
   { href: '/laboratory', label: 'Laboratory' },
   { href: '/watchtower', label: 'Watchtower' },
   { href: '/academy', label: 'Academy' },
+  { href: '/products/fabricationguard', label: 'FabricationGuard', highlight: true as const },
 ]
 
 const secondaryNav = [
@@ -43,9 +44,15 @@ export function Navbar() {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="text-ink-900/70 dark:text-ink-50/70 hover:text-brand-600 dark:hover:text-brand-400 transition-colors font-medium"
+                className={
+                  (item as any).highlight
+                    ? 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ring-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/15 transition-colors'
+                    : 'text-ink-900/70 dark:text-ink-50/70 hover:text-brand-600 dark:hover:text-brand-400 transition-colors font-medium'
+                }
               >
+                {(item as any).highlight ? <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse-slow" /> : null}
                 {item.label}
+                {(item as any).highlight ? <span className="ml-1 text-[10px] opacity-80">new</span> : null}
               </Link>
             </li>
           ))}
