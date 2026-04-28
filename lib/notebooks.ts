@@ -9,7 +9,7 @@ import {
 export type NotebookTier = 'hobbyist' | 'explorer' | 'papergrade'
 export type NotebookSupplKind =
   | 'discover' | 'share' | 'steer' | 'pick' | 'coverage' | 'research' | 'safety' | 'circuits'
-  | 'score' | 'lens' | 'probing' | 'hallucination'
+  | 'score' | 'lens' | 'probing' | 'hallucination' | 'guard'
 
 const NOTEBOOK_REPO = 'OpenInterpretability/notebooks'
 const GITHUB_BASE = `https://github.com/${NOTEBOOK_REPO}/blob/main/notebooks`
@@ -409,6 +409,32 @@ export const supplementary: SupplNotebook[] = [
     githubUrl: `${GITHUB_BASE}/17_train_crosscoder.ipynb`,
     colabUrl: colabFor('17_train_crosscoder.ipynb'),
   },
+  {
+    kind: 'circuits',
+    title: 'Cross-model crosscoder + Pearson_CE',
+    tagline: 'Gemma-2-2B base/IT · BatchTopK · cosine vs causal universality',
+    icon: GitBranch,
+    description:
+      'Companion to 17 (cross-layer). This is cross-MODEL — diff base vs IT-tuned variant of Gemma-2-2B with BatchTopK + decoder-norm sparsity. First per-feature Pearson causal-equivalence test in the literature. Median cosine 0.965 vs median CE 0.616 on shared features (38% gap). The methodology paper-1 uses for ICML MI Workshop 2026.',
+    estimatedTime: '~5 h · A100 / RTX 6000 Pro',
+    platform: 'Cloud GPU · ≥40 GB VRAM',
+    difficulty: 'advanced',
+    notebookPath: '17b_crosscoder_model_diff_papergrade.ipynb',
+    githubUrl: `${GITHUB_BASE}/17b_crosscoder_model_diff_papergrade.ipynb`,
+  },
+  {
+    kind: 'circuits',
+    title: 'RL-diffing crosscoder — base vs mechreward',
+    tagline: 'Qwen3.5-4B base vs G3-LoRA · LoRA toggle pattern',
+    icon: Workflow,
+    description:
+      'Cross-stage crosscoder companion to 17b. Single base model + LoRA toggle via PEFT.disable_adapter() for activation collection. Diffs Qwen3.5-4B base against the mechreward-G3 LoRA (GSM8K 64%→83%) — first cross-stage RL diffing crosscoder on hybrid GDN architecture. Hypothesis: RL preserves residuals at L18 but rewires downstream consumers — Pearson_CE catches it.',
+    estimatedTime: '~5 h · A100 / RTX 6000 Pro',
+    platform: 'Cloud GPU · ≥40 GB VRAM',
+    difficulty: 'advanced',
+    notebookPath: '17c_crosscoder_rl_diffing_papergrade.ipynb',
+    githubUrl: `${GITHUB_BASE}/17c_crosscoder_rl_diffing_papergrade.ipynb`,
+  },
   // InterpScore
   {
     kind: 'score',
@@ -507,6 +533,77 @@ export const supplementary: SupplNotebook[] = [
     notebookPath: '27_multi_feature_steering_with_controls.ipynb',
     githubUrl: `${GITHUB_BASE}/27_multi_feature_steering_with_controls.ipynb`,
     colabUrl: colabFor('27_multi_feature_steering_with_controls.ipynb'),
+  },
+  {
+    kind: 'hallucination',
+    title: 'Paper baselines — Ferrando 2024 on Qwen3.6-27B',
+    tagline: 'L31/f34957 0.81 · LR 0.887 · diff-of-means 0.859',
+    icon: BarChart3,
+    description:
+      'The headline-numbers notebook for the ICML MI Workshop paper-1. Ferrando-style entity-recognition replication with 607 entities, per-layer scan across all 64 layers for linear probe + diff-of-means baselines, 95% bootstrap CI, HF resumable checkpoints. Cleanly compares single SAE feature vs supervised LR ceiling vs cross-bench generalization.',
+    estimatedTime: '~3 h · Colab A100',
+    platform: 'Colab Pro · A100 recommended',
+    difficulty: 'advanced',
+    notebookPath: '28_paper_baselines_qwen36_27b.ipynb',
+    githubUrl: `${GITHUB_BASE}/28_paper_baselines_qwen36_27b.ipynb`,
+    colabUrl: colabFor('28_paper_baselines_qwen36_27b.ipynb'),
+  },
+  {
+    kind: 'hallucination',
+    title: 'Sensitivity — refusal-only vs Ferrando labelling',
+    tagline: 'Same residual capture · 2 labelling rules → which signal survives?',
+    icon: Scale,
+    description:
+      'Ablation companion to 28. Re-uses the cached residual capture, swaps labelling rule (refusal-only vs Ferrando-style confabulation-as-unknown). Builds reviewer defence: shows the L31/f34957 0.81 AUROC is robust to the labelling rule choice, falsifies an earlier "L11 best" claim from v0.0.2.',
+    estimatedTime: '~30 min · Colab T4',
+    platform: 'Colab Free',
+    difficulty: 'advanced',
+    notebookPath: '28b_sensitivity_refusal_only.ipynb',
+    githubUrl: `${GITHUB_BASE}/28b_sensitivity_refusal_only.ipynb`,
+    colabUrl: colabFor('28b_sensitivity_refusal_only.ipynb'),
+  },
+  // Guard — product reproducers (each notebook reproduces a shipped product number)
+  {
+    kind: 'guard',
+    title: 'FabricationGuard PoC v1 — single SAE feature',
+    tagline: 'How the entity feature failed cross-bench',
+    icon: AlertTriangle,
+    description:
+      'The first attempt at HallucinationGuard: single SAE feature L31/f34957 (AUROC 0.81 on Ferrando entity test) applied to 4 public benchmarks. AUROC collapsed to ~0.5 chance on TruthfulQA / HaluEval / SimpleQA / MMLU. The honest negative result that motivated v2. Open-sourced as part of the OpenInterp methodology arc.',
+    estimatedTime: '~1.5 h · Colab Pro+ RTX 6000',
+    platform: 'Colab Pro+ · ≥48 GB VRAM',
+    difficulty: 'advanced',
+    notebookPath: '30_hallucinationguard_proof_qwen36_27b.ipynb',
+    githubUrl: `${GITHUB_BASE}/30_hallucinationguard_proof_qwen36_27b.ipynb`,
+    colabUrl: colabFor('30_hallucinationguard_proof_qwen36_27b.ipynb'),
+  },
+  {
+    kind: 'guard',
+    title: 'FabricationGuard v2 — linear probe (production)',
+    tagline: 'AUROC 0.88 cross-task SimpleQA · −88% confident-wrong reduction',
+    icon: Shield,
+    description:
+      'The probe behind the shipped openinterp.FabricationGuard (PyPI v0.2.0). Multi-feature LR on residual stream at L31, trained on TruthfulQA + HaluEval + MMLU train splits, evaluated cross-task on held-out SimpleQA. AUROC 0.88. Mitigation analysis shows −52% to −88% confident-wrong reduction on factual QA. Outputs probe.joblib that ships in the SDK.',
+    estimatedTime: '~50 min · Colab Pro+ RTX 6000',
+    platform: 'Colab Pro+ · ≥48 GB VRAM',
+    difficulty: 'advanced',
+    notebookPath: '31_hallucinationguard_v2_linear_probe.ipynb',
+    githubUrl: `${GITHUB_BASE}/31_hallucinationguard_v2_linear_probe.ipynb`,
+    colabUrl: colabFor('31_hallucinationguard_v2_linear_probe.ipynb'),
+  },
+  {
+    kind: 'guard',
+    title: 'ReasoningGuard PoC — probe during thinking',
+    tagline: 'Probe at end-of-think · GSM8K + MATH + StrategyQA',
+    icon: Brain,
+    description:
+      'Companion to 31. Score the *reasoning trace itself* (during thinking-mode generation), not the prompt. Sweeps 3 layers × 4 positions (end-of-question, mid-think, end-of-think, end-of-answer). Cross-domain test: train on GSM8K, eval on MATH + StrategyQA. If passes, ships as openinterp.ReasoningGuard v0.3.',
+    estimatedTime: '~3 h · Colab Pro+ RTX 6000',
+    platform: 'Colab Pro+ · ≥48 GB VRAM',
+    difficulty: 'advanced',
+    notebookPath: '32_reasoningguard_proof_qwen36_27b.ipynb',
+    githubUrl: `${GITHUB_BASE}/32_reasoningguard_proof_qwen36_27b.ipynb`,
+    colabUrl: colabFor('32_reasoningguard_proof_qwen36_27b.ipynb'),
   },
   // Lenses
   {
@@ -644,8 +741,13 @@ export const supplementaryGroups: {
   },
   {
     label: 'Hallucination — detection & steering',
-    sub: 'The full research arc behind the 2026-04-25 blog post: Ferrando replication on 27B, single-feature null, multi-feature ablation under random-K + Claude-judge controls.',
+    sub: 'The full research arc behind the 2026-04-25 blog post: Ferrando replication on 27B, single-feature null, multi-feature ablation under random-K + Claude-judge controls. Plus the ICML MI Workshop paper-1 baseline notebook.',
     kinds: ['hallucination'],
+  },
+  {
+    label: 'Guards — product reproducers',
+    sub: 'Reproduce the exact numbers behind shipped openinterp Guards. Each notebook is a self-contained validation of a probe that ships in the PyPI SDK.',
+    kinds: ['guard'],
   },
   {
     label: 'Safety + production',

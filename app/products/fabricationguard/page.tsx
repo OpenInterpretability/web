@@ -31,6 +31,9 @@ const PYPI_URL = 'https://pypi.org/project/openinterp/'
 const GITHUB_RELEASE = 'https://github.com/OpenInterpretability/cli/releases/tag/v0.2.0'
 const GITHUB_REPO = 'https://github.com/OpenInterpretability/cli'
 const NOTEBOOKS_REPO = 'https://github.com/OpenInterpretability/notebooks'
+const NOTEBOOK_31_GITHUB = 'https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/31_hallucinationguard_v2_linear_probe.ipynb'
+const NOTEBOOK_31_COLAB  = 'https://colab.research.google.com/github/OpenInterpretability/notebooks/blob/main/notebooks/31_hallucinationguard_v2_linear_probe.ipynb'
+const NOTEBOOK_30_COLAB  = 'https://colab.research.google.com/github/OpenInterpretability/notebooks/blob/main/notebooks/30_hallucinationguard_proof_qwen36_27b.ipynb'
 
 // -----------------------------------------------------------------------------
 // Numbers from notebook 31 (held-out, 2026-04-27)
@@ -496,20 +499,22 @@ out   = guard.generate("Who is Bambale Osby?", mode="abstain")`}
         </p>
 
         <div className="mt-10 grid md:grid-cols-3 gap-4">
-          <a
-            href={NOTEBOOKS_REPO}
-            target="_blank" rel="noopener noreferrer"
-            className="card p-6 hover:border-brand-500/40 transition-colors"
-          >
+          <div className="card p-6 hover:border-brand-500/40 transition-colors">
             <FlaskConical className="h-6 w-6 text-brand-500 mb-3" />
-            <div className="text-sm font-semibold">Notebook 30 + 31</div>
+            <div className="text-sm font-semibold">Notebook 31 — the probe reproducer</div>
             <div className="mt-1.5 text-xs text-ink-900/60 dark:text-ink-50/60 leading-relaxed">
-              Single-feature attempt → linear-probe pivot. Public benchmarks, held-out splits, ROC analysis.
+              The probe behind the shipped SDK. AUROC 0.88 cross-task, mitigation analysis, full reproducer.
+              ~50 min on RTX 6000 Pro · ~R$10.
             </div>
-            <div className="mt-3 inline-flex items-center gap-1 text-xs font-mono text-brand-600 dark:text-brand-400">
-              github.com/OpenInterpretability/notebooks <ExternalLink className="h-3 w-3" />
-            </div>
-          </a>
+            <a href={NOTEBOOK_31_COLAB} target="_blank" rel="noopener noreferrer"
+               className="mt-4 inline-flex items-center gap-1 text-xs font-mono text-brand-600 dark:text-brand-400 hover:underline">
+              ▶ Open in Colab <ExternalLink className="h-3 w-3" />
+            </a>
+            <a href={NOTEBOOK_31_GITHUB} target="_blank" rel="noopener noreferrer"
+               className="mt-1 inline-flex items-center gap-1 text-xs text-ink-900/50 dark:text-ink-50/50 hover:text-ink-900 dark:hover:text-ink-50">
+              source on github · 31_hallucinationguard_v2_linear_probe.ipynb
+            </a>
+          </div>
 
           <a
             href={HF_DATASET}
