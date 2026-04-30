@@ -24,22 +24,31 @@ export default function ManifestoPage() {
         MANIFESTO · 2026
       </span>
       <h1 className="mt-4 text-5xl sm:text-6xl font-semibold tracking-tight text-balance">
-        Interpretability should feel like video games, not archaeology.
+        The microscope is built. Now we need the standards.
       </h1>
 
       <div className="mt-10 space-y-10 text-ink-900/80 dark:text-ink-50/80 text-lg leading-relaxed">
         <p>
-          Neuronpedia gave the world its first SAE encyclopedia — a massive, essential contribution.
-          Gemma Scope followed with an industrial-grade suite of dictionaries. The Anthropic
-          Transformer Circuits thread wrote the intellectual foundation. We stand on their
-          shoulders.
+          Anthropic published Persona Vectors and Tracing Thoughts. DeepMind shipped Gemma Scope.
+          Alibaba shipped Qwen-Scope. Neuronpedia built the encyclopedia. Goodfire raised
+          $150M to commercialize the substrate. The interpretability infrastructure is, finally,
+          a thing that exists.
         </p>
 
         <p>
-          But an encyclopedia is where you look things up. It is not where discovery happens, and
-          it is not where a student becomes a contributor. Today, running your first end-to-end
-          interpretability experiment — find a feature, validate it, steer it, publish it — takes a
-          PhD advisor, a GPU cluster, and three months. That is a failure mode for the field.
+          What does <em>not</em> exist yet — at least not in shippable form — is the methodology
+          and product layer above it. The probes that take SAE features and turn them into
+          something a developer can put in front of a customer. The benchmarks that survive
+          Goodhart. The standards that distinguish a probe that learned the underlying signal from
+          a probe that learned a confound. The deployment plumbing that lets a hospital safety
+          team actually use a 27B activation probe in production.
+        </p>
+
+        <p>
+          That is the gap OpenInterp fills. We don't train more SAEs — frontier labs already do
+          that better than we ever could. We turn their work into <strong className="text-ink-900 dark:text-white">probes
+          that ship</strong> and <strong className="text-ink-900 dark:text-white">standards that
+          survive Goodhart</strong>. Apache 2.0 throughout. Anti-Goodhart by construction.
         </p>
 
         <h2 className="text-3xl font-semibold tracking-tight mt-14 text-ink-900 dark:text-white">

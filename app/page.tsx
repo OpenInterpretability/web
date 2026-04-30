@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { ArrowRight, Github, Zap, ShieldCheck, GitBranch, Cpu, Atom, Package, Play } from 'lucide-react'
+import { ArrowRight, Github, Zap, ShieldCheck, GitBranch, Cpu, Atom, Package, Play, Trophy } from 'lucide-react'
 import { headline, moat, saes, benchmarks, priorWork, stages, site } from '@/lib/constants'
-import { pillars, threeMoats, roadmap, heroNew } from '@/lib/pillars'
+import { pillars, threePillars, threeMoats, roadmap, heroNew } from '@/lib/pillars'
 import { PillarCard } from '@/components/pillar-card'
 
 export default function HomePage() {
@@ -34,24 +34,24 @@ export default function HomePage() {
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/train"
+              href="/products/fabricationguard"
               className="group inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:shadow-xl hover:shadow-brand-600/40 transition-all"
             >
-              Train your first SAE in 30 min
+              Try FabricationGuard
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
-              href="/observatory/trace"
+              href="/probebench"
               className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
             >
-              <Play className="h-3.5 w-3.5 fill-current" />
-              Open Trace Theater
+              <Trophy className="h-3.5 w-3.5" />
+              Browse ProbeBench
             </Link>
             <Link
-              href="/manifesto"
+              href="/research"
               className="inline-flex items-center gap-2 rounded-lg border border-transparent px-4 py-3 text-sm font-semibold text-ink-900/70 dark:text-ink-50/70 hover:text-ink-900 dark:hover:text-ink-50 transition-colors"
             >
-              Read the manifesto
+              Read papers
             </Link>
           </div>
 
@@ -61,35 +61,118 @@ export default function HomePage() {
               <span className="text-brand-500 select-none">$</span>
               <code className="flex-1 text-left text-ink-900 dark:text-ink-50">pip install openinterp</code>
               <span className="chip bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30">
-                v0.1.0 live
+                v0.2.0 live
               </span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== Platform-state metrics ===== */}
+      {/* ===== Concrete proof strip ===== */}
       <section className="mx-auto max-w-7xl px-6 -mt-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Metric label="Pillars shipped" value="4" detail="Observatory · Laboratory · Watchtower · Academy" />
-          <Metric label="Training ladder" value="3 tiers" detail="Colab Free → Kaggle → Cloud paper-grade" />
-          <Metric label="Trace scenarios live" value="10" detail="Medical · math · code · riddle · safety · planning · creative · multilingual · ambiguity · ToM" />
-          <Metric label="First-in-class SAEs" value="4+" detail="Qwen3.5 GDN · Gemma-4 MoE · Qwen3.6 dense · Qwen3.6 triple-hybrid" />
+          <Metric label="🎯 0.88 AUROC" value="FabricationGuard" detail="cross-task hallucination · ~1ms · PyPI v0.2.0" />
+          <Metric label="📊 5 probes" value="ProbeBench" detail="anti-Goodhart leaderboard · 7-axis ProbeScore · v0.0.1" />
+          <Metric label="📜 ICML MI #73" value="Paper-1 in review" detail="Hallucination-Induction, Not Calibration · notification June 12" />
+          <Metric label="⚙️ Apache 2.0" value="All artifacts" detail="5 GitHub repos · PyPI · 7 HF datasets · 1 SAE model" />
         </div>
       </section>
 
-      {/* ===== The four pillars (NEW · primary frame) ===== */}
+      {/* ===== Built on (lineage / humility) ===== */}
+      <section className="mx-auto max-w-7xl px-6 mt-16">
+        <div className="text-center max-w-3xl mx-auto mb-6">
+          <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50 mb-2">
+            Built on
+          </span>
+          <p className="text-base text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
+            We extend frontier-lab interpretability infrastructure with a methodology + product layer.
+            Apache 2.0 throughout. Anti-Goodhart by construction.
+            {' '}<Link href="/built-on" className="text-brand-600 dark:text-brand-400 hover:underline font-medium">See full lineage →</Link>
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
+          <span className="chip bg-black/[0.03] dark:bg-white/[0.04] text-ink-900/70 dark:text-ink-50/70 ring-black/10 dark:ring-white/10">
+            Anthropic Persona Vectors (Aug 2025)
+          </span>
+          <span className="chip bg-black/[0.03] dark:bg-white/[0.04] text-ink-900/70 dark:text-ink-50/70 ring-black/10 dark:ring-white/10">
+            Anthropic Tracing Thoughts (Mar 2025)
+          </span>
+          <span className="chip bg-black/[0.03] dark:bg-white/[0.04] text-ink-900/70 dark:text-ink-50/70 ring-black/10 dark:ring-white/10">
+            DeepMind Gemma Scope (2024)
+          </span>
+          <span className="chip bg-black/[0.03] dark:bg-white/[0.04] text-ink-900/70 dark:text-ink-50/70 ring-black/10 dark:ring-white/10">
+            Alibaba Qwen-Scope (Apr 2026)
+          </span>
+          <span className="chip bg-black/[0.03] dark:bg-white/[0.04] text-ink-900/70 dark:text-ink-50/70 ring-black/10 dark:ring-white/10">
+            Goodfire RLFR (2025)
+          </span>
+        </div>
+      </section>
+
+      {/* ===== Three pillars (NEW · primary frame: Detect · Standardize · Deploy) ===== */}
       <section className="mx-auto max-w-7xl px-6 mt-24">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-brand-600 dark:text-brand-400 mb-3">
-            Four pillars
+            What we ship
           </span>
           <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-balance">
-            Observe. Edit. Monitor. Teach.
+            Detect. Standardize. Deploy.
           </h2>
           <p className="mt-4 text-lg text-ink-900/70 dark:text-ink-50/70 text-balance leading-relaxed">
-            Neuronpedia is the encyclopedia you consult. OpenInterp is the microscope, the
-            laboratory, the watchtower, and the school — one platform, four ways in.
+            Production probes. Goodhart-resistant standards. Inference-time integrations.
+            Built on top of the SAE infrastructure that frontier labs already shipped.
+          </p>
+        </div>
+        <div className="grid gap-5 md:grid-cols-3">
+          {threePillars.map((p) => (
+            <Link
+              key={p.id}
+              href={p.href}
+              className={`card p-6 relative overflow-hidden group hover:scale-[1.01] transition-transform`}
+            >
+              <div className={`absolute inset-0 bg-gradient-to-br ${p.gradient} opacity-50 group-hover:opacity-70 transition-opacity`} aria-hidden="true" />
+              <div className="relative">
+                <h3 className="text-2xl font-semibold tracking-tight">{p.name}</h3>
+                <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">{p.tagline}</p>
+                <ul className="mt-5 space-y-2.5">
+                  {p.products.map((prod) => (
+                    <li key={prod.name} className="flex items-start gap-2 text-sm">
+                      <span
+                        className={`mt-1 h-1.5 w-1.5 rounded-full shrink-0 ${
+                          prod.status === 'live'
+                            ? 'bg-emerald-500'
+                            : prod.status === 'planned'
+                            ? 'bg-amber-500/60'
+                            : 'bg-ink-400'
+                        }`}
+                      />
+                      <span>
+                        <span className="font-medium">{prod.name}</span>
+                        <span className="text-ink-900/55 dark:text-ink-50/55"> — {prod.detail}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-5 inline-flex items-center gap-1 text-xs font-semibold text-brand-700 dark:text-brand-300 group-hover:gap-2 transition-all">
+                  Explore {p.name.toLowerCase()} <ArrowRight className="h-3 w-3" />
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== The four pillars (LEGACY · kept for /observatory + /laboratory + /watchtower + /academy routing) ===== */}
+      <section className="mx-auto max-w-7xl px-6 mt-24">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50 mb-3">
+            Tools we maintain
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-balance text-ink-900/85 dark:text-ink-50/85">
+            Observe. Edit. Monitor. Teach.
+          </h2>
+          <p className="mt-3 text-base text-ink-900/60 dark:text-ink-50/60 text-balance leading-relaxed">
+            Four supporting environments around the core probe + standard + deploy stack.
           </p>
         </div>
         <div className="grid gap-5 md:grid-cols-2">
@@ -171,6 +254,71 @@ export default function HomePage() {
                   f2503, f3383, f1847, f4521, f2156, f3892, f152 — shown
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== ProbeBench teaser (NEW) ===== */}
+      <section className="mx-auto max-w-7xl px-6 mt-24">
+        <div className="card p-8 sm:p-10 relative overflow-hidden">
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-accent-500/10 via-transparent to-brand-500/10"
+            aria-hidden="true"
+          />
+          <div
+            className="absolute -top-16 -right-16 h-56 w-56 rounded-full bg-accent-500/15 blur-3xl"
+            aria-hidden="true"
+          />
+          <div className="relative grid gap-8 lg:grid-cols-[1.1fr_1fr] items-center">
+            <div>
+              <span className="chip bg-accent-500/15 text-cyan-700 dark:text-cyan-300 ring-accent-500/30 ring-inset inline-flex items-center gap-1.5">
+                <Trophy className="h-3 w-3" />
+                ProbeBench v0.0.1
+              </span>
+              <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
+                The first leaderboard for activation probes.
+              </h2>
+              <p className="mt-4 text-base text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
+                8 categories — hallucination, deception, sandbagging, eval-awareness — each with a
+                composite ProbeScore. Cross-model Pearson_CE transfer included. Apache-2.0 reproducers.
+                Open submissions.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/probebench"
+                  className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
+                >
+                  <Trophy className="h-3.5 w-3.5" /> Open the leaderboard
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+                <Link
+                  href="/probebench/submit"
+                  className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                >
+                  Submit your probe
+                </Link>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: 'Hallucination', score: '0.882', detail: 'cross-task SimpleQA' },
+                { label: 'Deception', score: '0.96+', detail: 'Apollo re-impl' },
+                { label: 'Eval-awareness', score: 'pending', detail: 'UK AISI priority' },
+                { label: 'Reward-hacking', score: 'pending', detail: 'Anthropic 2511.18397' },
+              ].map((c) => (
+                <div key={c.label} className="card p-4 bg-black/[0.03] dark:bg-white/[0.03]">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50">
+                    {c.label}
+                  </div>
+                  <div className="mt-1.5 font-mono text-lg font-semibold tracking-tight gradient-text">
+                    {c.score}
+                  </div>
+                  <div className="mt-0.5 text-[10px] text-ink-900/50 dark:text-ink-50/50 leading-snug">
+                    {c.detail}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

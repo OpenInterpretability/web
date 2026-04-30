@@ -209,62 +209,109 @@ export const threeMoats = [
 
 export const roadmap = [
   {
-    quarter: 'Q1 2026',
+    quarter: 'Q2 2026',
     label: 'NOW',
-    theme: 'Observatory v0',
+    theme: 'Probes shipped + paper-1 in review',
     active: true,
     items: [
-      'Trace Theater (Qwen3.6-27B, 3 curated prompts, real feature IDs)',
-      'Paper-grade SAEs landing on HuggingFace (n=65k, L11/L31/L55)',
-      'Public Python SDK v0.1 · pip install openinterp',
-      'mechreward + Stage Gate preserved and integrated into Atlas',
-    ],
-  },
-  {
-    quarter: 'Q2 2026',
-    label: 'NEXT',
-    theme: 'Expansion',
-    active: false,
-    items: [
-      'Atlas search across 8+ model families',
-      'Circuit Canvas v1 (attribution graphs)',
-      'Lab Sandbox beta (compose interventions)',
-      'Compare mode (N-way diff)',
-      'Academic paper + 10 partnership conversations',
+      'FabricationGuard v0.2.0 live · 0.88 AUROC cross-task hallucination · ~1ms',
+      'ReasonGuard live · narrow-scope honest negative documented',
+      'ProbeBench v0.0.1 · 5 reference probes · 7-axis ProbeScore · anti-Goodhart norms',
+      'ICML MI Workshop paper-1 submitted · "Hallucination-Induction, Not Calibration"',
+      'Multi-Probe DPO + Pearson_CE crosscoder methodology (paper-2 finding validated)',
     ],
   },
   {
     quarter: 'Q3 2026',
-    label: 'COMMUNITY',
-    theme: 'Academy + growth',
+    label: 'NEXT',
+    theme: 'More probes + integrations',
     active: false,
     items: [
-      'Recipe Store public launch',
-      'Expeditions v1 · 12 guided tutorials',
-      'Interp Olympics Season 1',
-      'Live Lectures · 4 researchers/mo',
-      'Target: 1,000 monthly active users',
+      'DeceptionGuard v0.1 · Apollo methodology applied to Qwen3.6',
+      'CoTGuard v2 · causal-mediation methodology (Lanham 2023 truncation)',
+      'BehaviorGuard · CoT-vs-action consistency for agentic systems',
+      'vLLM plugin · inference-time probe scoring (~5ms overhead)',
+      'NeurIPS MI Workshop submission · paper-2 (grokking) + paper-3 (multi-probe GRPO)',
     ],
   },
   {
     quarter: 'Q4 2026',
-    label: 'SUSTAINABILITY',
-    theme: 'Watchtower + revenue',
+    label: 'COVERAGE',
+    theme: 'Cross-substrate + cross-model',
     active: false,
     items: [
-      'Watchtower Enterprise beta · 3 design partners',
-      'Model Partner Program · first vendor SAE launch-day release',
-      'Reproducibility Vault · public hash index',
-      'First revenue in. OSS tier permanently funded.',
+      'ProbeBench v0.1 · register Qwen-Scope, Gemma Scope SAEs as upstream substrates',
+      'Cross-model probe transfer · FabricationGuard methodology on Llama / DeepSeek',
+      'Probe registry API · external probes can register against any substrate',
+      'Auto-interp pipeline · Claude/GPT-4 feature labels on Qwen-Scope features',
+      'ICLR 2027 paper submission',
+    ],
+  },
+  {
+    quarter: 'Q1 2027',
+    label: 'DEPLOY',
+    theme: 'Regulated industries + revenue',
+    active: false,
+    items: [
+      'Medical adapter · EU AI Act Article 14 + FDA SaMD compliance probe pack',
+      'Financial adapter · audit trail + immutable feature activation logs',
+      'Cursor / Cline / agent integrations · BehaviorGuard for tool-use',
+      'Pro tier $99/mo · auto-tuning, custom benches, SLA',
+      'First revenue in · OSS tier permanently funded',
     ],
   },
 ]
 
 export const heroNew = {
-  eyebrow: 'Observatory · Laboratory · Watchtower · Academy — shipped Apache-2.0',
-  watchLine: 'Watch language models',
-  thinkLine: 'think.',
-  subBold: 'Trace every feature. Every circuit. Every second of reasoning.',
+  eyebrow: 'FabricationGuard live · ProbeBench v0.0.1 · Multi-Probe DPO',
+  watchLine: 'Probes that ship.',
+  thinkLine: 'Standards that survive.',
+  subBold: 'The application layer for mechanistic interpretability.',
   subText:
-    'The open platform for mechanistic interpretability. Train SAEs on free Colab in 30 min or at paper-grade in the cloud. Trace any model. Edit features, monitor deployments, teach the next generation — one platform, four ways in.',
+    'We turn frontier-lab interpretability research into production-grade safety probes. Built on Anthropic Persona Vectors, DeepMind Gemma Scope, and Alibaba Qwen-Scope. Apache 2.0 · Anti-Goodhart by construction · ~1ms inference.',
 }
+
+// Three-pillar reframing (Detect / Standardize / Deploy) — replaces 4-pillar stack.
+// Original 4 pillars retained above for /observatory, /laboratory, /watchtower, /academy
+// page routing; this new structure is the homepage primary frame.
+export const threePillars = [
+  {
+    id: 'detect',
+    name: 'Detect',
+    tagline: 'Production-grade probes for hallucination, deception, and reasoning faithfulness.',
+    products: [
+      { name: 'FabricationGuard', status: 'live', detail: '0.88 AUROC cross-task · ~1ms · PyPI v0.2.0' },
+      { name: 'ReasonGuard', status: 'live', detail: 'narrow-scope: 0.888 within-domain · honest negative cross-domain' },
+      { name: 'DeceptionGuard', status: 'planned', detail: 'Apollo methodology, Q3 2026' },
+      { name: 'CoTGuard v2', status: 'planned', detail: 'causal-mediation methodology, Q3 2026' },
+    ],
+    href: '/probebench',
+    gradient: 'from-brand-500/20 to-accent-500/20',
+  },
+  {
+    id: 'standardize',
+    name: 'Standardize',
+    tagline: 'ProbeBench — the anti-Goodhart leaderboard for activation probes.',
+    products: [
+      { name: 'ProbeBench v0.0.1', status: 'live', detail: '8 categories · 7-axis ProbeScore · 5 reference probes' },
+      { name: 'Anti-Goodhart norms', status: 'live', detail: 'random-K controls · fresh-probe AUROC · 3-way splits' },
+      { name: 'InterpScore', status: 'live', detail: 'composite metric for SAE evaluation (vs SAEBench)' },
+      { name: 'Cross-substrate registry', status: 'planned', detail: 'register Qwen-Scope, Gemma Scope SAEs as upstream' },
+    ],
+    href: '/probebench',
+    gradient: 'from-cyan-500/20 to-emerald-500/20',
+  },
+  {
+    id: 'deploy',
+    name: 'Deploy',
+    tagline: 'vLLM/SGLang plugins, agent integrations, regulated-industry adapters.',
+    products: [
+      { name: 'openinterp SDK', status: 'live', detail: '`pip install openinterp` v0.2.0' },
+      { name: 'HuggingFace Spaces', status: 'live', detail: 'FabricationGuard ZeroGPU demo + ProbeBench leaderboard' },
+      { name: 'vLLM plugin', status: 'planned', detail: 'inference-time probe scoring · Q2 2026' },
+      { name: 'Medical / financial adapters', status: 'planned', detail: 'EU AI Act + FDA SaMD compliance' },
+    ],
+    href: '/products/fabricationguard',
+    gradient: 'from-pink-500/20 to-orange-500/20',
+  },
+] as const
