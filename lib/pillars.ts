@@ -306,7 +306,7 @@ export const threePillars = [
     name: 'Deploy',
     tagline: 'vLLM/SGLang plugins, agent integrations, regulated-industry adapters.',
     products: [
-      { name: 'openinterp SDK', status: 'live', detail: '`pip install openinterp` v0.2.0' },
+      { name: 'openinterp SDK', status: 'live', detail: '`pip install openinterp` v0.2.1 · `safe_load_qwen36_lora()` for LoRA save/reload' },
       { name: 'HuggingFace Spaces', status: 'live', detail: 'FabricationGuard ZeroGPU demo + ProbeBench leaderboard' },
       { name: 'vLLM plugin', status: 'planned', detail: 'inference-time probe scoring · Q2 2026' },
       { name: 'Medical / financial adapters', status: 'planned', detail: 'EU AI Act + FDA SaMD compliance' },
