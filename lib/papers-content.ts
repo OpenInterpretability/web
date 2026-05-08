@@ -16,6 +16,25 @@ export interface PaperMeta {
 
 export const papers: PaperMeta[] = [
   {
+    slug: "cosine-causal-gap-crosscoder",
+    title: "The Cosine–Causal Gap in Cross-Model Crosscoders",
+    subtitle:
+      "When Decoder Universality Overstates Causal Equivalence in Gemma-2-2B",
+    authors: "Caio Vicentino",
+    venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft)",
+    status: "draft",
+    date: "2026-05-08",
+    abstract:
+      "We provide the first per-feature empirical measurement of the gap between decoder cosine universality and causal-equivalence in cross-model crosscoders. Training a paper-grade BatchTopK crosscoder (73,728 latents, k=100) on Gemma-2-2B base/IT at layer 13, we measure Pearson correlation between two-model KL trajectories under per-feature ablation across 256 probes. Median decoder cosine 0.965 vs median Pearson_CE 0.616, with 38.24% of shared features having cosine > 0.7 yet CE < 0.5. Outliers in both tails — anti-aligned decoders with equivalent causal effect, and aligned decoders with opposite causal effect — show that cosine is neither necessary nor sufficient for causal equivalence. We propose Pearson_CE as a mandatory complementary diagnostic for crosscoder universality claims and release all artifacts under Apache-2.0.",
+    artifacts: [
+      { label: "Crosscoder weights (HF)", href: "https://huggingface.co/caiovicentino1/gemma2-2b-crosscoder-model-diff-papergrade" },
+      { label: "Causal validation CSV (96 features)", href: "https://github.com/OpenInterpretability/openinterp-paper-pearson-ce-crosscoder/blob/main/data/gemma_causal_validation.csv" },
+      { label: "Training notebook", href: "https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/17b_crosscoder_model_diff_papergrade.ipynb" },
+      { label: "openinterp SDK (PyPI)", href: "https://pypi.org/project/openinterp/" },
+    ],
+    tags: ["crosscoders", "SAE", "universality", "causal equivalence", "Gemma-2", "Anthropic methodology"],
+  },
+  {
     slug: "probe-detected-grokking-dpo",
     title: "Probe-Detected Grokking in Multi-Probe DPO",
     subtitle:
