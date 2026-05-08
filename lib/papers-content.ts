@@ -16,6 +16,27 @@ export interface PaperMeta {
 
 export const papers: PaperMeta[] = [
   {
+    slug: "probe-detected-grokking-dpo",
+    title: "Probe-Detected Grokking in Multi-Probe DPO",
+    subtitle:
+      "Orthogonal Learning Beyond Task-Specific Detectors in Qwen3.6-27B",
+    authors: "Caio Vicentino",
+    venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft)",
+    status: "draft",
+    date: "2026-05-08",
+    abstract:
+      "We report a phase-transition-like dynamic in multi-probe Direct Preference Optimization on a 27B-parameter reasoning model, observable only through fresh probes trained after the fact. Original probes (FabricationGuard at L31, ReasoningGuard at L55) used as the joint preference signal remain invariant across training (variance 7×10⁻⁸, ~40× below within-step noise) despite a 0.234 DPO loss descent and 0.654 logit-difference. A fresh probe re-trained on each checkpoint reveals a smooth, accelerating progression in AUROC from 0.472 → 0.528 with a late-half-to-early-half slope ratio of 2.60 — the construct-then-compress signature of grokking dynamics, but with a compression target orthogonal to the original probes. We argue this is a structural Goodhart phenomenon specific to probe-derived rewards, propose fresh-probe AUROC progression as a complementary safety evaluation, and release training checkpoints, probes, and reproducer code under Apache-2.0.",
+    artifacts: [
+      { label: "Forward sweep dataset (HF)", href: "https://huggingface.co/datasets/caiovicentino1/openinterp-41v2-grokking-extended" },
+      { label: "DPO training data (HF)", href: "https://huggingface.co/datasets/caiovicentino1/openinterp-37-multiprobe-dpo-full" },
+      { label: "DPO checkpoints (HF)", href: "https://huggingface.co/caiovicentino1/openinterp-37v2-multiprobe-dpo-extended" },
+      { label: "FabricationGuard probe", href: "https://huggingface.co/datasets/caiovicentino1/FabricationGuard-linearprobe-qwen36-27b" },
+      { label: "openinterp SDK (PyPI)", href: "https://pypi.org/project/openinterp/" },
+      { label: "Notebooks repo", href: "https://github.com/OpenInterpretability/notebooks" },
+    ],
+    tags: ["grokking", "DPO", "Goodhart", "probes", "Qwen3.6-27B", "phase transition"],
+  },
+  {
     slug: "two-forms-epiphenomenal-probes",
     title: "Two Forms of Epiphenomenal Probes in Code Agents",
     subtitle:
