@@ -13,6 +13,7 @@ const primaryNav = [
   { href: '/watchtower', label: 'Watchtower' },
   { href: '/academy', label: 'Academy' },
   { href: '/products/fabricationguard', label: 'FabricationGuard', highlight: true as const },
+  { href: '/products/agent-probe-guard', label: 'agent-probe-guard', highlight: true as const },
 ]
 
 const secondaryNav = [

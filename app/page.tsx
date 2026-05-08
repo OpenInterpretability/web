@@ -34,18 +34,25 @@ export default function HomePage() {
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/products/fabricationguard"
+              href="/products/agent-probe-guard"
               className="group inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:shadow-xl hover:shadow-brand-600/40 transition-all"
             >
-              Try FabricationGuard
+              Try agent-probe-guard
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+            <Link
+              href="/products/fabricationguard"
+              className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
+            >
+              <ShieldCheck className="h-3.5 w-3.5" />
+              FabricationGuard
             </Link>
             <Link
               href="/probebench"
               className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
             >
               <Trophy className="h-3.5 w-3.5" />
-              Browse ProbeBench
+              ProbeBench
             </Link>
             <Link
               href="/research"
@@ -61,7 +68,7 @@ export default function HomePage() {
               <span className="text-brand-500 select-none">$</span>
               <code className="flex-1 text-left text-ink-900 dark:text-ink-50">pip install openinterp</code>
               <span className="chip bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30">
-                v0.2.0 live
+                v0.3.0 live
               </span>
             </div>
           </div>
@@ -71,10 +78,10 @@ export default function HomePage() {
       {/* ===== Concrete proof strip ===== */}
       <section className="mx-auto max-w-7xl px-6 -mt-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Metric label="🛡️ 0.85 / 0.85" value="agent-probe-guard" detail="capability + thinking · ~50ms · v0.3.0 · detect-only" />
           <Metric label="🎯 0.88 AUROC" value="FabricationGuard" detail="cross-task hallucination · ~1ms · PyPI v0.2.0" />
           <Metric label="📊 5 probes" value="ProbeBench" detail="anti-Goodhart leaderboard · 7-axis ProbeScore · v0.0.1" />
-          <Metric label="📜 ICML MI #73" value="Paper-1 in review" detail="Hallucination-Induction, Not Calibration · notification June 12" />
-          <Metric label="⚙️ Apache 2.0" value="All artifacts" detail="5 GitHub repos · PyPI · 7 HF datasets · 1 SAE model" />
+          <Metric label="📜 ICML MI #73" value="Paper-1 in review" detail="Hallucination-Induction, Not Calibration · June 12" />
         </div>
       </section>
 
