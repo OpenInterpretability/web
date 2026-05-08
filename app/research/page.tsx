@@ -11,50 +11,73 @@ export const metadata = {
 
 const artifacts = [
   {
-    title: 'Qwen3.6-35B-A3B SAE at L23 — Stage Gate 1 passed (ρ=0.522)',
-    venue: 'GitHub release · mechreward catalog',
-    status: 'Published artifact',
-    url:
-      'https://github.com/OpenInterpretability/mechreward/blob/main/catalogs/qwen3.6-35b-a3b/reasoning_pack.json',
+    title: 'agent-probe-guard SDK v0.3.1',
+    venue: 'PyPI · openinterp · HF dataset · GitHub release',
+    status: 'Live · Apache-2.0',
+    url: 'https://pypi.org/project/openinterp/',
     summary:
-      'First SAE on triple-hybrid MoE + GDN + Gated-Attention architecture. Matches Qwen3.5-4B correlation level with 46% of the training budget.',
+      'Two-probe activation gate for code agents on Qwen3.6-27B (capability + thinking-intent). Skip / escalate / proceed routing, ~50ms gate, refit() helper for cross-env transfer. Detect-only by design — confirmed across 3 intervention experiments.',
   },
   {
-    title: 'Circuit-tracer integration gap report (4 concrete issues)',
-    venue: 'GitHub · mechreward',
-    status: 'Upstream issue pending',
-    url:
-      'https://github.com/OpenInterpretability/mechreward/blob/main/circuit_tracer_gap_report.md',
+    title: 'agent-probe-guard probe weights',
+    venue: 'HF dataset · caiovicentino1/agent-probe-guard-qwen36-27b',
+    status: 'Live · Apache-2.0',
+    url: 'https://huggingface.co/datasets/caiovicentino1/agent-probe-guard-qwen36-27b',
     summary:
-      'Integration audit of Anthropic\'s circuit-tracer against our hybrid-GDN SAEs. Four actionable gaps with reproducers.',
+      'L43 K=10 capability + L55 K=5 thinking probes for Qwen3.6-27B. CV AUROC 0.83 / 0.85 with random K-matched gap +0.08 / +0.15. Cross-env transfer caveat documented in paper Appendix C.',
+  },
+  {
+    title: 'Qwen3.6-27B paper-grade SAE',
+    venue: 'HF model · caiovicentino1/qwen36-27b-sae-papergrade',
+    status: 'Live · Apache-2.0',
+    url: 'https://huggingface.co/caiovicentino1/qwen36-27b-sae-papergrade',
+    summary:
+      'Multi-layer SAE on Qwen3.6-27B trained on 200M tokens. L11 ve=0.842 / L31 0.706 / L55 0.808. Only public SAE for Qwen3.6 reasoning model as of May 2026. Used by FabricationGuard, ReasonGuard, agent-probe-guard.',
+  },
+  {
+    title: 'Gemma-2-2B base/IT crosscoder (paper-grade)',
+    venue: 'HF model · caiovicentino1/gemma2-2b-crosscoder-model-diff-papergrade',
+    status: 'Live · Apache-2.0',
+    url: 'https://huggingface.co/caiovicentino1/gemma2-2b-crosscoder-model-diff-papergrade',
+    summary:
+      'BatchTopK crosscoder, 73,728 latents, k=100, expansion 32, layer 13. Trained on 100M tokens (FineWeb-Edu + UltraChat-200k). VE_A 0.877 / VE_B 0.867. Substrate for the Cosine-Causal Gap paper.',
+  },
+  {
+    title: 'SWE-bench Pro reproducible harness',
+    venue: 'GitHub · OpenInterpretability/openinterp-swebench-harness',
+    status: 'Live · Apache-2.0',
+    url: 'https://github.com/OpenInterpretability/openinterp-swebench-harness',
+    summary:
+      'V1 harness for collecting agent rollouts on SWE-bench Pro with residual-stream captures (transformers direct, forward hooks). Phase 1 N=20 + Phase 6 N=99 in flight. Substrate for Two Forms Epiphenomenal Probes paper.',
   },
 ]
 
 const roadmap = [
   {
-    quarter: 'Now',
+    quarter: 'Now (May 2026)',
     items: [
-      'Stage Gate 2 for Qwen3.6-35B-A3B (3-way reward ablation: R0 / R1 / R2)',
-      'Stage Gate 3 Phase A for Qwen3.6-35B-A3B',
-      'Cross-architecture benchmark matrix (GSM8K, SuperGPQA, MATH-500)',
+      'Phase 6 N=99 SWE-bench Pro trace collection (in flight, ~6h remaining at last check)',
+      'Paper-3 finalization with N=99 capability numbers + agent-probe-guard SDK v0.3.2 (Phase-1-real probes)',
+      'Paper-1 ICML MI Workshop notification awaited (June 12)',
     ],
   },
   {
-    quarter: 'Next',
+    quarter: 'Next (Jun-Sep 2026)',
     items: [
-      'Auto-interp pipeline (OpenInterp-labeled features)',
-      'Feature-pack marketplace v1 (community submissions)',
-      'Paper v1 on arXiv (paper-form of LW post + S4 extensions)',
-      'Gemma-4-E4B G1 + G2 + G3 full pipeline',
+      'NeurIPS MI Workshop 2026 submissions × 3 (Sep deadline): Cosine-Causal Gap, Probe-Detected Grokking, Two Forms Epiphenomenal Probes',
+      'nb47 v2 — Probe-gated memory with thinking-preservation prompt fix (RAG-breaks-CoT finding paper)',
+      'nb48 — LoRA distillation from probe-gated memory (completes 3-timescale stack)',
+      'MATS Winter 2027 application (opens July)',
     ],
   },
   {
-    quarter: 'Later',
+    quarter: 'Later (Q4 2026+)',
     items: [
-      'Safety-focused feature packs (beyond reasoning)',
+      'SAE-decoded steering experiments (Two Forms paper §6 future work, recover causal claim)',
+      'Cross-model crosscoder replication on Qwen + Llama (Qwen CSV currently empty, Llama unstarted)',
+      'nb37 v3 — extended DPO 400 steps × 40 checkpoints (confirms grokking phase transition continues)',
       'Integration with Anthropic circuit-tracer via native plugin',
-      'Multi-step, scheduled reward shaping (intentional design roadmap)',
-      'Hybrid-arch SAE training library (saelib-hybrid, fork of sae_lens)',
+      'Cross-architecture probe transfer matrix (Qwen3.6 ↔ Llama-3.3 ↔ Gemma-2)',
     ],
   },
 ]
@@ -72,7 +95,12 @@ export default function ResearchPage() {
       </header>
 
       <section className="mt-12">
-        <h2 className="text-xl font-semibold tracking-tight">Published / in review</h2>
+        <h2 className="text-xl font-semibold tracking-tight">Open artifacts</h2>
+        <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70 max-w-3xl leading-relaxed">
+          SDKs, probe weights, SAE / crosscoder models, and reproducible harnesses.
+          Apache-2.0 throughout. Every artifact is paired with a paper or eval doc that
+          documents how it was built and what it&apos;s for.
+        </p>
         <div className="mt-6 space-y-4">
           {artifacts.map((a) => (
             <article key={a.url} className="card p-6">
