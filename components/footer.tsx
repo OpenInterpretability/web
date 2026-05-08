@@ -33,6 +33,14 @@ export function Footer() {
             <li><Link href="/playground" className="hover:text-brand-600">Playground</Link></li>
             <li><Link href="/models" className="hover:text-brand-600">SAE models</Link></li>
             <li><Link href="/benchmarks" className="hover:text-brand-600">Benchmarks</Link></li>
+            <li>
+              <Link href="/interpscore" className="hover:text-brand-600">InterpScore</Link>
+              <span className="ml-1 block text-[10px] text-ink-900/40 dark:text-ink-50/40">SAE leaderboard</span>
+            </li>
+            <li>
+              <Link href="/probebench" className="hover:text-brand-600">ProbeBench</Link>
+              <span className="ml-1 block text-[10px] text-ink-900/40 dark:text-ink-50/40">Activation probes leaderboard</span>
+            </li>
           </ul>
         </div>
 

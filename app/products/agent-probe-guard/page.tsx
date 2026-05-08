@@ -34,8 +34,8 @@ const PYPI_URL = 'https://pypi.org/project/openinterp/'
 const GITHUB_RELEASE = 'https://github.com/OpenInterpretability/cli/releases/tag/v0.3.0'
 const GITHUB_REPO = 'https://github.com/OpenInterpretability/cli'
 const SWEBENCH_REPO = 'https://github.com/OpenInterpretability/openinterp-swebench-harness'
-const PAPER_DRAFT = 'https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/paper/two_forms_epiphenomenal_probes_neurips_mi_2026.md'
-const EVAL_V6 = 'https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/paper/preflight_probe_eval_v6_phase8_template_lock.md'
+const PAPER_DRAFT = '/research/papers/two-forms-epiphenomenal-probes'
+const EVAL_V6 = '/research/papers/preflight-probe-eval-v6'
 
 const installCmd = 'pip install --upgrade "openinterp[full]"'
 

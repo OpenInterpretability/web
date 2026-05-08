@@ -15,9 +15,13 @@ import {
   FlaskConical,
   Eye,
   AlertTriangle,
+  Trophy,
 } from 'lucide-react'
 import { site } from '@/lib/constants'
 import { CopyButton } from '@/components/copy-button'
+import { rankedProbes } from '@/lib/probebench-data'
+
+const FABRICATIONGUARD_PROBE_ID = 'openinterp/fabricationguard-qwen36-27b-l31-v2'
 
 export const metadata = {
   title: 'FabricationGuard — Open-source hallucination detection · OpenInterp',
@@ -121,6 +125,11 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
 // =============================================================================
 
 export default function FabricationGuardPage() {
+  const ranked = rankedProbes()
+  const fgEntry = ranked.find((r) => r.probe.id === FABRICATIONGUARD_PROBE_ID)
+  const fgRank = fgEntry?.score.globalRank
+  const fgScore = fgEntry?.score.total
+
   return (
     <div className="relative">
       {/* ============================================================ HERO */}
@@ -192,6 +201,50 @@ export default function FabricationGuardPage() {
             <Stat label="Latency / score call" value="~1 ms" sub="single matrix mul" />
           </div>
         </div>
+      </section>
+
+      {/* ============================================================ PROBEBENCH CALLOUT */}
+      <section className="mx-auto max-w-6xl px-6 -mt-2">
+        <Link
+          href={`/probebench/probe/${encodeURIComponent(FABRICATIONGUARD_PROBE_ID)}`}
+          className="group block card p-5 sm:p-6 bg-gradient-to-r from-brand-500/[0.06] via-accent-500/[0.05] to-transparent border-brand-500/20 hover:border-brand-500/40 hover:shadow-lg transition-all"
+        >
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <div className="h-10 w-10 shrink-0 rounded-lg bg-brand-500/15 flex items-center justify-center text-brand-700 dark:text-brand-300">
+                <Trophy className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-600 dark:text-brand-400">
+                  Registered on ProbeBench v0.0.1
+                </div>
+                <div className="mt-1 text-sm sm:text-base text-ink-900/85 dark:text-ink-50/85 leading-snug">
+                  FabricationGuard is the <strong>reference probe in the hallucination category</strong>
+                  {fgRank ? (
+                    <>
+                      {' — currently '}
+                      <span className="font-mono font-semibold">#{fgRank}</span>
+                      {' globally'}
+                      {fgScore != null ? (
+                        <>
+                          {' with a ProbeScore of '}
+                          <span className="font-mono font-semibold">{fgScore.toFixed(3)}</span>
+                        </>
+                      ) : null}
+                      .
+                    </>
+                  ) : (
+                    '.'
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-brand-600 dark:text-brand-400 group-hover:translate-x-0.5 transition-transform shrink-0">
+              View the full DNA card
+              <ArrowRight className="h-3.5 w-3.5" />
+            </div>
+          </div>
+        </Link>
       </section>
 
       {/* ============================================================ LIVE DEMO */}
@@ -437,6 +490,16 @@ out   = guard.generate("Who is Bambale Osby?", mode="abstain")`}
           LLM-judge tools and proprietary platforms run an entire second model to score
           each output. We capture an activation that the model already computed and run
           a 1-ms matrix multiplication. Different cost structure entirely.
+        </p>
+        <p className="mt-3 max-w-3xl text-xs text-ink-900/50 dark:text-ink-50/50 leading-relaxed">
+          Methodology extends Anthropic&apos;s{' '}
+          <a href="https://arxiv.org/abs/2507.21509" target="_blank" rel="noopener noreferrer"
+             className="text-brand-600 dark:text-brand-400 hover:underline">
+            persona-vectors approach
+          </a>{' '}
+          (Aug 2025, tested on 7-8B models) to Qwen3.6-27B (3-4× larger) with formal
+          cross-task AUROC + mitigation-rate evaluation. Apache-2.0 production-grade
+          implementation, not a proprietary platform.
         </p>
 
         <div className="mt-10 card overflow-hidden">

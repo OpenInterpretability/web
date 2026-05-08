@@ -14,16 +14,21 @@ const primaryNav = [
   { href: '/academy', label: 'Academy' },
   { href: '/products/fabricationguard', label: 'FabricationGuard', highlight: true as const },
   { href: '/products/agent-probe-guard', label: 'agent-probe-guard', highlight: true as const },
+  { href: '/probebench', label: 'ProbeBench', highlight: true as const },
 ]
 
 const secondaryNav = [
-  { href: '/interpscore', label: 'Leaderboard' },
+  { href: '/interpscore', label: 'InterpScore' },
   { href: '/blog', label: 'Blog' },
+  { href: '/docs', label: 'Docs' },
+]
+
+// Tertiary lives only in mobile menu + footer to keep desktop navbar from overflowing
+const tertiaryNav = [
   { href: '/contribute', label: 'Contribute' },
   { href: '/manifesto', label: 'Manifesto' },
   { href: '/roadmap', label: 'Roadmap' },
   { href: '/research', label: 'Research' },
-  { href: '/docs', label: 'Docs' },
 ]
 
 export function Navbar() {
@@ -40,26 +45,25 @@ export function Navbar() {
         </Link>
 
         {/* Primary (pillars) */}
-        <ul className="hidden lg:flex items-center gap-5 text-sm">
+        <ul className="hidden lg:flex items-center gap-4 text-sm">
           {primaryNav.map((item) => (
             <li key={item.href}>
               <Link
                 href={item.href}
                 className={
                   (item as any).highlight
-                    ? 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ring-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/15 transition-colors'
+                    ? 'inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-semibold ring-1 ring-inset ring-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/15 transition-colors'
                     : 'text-ink-900/70 dark:text-ink-50/70 hover:text-brand-600 dark:hover:text-brand-400 transition-colors font-medium'
                 }
               >
                 {(item as any).highlight ? <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse-slow" /> : null}
                 {item.label}
-                {(item as any).highlight ? <span className="ml-1 text-[10px] opacity-80">new</span> : null}
               </Link>
             </li>
           ))}
-          <li aria-hidden className="h-4 w-px bg-black/10 dark:bg-white/10" />
+          <li aria-hidden className="hidden xl:block h-4 w-px bg-black/10 dark:bg-white/10" />
           {secondaryNav.map((item) => (
-            <li key={item.href}>
+            <li key={item.href} className="hidden xl:block">
               <Link
                 href={item.href}
                 className="text-ink-900/50 dark:text-ink-50/50 hover:text-ink-900 dark:hover:text-ink-50 transition-colors"
@@ -85,7 +89,8 @@ export function Navbar() {
             href="/observatory/trace"
             className="hidden sm:inline-flex items-center gap-1 rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
           >
-            Open Trace Theater
+            <span className="hidden xl:inline">Open Trace Theater</span>
+            <span className="xl:hidden">Trace</span>
           </Link>
           <button
             onClick={() => setOpen((o) => !o)}
@@ -118,7 +123,7 @@ export function Navbar() {
               <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-1.5 pt-4">
                 More
               </div>
-              {secondaryNav.map((item) => (
+              {[...secondaryNav, ...tertiaryNav].map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}

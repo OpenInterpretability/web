@@ -72,3 +72,72 @@
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
   -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
 }
+
+/* Paper / longform markdown rendering */
+.paper-prose {
+  @apply text-base leading-relaxed text-ink-900/85 dark:text-ink-50/85;
+}
+.paper-prose h1 {
+  @apply text-3xl font-semibold tracking-tight mt-12 mb-4 text-ink-900 dark:text-ink-50;
+}
+.paper-prose h2 {
+  @apply text-2xl font-semibold tracking-tight mt-10 mb-3 text-ink-900 dark:text-ink-50;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+  padding-bottom: 0.4rem;
+}
+.paper-prose h3 {
+  @apply text-xl font-semibold mt-8 mb-2 text-ink-900 dark:text-ink-50;
+}
+.paper-prose h4 {
+  @apply text-lg font-semibold mt-6 mb-2 text-ink-900/90 dark:text-ink-50/90;
+}
+.paper-prose p {
+  @apply my-4;
+}
+.paper-prose ul, .paper-prose ol {
+  @apply my-4 pl-6 space-y-1;
+}
+.paper-prose ul { list-style: disc; }
+.paper-prose ol { list-style: decimal; }
+.paper-prose li {
+  @apply my-1;
+}
+.paper-prose a {
+  @apply text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 underline underline-offset-2;
+}
+.paper-prose strong {
+  @apply font-semibold text-ink-900 dark:text-ink-50;
+}
+.paper-prose em {
+  @apply italic;
+}
+.paper-prose code {
+  @apply rounded bg-black/[0.05] dark:bg-white/[0.07] px-1.5 py-0.5 text-[0.875em] font-mono text-brand-700 dark:text-brand-300;
+}
+.paper-prose pre {
+  @apply rounded-lg border border-black/10 dark:border-white/10 bg-ink-950 text-ink-50 p-4 my-5 overflow-x-auto text-sm leading-relaxed;
+}
+.paper-prose pre code {
+  @apply bg-transparent text-emerald-200 p-0;
+}
+.paper-prose blockquote {
+  @apply pl-4 my-5 border-l-4 border-brand-500/40 italic text-ink-900/70 dark:text-ink-50/70;
+}
+.paper-prose hr {
+  @apply my-10 border-t border-black/10 dark:border-white/10;
+}
+.paper-prose table {
+  @apply my-6 w-full text-sm border-collapse;
+}
+.paper-prose thead {
+  @apply border-b border-black/15 dark:border-white/15;
+}
+.paper-prose th {
+  @apply text-left font-semibold py-2 pr-4 text-ink-900 dark:text-ink-50;
+}
+.paper-prose td {
+  @apply py-2 pr-4 border-b border-black/[0.06] dark:border-white/[0.06];
+}
+.paper-prose img {
+  @apply my-6 rounded-lg max-w-full;
+}

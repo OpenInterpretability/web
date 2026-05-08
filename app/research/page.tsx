@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import { ExternalLink, FileText, BookOpen } from 'lucide-react'
+import { ExternalLink, FileText, BookOpen, ScrollText } from 'lucide-react'
 import { paperTopics, paperCount } from '@/lib/papers'
+import { papers as ownPapers } from '@/lib/papers-content'
 
 export const metadata = {
   title: 'Research — OpenInterp',
@@ -104,6 +105,73 @@ export default function ResearchPage() {
               </div>
             </article>
           ))}
+        </div>
+      </section>
+
+      {/* ===== Our papers (in-house authored, full text on site) ===== */}
+      <section className="mt-16">
+        <div className="flex items-baseline justify-between gap-3 flex-wrap mb-3">
+          <h2 className="text-xl font-semibold tracking-tight inline-flex items-center gap-2">
+            <ScrollText className="h-5 w-5 text-brand-600 dark:text-brand-400" />
+            Our papers
+          </h2>
+          <span className="text-xs font-mono text-ink-900/50 dark:text-ink-50/50">
+            {ownPapers.length} hosted on site · full text
+          </span>
+        </div>
+        <p className="text-sm text-ink-900/70 dark:text-ink-50/70 max-w-3xl mb-6 leading-relaxed">
+          Drafts, eval docs, and submitted papers authored by OpenInterp. Markdown source mirrored
+          from the research repos so you can read the exact text without leaving the site.
+        </p>
+        <div className="space-y-4">
+          {ownPapers.map((p) => {
+            const statusColor =
+              p.status === 'draft' ? 'bg-amber-500/10 text-amber-700 dark:text-amber-300 ring-amber-500/30' :
+              p.status === 'in-review' ? 'bg-blue-500/10 text-blue-700 dark:text-blue-300 ring-blue-500/30' :
+              p.status === 'submitted' ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30' :
+              'bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-brand-500/30'
+            return (
+              <Link
+                key={p.slug}
+                href={`/research/papers/${p.slug}`}
+                className="block card p-6 hover:border-brand-500/40 transition-colors"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 p-2 rounded-lg bg-brand-600/10 text-brand-600 shrink-0">
+                    <FileText className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-3">
+                      <h3 className="font-semibold text-base">{p.title}</h3>
+                      <span className={`chip ring-1 ring-inset ${statusColor}`}>{p.status}</span>
+                    </div>
+                    {p.subtitle ? (
+                      <p className="mt-1 text-sm text-ink-900/70 dark:text-ink-50/70 italic">
+                        {p.subtitle}
+                      </p>
+                    ) : null}
+                    <p className="mt-1 text-xs text-ink-900/50 dark:text-ink-50/50 font-mono">
+                      {p.authors} · {p.venue} · {p.date}
+                    </p>
+                    <p className="mt-3 text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed line-clamp-3">
+                      {p.abstract}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {p.tags?.slice(0, 5).map((t) => (
+                        <span
+                          key={t}
+                          className="chip bg-black/[0.04] dark:bg-white/[0.05] text-ink-900/60 dark:text-ink-50/60 ring-inset ring-1 ring-black/10 dark:ring-white/10"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-ink-900/30 dark:text-ink-50/30 shrink-0 mt-1" />
+                </div>
+              </Link>
+            )
+          })}
         </div>
       </section>
 
