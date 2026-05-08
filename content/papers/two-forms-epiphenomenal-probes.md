@@ -349,6 +349,16 @@ different fixes**. Future probe-causality work should report against this
 taxonomy, and our three sanity checks (§3) provide cheap diagnostics for
 each.
 
+We position both findings as instances of the broader eval-distribution-overfitting
+pattern documented by Anthropic Alignment (2026): an in-distribution metric
+(probe AUROC on the labelled distribution it was selected against) can pass
+while a held-out automated audit (behavioral steering at α >> ‖h‖, or output
+divergence under intervention) fails. The gap between detection and lever is
+itself an automated audit on a distribution the training signal does not
+span. The two mechanisms above are concrete instances of this structural
+risk for any probe shipped as a safety component without an explicit causal
+test against a control direction at amplitude.
+
 ---
 
 ## 7. Engineering — agent-probe-guard SDK
@@ -506,6 +516,10 @@ but at the cost of run-to-run variance that the ~$11 budget couldn't absorb.
 
 - Anthropic Persona Vectors (Aug 2025) — softmax-temperature artifacts in
   steering, residual-stream interventions.
+- Anthropic Alignment Team (2026), *Teaching Claude Why* — eval-distribution
+  overfitting at the alignment-training level; held-out automated auditing
+  catches what training-time metrics miss.
+  https://alignment.anthropic.com/2026/teaching-claude-why/
 - Belrose et al. (2024), tuned-lens — probes can predict outputs without
   being causal.
 - Marks & Rager (2024), edge attribution patching — feature-level intervention

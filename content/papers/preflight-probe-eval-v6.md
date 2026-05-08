@@ -199,5 +199,6 @@ For any linear-probe paper on instruction-tuned models with chat templates:
 - **Detection ≠ causation** (v5 lesson holds).
 - **For format-like or template-controlled outcomes, the decision is often in input tokens, not residuals.** Mid-layer steering at any α cannot reach it. The structural-rigidity diagnostic catches this in <60s of compute.
 - **Two failure modes for "probe doesn't lever"** are now documented in this work: softmax-temperature artifacts (Phase 7) and template-locked decisions (Phase 8). Future probe-causality work should report against this taxonomy.
+- **Detection ≠ causation is an instance of eval-distribution overfitting.** Anthropic Alignment (2026, *Teaching Claude Why*, https://alignment.anthropic.com/2026/teaching-claude-why/) document the same pattern at the alignment-training level: in-distribution metrics can pass while held-out automated auditing fails. Linear probe AUROC is the in-distribution metric here; behavioral steering at α >> ‖h‖ with both probe and random direction is the held-out audit. The two-mechanism taxonomy above is the failure-mode map for that audit in mech-interp tooling.
 
 The cumulative lesson across v2 → v6: every cheap sanity check we considered skipping turned out to flip a confident finding into an honest one. The discipline was net-positive at every step.

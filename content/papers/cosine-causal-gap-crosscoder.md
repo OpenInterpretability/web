@@ -306,6 +306,16 @@ practice — extract a feature, identify its high-cosine cross-model match,
 operate on the matched pair — passes the population-level test but, as we
 show, fails 38% of the time at the per-feature level.
 
+This failure mode mirrors a broader pattern in alignment evaluation. Anthropic
+Alignment (2026) document that training on the evaluation distribution can
+reduce a measured metric while leaving held-out automated auditing metrics
+unchanged. Decoder cosine is the in-distribution proxy here — measured on the
+same activations the crosscoder was trained to reconstruct. Pearson_CE is the
+held-out automated audit — measured under ablation on a probe set the
+crosscoder never saw and on a downstream output (KL between models) the
+crosscoder is not trained to align. The 38% gap is the size of the
+overfitting.
+
 ### 5.3 Compatible with existing pipelines
 
 Pearson_CE is a *complementary* diagnostic, not a replacement. It can be
@@ -425,6 +435,8 @@ Anthropic. (2025). *Crosscoder diffing update*. Transformer Circuits.
 https://transformer-circuits.pub/2025/crosscoder-diffing-update/index.html
 
 Anthropic. (2025). *Persona vectors: Identifying and modulating personality traits in language models*. Anthropic Research Blog.
+
+Anthropic Alignment Team. (2026). *Teaching Claude Why: Principle-based training generalizes better than behavioral imitation*. Anthropic Alignment Research. https://alignment.anthropic.com/2026/teaching-claude-why/
 
 Bhatt, M., et al. (2026). Dedicated Feature Crosscoders. *arXiv preprint arXiv:2602.11729*.
 

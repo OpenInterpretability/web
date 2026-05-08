@@ -143,6 +143,8 @@ Goodhart's law is typically discussed in terms of *reward hacking*: the model fi
 
 This is a more pernicious failure mode. Reward hacking is detectable by looking at the training reward closely (it spikes anomalously, or correlates with surface features). Structural Goodhart of the type we observe is invisible to the training-time metric by construction; it requires post-hoc fresh-probe analysis to detect.
 
+This same eval-distribution-overfitting pattern is documented at the alignment-training level by Anthropic Alignment (2026): an in-distribution metric (the original probes serving as preference signal) reports stability while held-out automated auditing (fresh-probe AUROC trained on each checkpoint's activations) reveals the model has shifted along directions the training-time signal cannot span. Fresh-probe AUROC plays the role their automated auditing metrics play in safety training: a measurement whose distribution does not coincide with the training reward, and which therefore retains discriminative power under structural Goodhart.
+
 ### 5.2 Fresh-probe AUROC as an evaluation axis
 
 We propose fresh-probe AUROC progression as a standard evaluation for any model trained with probe-derived signals. The procedure:
@@ -226,6 +228,8 @@ We thank the Qwen team (Alibaba) for releasing Qwen3.6-27B with reasoning suppor
 ## References
 
 Anthropic. (2025). *Persona vectors: Identifying and modulating personality traits in language models*. Anthropic Research Blog.
+
+Anthropic Alignment Team. (2026). *Teaching Claude Why: Principle-based training generalizes better than behavioral imitation*. Anthropic Alignment Research. https://alignment.anthropic.com/2026/teaching-claude-why/
 
 Cobbe, K., et al. (2021). Training verifiers to solve math word problems. *arXiv preprint arXiv:2110.14168* (GSM8K).
 
