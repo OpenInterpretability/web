@@ -145,6 +145,8 @@ This is a more pernicious failure mode. Reward hacking is detectable by looking 
 
 This same eval-distribution-overfitting pattern is documented at the alignment-training level by Anthropic Alignment (2026): an in-distribution metric (the original probes serving as preference signal) reports stability while held-out automated auditing (fresh-probe AUROC trained on each checkpoint's activations) reveals the model has shifted along directions the training-time signal cannot span. Fresh-probe AUROC plays the role their automated auditing metrics play in safety training: a measurement whose distribution does not coincide with the training reward, and which therefore retains discriminative power under structural Goodhart.
 
+OpenAI Alignment (2026), in their audit of accidental chain-of-thought grading during RL training, document the **behavioral** counterpart of our **mechanical** finding. They observed that when CoT text was inadvertently included in reward computation, "surface-level CoT properties were steerable under sufficient pressure, but more specific monitor-relevant shaping was harder to induce" — and detected "a meaningful reduction in recall for one of the flaky tool datasets" when comparing CoT-aware vs CoT-blind detectors. Their substrate is text-level reward; ours is activation-level reward. Their detection is a held-out behavioral classifier; ours is a fresh probe at the same residual position the training-time probe lived. The two studies thus give complementary evidence for the same structural risk: a reward computed from any signal X drives the model to satisfy X via mechanisms invisible to X. Our fresh-probe diagnostic provides the activation-level audit that their CoT-blind detector provides at the behavioral level.
+
 ### 5.2 Fresh-probe AUROC as an evaluation axis
 
 We propose fresh-probe AUROC progression as a standard evaluation for any model trained with probe-derived signals. The procedure:
@@ -230,6 +232,8 @@ We thank the Qwen team (Alibaba) for releasing Qwen3.6-27B with reasoning suppor
 Anthropic. (2025). *Persona vectors: Identifying and modulating personality traits in language models*. Anthropic Research Blog.
 
 Anthropic Alignment Team. (2026). *Teaching Claude Why: Principle-based training generalizes better than behavioral imitation*. Anthropic Alignment Research. https://alignment.anthropic.com/2026/teaching-claude-why/
+
+OpenAI Alignment Team. (2026). *Accidental Chain-of-Thought Grading: Audit and Monitorability Analysis*. OpenAI Alignment Research. https://alignment.openai.com/accidental-cot-grading/
 
 Cobbe, K., et al. (2021). Training verifiers to solve math word problems. *arXiv preprint arXiv:2110.14168* (GSM8K).
 

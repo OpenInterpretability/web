@@ -359,6 +359,17 @@ span. The two mechanisms above are concrete instances of this structural
 risk for any probe shipped as a safety component without an explicit causal
 test against a control direction at amplitude.
 
+OpenAI Alignment (2026), in their audit of accidental CoT-text grading,
+observed the same gap at the **behavioral** level: when CoT text was
+included in RL reward, "surface-level CoT properties were steerable under
+sufficient pressure, but more specific monitor-relevant shaping was harder
+to induce". Their finding is consistent with our two mechanisms: surface
+softmax-temperature shifts (paper §6.1) are reachable from any residual
+intervention, but the deeper template-locked or input-token-controlled
+decisions (paper §6.2) are structurally outside the reach of the residual
+where the probe is read. We thus interpret their empirical observation as
+behavioral evidence for the two-mechanism taxonomy we identify mechanistically.
+
 ---
 
 ## 7. Engineering — agent-probe-guard SDK
@@ -520,6 +531,11 @@ but at the cost of run-to-run variance that the ~$11 budget couldn't absorb.
   overfitting at the alignment-training level; held-out automated auditing
   catches what training-time metrics miss.
   https://alignment.anthropic.com/2026/teaching-claude-why/
+- OpenAI Alignment Team (2026), *Accidental Chain-of-Thought Grading* —
+  behavioral audit of CoT text in RL reward; "surface CoT steerable, deeper
+  monitor-relevant shaping harder" empirical pattern matching the two-mechanism
+  taxonomy of this paper.
+  https://alignment.openai.com/accidental-cot-grading/
 - Belrose et al. (2024), tuned-lens — probes can predict outputs without
   being causal.
 - Marks & Rager (2024), edge attribution patching — feature-level intervention

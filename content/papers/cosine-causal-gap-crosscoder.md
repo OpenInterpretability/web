@@ -314,7 +314,13 @@ same activations the crosscoder was trained to reconstruct. Pearson_CE is the
 held-out automated audit — measured under ablation on a probe set the
 crosscoder never saw and on a downstream output (KL between models) the
 crosscoder is not trained to align. The 38% gap is the size of the
-overfitting.
+overfitting. OpenAI Alignment (2026), auditing accidental CoT-text grading
+in RL training, document the same pattern in a different substrate: a
+training-time signal (CoT-aware reward) reports stability while held-out
+auditors (CoT-blind detectors) reveal degraded recall on specific
+distributions. Our cosine-CE gap is the crosscoder-universality instance of
+the same in-distribution-vs-held-out-audit pattern these two alignment-team
+findings document at the training level.
 
 ### 5.3 Compatible with existing pipelines
 
@@ -437,6 +443,8 @@ https://transformer-circuits.pub/2025/crosscoder-diffing-update/index.html
 Anthropic. (2025). *Persona vectors: Identifying and modulating personality traits in language models*. Anthropic Research Blog.
 
 Anthropic Alignment Team. (2026). *Teaching Claude Why: Principle-based training generalizes better than behavioral imitation*. Anthropic Alignment Research. https://alignment.anthropic.com/2026/teaching-claude-why/
+
+OpenAI Alignment Team. (2026). *Accidental Chain-of-Thought Grading: Audit and Monitorability Analysis*. OpenAI Alignment Research. https://alignment.openai.com/accidental-cot-grading/
 
 Bhatt, M., et al. (2026). Dedicated Feature Crosscoders. *arXiv preprint arXiv:2602.11729*.
 
