@@ -36,6 +36,7 @@ export const papers: PaperMeta[] = [
       { label: "kitft NLA Gemma-3-12B-L32 AR (HF)", href: "https://huggingface.co/kitft/nla-gemma3-12b-L32-ar" },
       { label: "kitft NLA Gemma-3-27B-L41 AV (HF)", href: "https://huggingface.co/kitft/nla-gemma3-27b-L41-av" },
       { label: "kitft NLA Gemma-3-27B-L41 AR (HF)", href: "https://huggingface.co/kitft/nla-gemma3-27b-L41-ar" },
+      { label: "Reproducibility data (HF dataset — all 3 models)", href: "https://huggingface.co/datasets/caiovicentino1/openinterp-paper7-nla-two-tier-verbalization" },
       { label: "Anthropic NLA paper", href: "https://transformer-circuits.pub/2026/nla/index.html" },
       { label: "kitft/nla-inference (canonical recipe)", href: "https://github.com/kitft/nla-inference" },
     ],
