@@ -16,6 +16,28 @@ export interface PaperMeta {
 
 export const papers: PaperMeta[] = [
   {
+    slug: "saturation-direction-probe-levers",
+    title: "Saturation-Direction Lever",
+    subtitle:
+      "A Five-Class Taxonomy of Probe Causality in Qwen3.6-27B",
+    authors: "Caio Vicentino",
+    venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft)",
+    status: "draft",
+    date: "2026-05-09",
+    abstract:
+      "Linear probes routinely achieve high predictive AUROC, yet their causal authority — whether their direction levers downstream behavior — has been only sparsely tested at frontier scale. We map probe causality across 8 probes (5 layers, 5 positions, 3 training-objective classes) on Qwen3.6-27B using a unified protocol combining bidirectional α-sweep up to α=±200, random K-matched control direction, control-token-normalized log-prob shifts, structural-rigidity diagnostic, and whitespace-stripped behavioral flip metric. We document five empirical classes of probe-causality regime and identify a single unifying principle — probes lever in the saturation direction of the baseline residual — that explains all observed asymmetric-lever cases including a falsified prediction. The classes are: (1) surface softmax-temperature artifact (L43 capability), (2) template-locked categorical decision (L55 thinking emission, L31 fabrication-detection), (3) structural fragility at fragile layers (L11/L43 think_start), (4a) pushup-asymmetric lever for reasoning quality at high amplitude (RG L55 mid_think, +30pp gap), and (4b) pushdown-asymmetric lever for capability and persona at high amplitude (5 sites, +30 to +60pp gap). We falsify the naive prediction that continuous-gradient probes lever in the pushup direction by demonstrating that persona — a continuous gradient — levers in the pushdown direction when the test prompt's baseline is in the helpful saturation region.",
+    artifacts: [
+      { label: "SWE-bench harness (GitHub)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness" },
+      { label: "Phase 11 capability locus notebook", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/notebooks/nb_swebench_v11_capability_locus.ipynb" },
+      { label: "Phase 11b extension notebook", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/notebooks/nb_swebench_v11b_capability_locus_extension.ipynb" },
+      { label: "Phase 12 persona-falsifier notebook", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/notebooks/nb_swebench_v12_persona_falsifier.ipynb" },
+      { label: "Causal locus protocol spec", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/paper/paper5_causal_locus_protocol.md" },
+      { label: "Meta-analysis of probe AUROCs", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/paper/paper5_causal_locus_meta_analysis.md" },
+      { label: "openinterp SDK (PyPI)", href: "https://pypi.org/project/openinterp/" },
+    ],
+    tags: ["linear probes", "causal interpretability", "saturation direction", "asymmetric lever", "Qwen3.6-27B", "probe causality"],
+  },
+  {
     slug: "cosine-causal-gap-crosscoder",
     title: "The Cosine–Causal Gap in Cross-Model Crosscoders",
     subtitle:
