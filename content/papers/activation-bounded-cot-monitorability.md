@@ -242,12 +242,12 @@ fidelity than text monitors can.
 
 We propose the following heuristic bound on text-only CoT monitorability:
 
-> Let $V$ be the set of safety-relevant reasoning decisions a model
-> makes for a given task distribution. Partition $V$ into $V_T$ (template-locked,
-> input-encoded), $V_E$ (epiphenomenal at the layer-position of interest,
-> residual-encoded as surface artifact only), and $V_R$ (residual-leverable,
+> Let V be the set of safety-relevant reasoning decisions a model
+> makes for a given task distribution. Partition V into V_T (template-locked,
+> input-encoded), V_E (epiphenomenal at the layer-position of interest,
+> residual-encoded as surface artifact only), and V_R (residual-leverable,
 > direction-specifically encoded). Then text-only CoT monitorability
-> upper-bounds at $|V_E \cup V_R| / |V|$ — the fraction of decisions
+> upper-bounds at |V_E ∪ V_R| / |V| — the fraction of decisions
 > that are encoded somewhere the residual stream can read and the
 > tokenizer can express.
 
@@ -256,22 +256,22 @@ also pays the costs of unfaithful verbalisation, lossy tokenisation,
 and generation-policy-imposed selection. The empirical CoT monitorability
 metric of [arXiv 2510.27378](https://arxiv.org/abs/2510.27378), which
 measures the fraction of decisions actually reflected in the trace, is
-strictly $\le |V_E \cup V_R| / |V|$ by construction.
+strictly ≤ |V_E ∪ V_R| / |V| by construction.
 
 Activation-derived monitoring has a different bound. It can observe
-decisions in $V_E \cup V_R$ at the residual position where they are
+decisions in V_E ∪ V_R at the residual position where they are
 encoded, regardless of whether the trace text reflects them. In practice,
-its monitorability ratio is closer to $|V_R| / |V|$ — direction-specific
+its monitorability ratio is closer to |V_R| / |V| — direction-specific
 decisions can be classified with linear probes; epiphenomenal decisions
 cannot be reliably distinguished by a single direction. But activation
-monitoring catches what trace monitoring cannot: decisions in $V_R$ that
-the model omits from the trace, and decisions in $V_E$ that the trace
+monitoring catches what trace monitoring cannot: decisions in V_R that
+the model omits from the trace, and decisions in V_E that the trace
 reports faithfully but where intervention is impossible.
 
 The two monitoring strategies are not redundant. They are
 *structurally complementary*: text monitoring samples a noisier subset
-of the union $V_E \cup V_R$, while activation monitoring samples a
-cleaner subset of $V_R$. Neither catches decisions in $V_T$, the
+of the union V_E ∪ V_R, while activation monitoring samples a
+cleaner subset of V_R. Neither catches decisions in V_T, the
 template-locked set.
 
 For Qwen3.6-27B specifically, our four-locus measurement gives a sketch
@@ -279,15 +279,15 @@ of the partition for the SWE-bench Pro / code-agent task distribution:
 
 | Locus | Class | Detectable in trace text | Leverable via residual |
 |---|---|---|---|
-| L55 thinking emission | $V_T$ template-locked | partial (emit/skip is observable) | no |
-| L43 pre_tool tool selection | $V_E$ epiphenomenal | yes | not direction-specifically |
-| L31 pre_tool capability | $V_R$ residual-leverable | partial | yes (+40pp pushdown at α=−100) |
-| L43 last_prompt persona | $V_R$ residual-leverable | partial (style hints leak) | yes (+60pp pushdown at α=−200) |
-| L55 mid_think quality | $V_R$ residual-leverable | yes (verbalised reasoning) | yes (+30pp pushup at α=+200) |
+| L55 thinking emission | V_T template-locked | partial (emit/skip is observable) | no |
+| L43 pre_tool tool selection | V_E epiphenomenal | yes | not direction-specifically |
+| L31 pre_tool capability | V_R residual-leverable | partial | yes (+40pp pushdown at α=−100) |
+| L43 last_prompt persona | V_R residual-leverable | partial (style hints leak) | yes (+60pp pushdown at α=−200) |
+| L55 mid_think quality | V_R residual-leverable | yes (verbalised reasoning) | yes (+30pp pushup at α=+200) |
 
 Two of the four documented decision categories
-sit in the residual-leverable regime ($V_R$), one is template-locked
-($V_T$), one is epiphenomenal ($V_E$). For a hypothetical text-only
+sit in the residual-leverable regime (V_R), one is template-locked
+(V_T), one is epiphenomenal (V_E). For a hypothetical text-only
 monitoring strategy on Qwen3.6-27B at this task distribution: at most
 4/5 = 80% of these decisions are even visible in principle to a CoT
 text monitor, and the missing 20% (the choice to think at all) is a
@@ -313,7 +313,7 @@ monitorability "differs sharply across model families", and the
 verbosity/faithfulness composite score is itself distribution-dependent
 (longer prompts produce longer traces with more headroom for omission).
 This is not a contradiction; it is a structural feature.
-Activation-derived signals at $V_R$ loci can be more
+Activation-derived signals at V_R loci can be more
 distribution-robust than text-derived signals because the
 residual-stream encoding of the decision has a stable direction across
 distributions, while the verbalisation policy that decides what to put
@@ -323,7 +323,7 @@ generation-time cues.
 For policy frameworks that depend on monitor reliability across the
 deployment-time distribution shift between safety eval and real-world
 agentic use ([Anthropic 2026 alignment auditing](https://alignment.anthropic.com/2026/auditbench/)),
-activation monitoring at $V_R$ loci is the structurally less brittle
+activation monitoring at V_R loci is the structurally less brittle
 half of the monitoring stack.
 
 ---
@@ -337,9 +337,9 @@ deploying frontier reasoning models. We endorse the recommendation and
 note one structural addition the brief does not currently include.
 
 A monitorability evaluation that scores only what appears in trace text
-will, by construction, miss decisions in $V_T$. For thinking-mode chat
-templates, $V_T$ contains the decision to engage thinking at all. For
-broader chat-template families, $V_T$ contains every decision encoded
+will, by construction, miss decisions in V_T. For thinking-mode chat
+templates, V_T contains the decision to engage thinking at all. For
+broader chat-template families, V_T contains every decision encoded
 in system prompts, function-call schemas, retrieval-injected context,
 and tokenizer-level pre-processing. A model deployed with a chat template
 that encodes capability gating in the template (rather than in the
@@ -359,7 +359,7 @@ components:
    ([openinterp.org/probebench](https://openinterp.org/probebench))
    provides a public leaderboard for AUROC-only versions.
 3. **Template-audit evaluation**: enumerate the chat-template-encoded
-   decisions ($V_T$) and assess them as part of model deployment
+   decisions (V_T) and assess them as part of model deployment
    review, separately from inference-time monitoring.
 
 Component 1 catches what is text-leaked. Component 2 catches what is
@@ -378,10 +378,10 @@ linear probes outperformed SAEs on harmful-intent detection (0.999+ AUROC
 including OOD vs. distinctly worse for k-sparse SAE probes) —
 is consistent with this framing. Linear probes operate at the residual
 stream level and are, in our taxonomy, the activation-monitoring tool
-of choice for $V_E \cup V_R$ decisions. SAEs offer a different
-decomposition but face the same structural ceiling for $V_T$ decisions
+of choice for V_E ∪ V_R decisions. SAEs offer a different
+decomposition but face the same structural ceiling for V_T decisions
 that linear probes face. Text monitoring, in turn, faces a different
-ceiling on $V_T$ decisions that is independent of which residual
+ceiling on V_T decisions that is independent of which residual
 decomposition one uses.
 
 ---
@@ -389,11 +389,11 @@ decomposition one uses.
 ## 7. Limitations and open questions
 
 **Single model.** All evidence in this paper comes from Qwen3.6-27B.
-We do not claim that the partition $\{V_T, V_E, V_R\}$ has the same
+We do not claim that the partition {V_T, V_E, V_R} has the same
 shape for other reasoning models. The Universal Refusal Circuits paper
 ([arXiv 2601.16034](https://arxiv.org/html/2601.16034)) showed that
 refusal circuits transfer across models; we do not yet know whether the
-$V_T$/$V_E$/$V_R$ partition transfers across models. Replication on
+V_T/V_E/V_R partition transfers across models. Replication on
 Gemma-2-2B-IT, Llama-3.1-8B, and ideally a Claude-class model is the
 single largest open task.
 
@@ -405,8 +405,8 @@ plausibly generalise; thinking-mode template-lock plausibly does not
 generalise to non-reasoning models.
 
 **Bound is heuristic, not derived from first principles.** We have
-not derived $|V_E \cup V_R|/|V|$ from a formal information-theoretic
-argument. The argument we make is structural (decisions in $V_T$ cannot
+not derived |V_E ∪ V_R|/|V| from a formal information-theoretic
+argument. The argument we make is structural (decisions in V_T cannot
 appear in trace text by construction) but not quantitative beyond the
 four-locus sketch.
 
@@ -422,7 +422,7 @@ monitoring in current safety pipelines.
 work on distributed-output-template-driven in-context learning
 ([arXiv 2605.04061](https://arxiv.org/html/2605.04061)) shows that
 single-position interventions can fail because the relevant computation
-is distributed across multiple positions. Our $V_R$ classification
+is distributed across multiple positions. Our V_R classification
 assigns decisions to single layer-position pairs; a more refined
 treatment would partition across position-sets.
 
@@ -432,13 +432,13 @@ treatment would partition across position-sets.
 
 We measured four reasoning loci on Qwen3.6-27B using activation
 intervention and classified each by where the decision is encoded:
-template-locked input ($V_T$, 1/4), epiphenomenal residual surface
-($V_E$, 1/4), or direction-specifically residual-encoded ($V_R$, 2/4).
+template-locked input (V_T, 1/4), epiphenomenal residual surface
+(V_E, 1/4), or direction-specifically residual-encoded (V_R, 2/4).
 We argued that text-only chain-of-thought monitoring has an upper bound
-on monitorability of $|V_E \cup V_R|/|V|$ — the fraction of decisions
+on monitorability of |V_E ∪ V_R|/|V| — the fraction of decisions
 the residual stream encodes and the tokenizer can express — and that
 activation-derived monitoring complements it by catching the
-$V_R$ decisions that text omits. Template-locked decisions are
+V_R decisions that text omits. Template-locked decisions are
 invisible to both monitoring strategies and require separate template
 audit at deployment time.
 
