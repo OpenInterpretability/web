@@ -37,15 +37,24 @@ additionally flips via OOD-semantic perturbation in the saturated
 subspace. We release the protocol, all 6 capture batches, and per-site
 verdicts under Apache-2.0 and propose the saturation-direction lever as a
 predictive heuristic for which behavioral interventions a given probe
-will and will not afford. Two cross-distribution validations on
-BigCodeBench (Qwen pass-rate ~55%) and Codeforces rating ≥2000 (~7%)
-extend the α=−100 pushdown gap to +33pp and +40pp respectively, matching
-the +40pp on HumanEval+MBPP (~89%). The α=−100 locus is
-**saturation-independent** across distributions spanning ~12× pass-rate
-variation, yielding the **α=−100 robustness theorem**. We pre-registered
-and falsified a saturation-magnitude corollary (predicted lever weakening
-at lower saturation) using the Codeforces test, leaving the simpler
-saturation-direction principle as the surviving claim.
+will and will not afford. Cross-distribution validations on BigCodeBench
+(Qwen pass-rate ~55%) and Codeforces rating ≥2000 (~7%) extend the
+α=−100 pushdown gap from HumanEval+MBPP (~89%) and reveal a
+**site-dependent robustness profile**. Two of four pushdown-asymmetric
+capability sites — L23 pre_tool and L31 pre_tool — are
+saturation-independent: α=−100 pushdown gap holds at +43pp and +37pp on
+Codeforces vs +50pp and +40pp on HumanEval+MBPP. Two other sites — L43
+turn_end and L55 pre_tool — are saturation-coupled: L43 turn_end's
+gap collapses (+7pp on Codeforces vs +40pp on HumanEval+MBPP), while
+L55 pre_tool *flips direction* from pushdown on the saturated
+distribution to pushup at α=+200 on the unsaturated distribution. The
+direction flip is consistent with the saturation-direction principle
+itself: the lever pushes against the baseline saturation, and when
+saturation flips, the lever flips. We pre-registered and walked back two
+predictions in this paper (categorical-vs-continuous lever, then
+saturation-magnitude corollary), and the surviving thesis combines a
+**site-partitioned robustness theorem** with the
+**saturation-direction principle** that subsumes it.
 
 **Keywords**: linear probes, activation steering, causal interpretability,
 mechanistic interpretability, Qwen3.6-27B, asymmetric lever, saturation
@@ -439,81 +448,93 @@ limited reach for "monitor-relevant" properties: the relevant features
 are upstream in the saturation region and reward pressure cannot
 constructively reach beyond the existing saturation.
 
-### 5.5 Cross-distribution validation — α=−100 robustness theorem
+### 5.5 Cross-distribution validation — site-partitioned robustness
 
-We tested distribution-robustness in two stages. The same L31 pre_tool
-probe direction (trained on Phase 6 SWE-bench Pro, N=99, top-K=10
-diff-of-means) was applied unchanged to two new code distributions
+We tested distribution-robustness in three stages. The same probe
+directions (trained on Phase 6 SWE-bench Pro, N=99, top-K=10
+diff-of-means) were applied unchanged to new code distributions
 spanning a wide saturation range.
 
-**Phase 11c (BigCodeBench)**: 30 prompts. Qwen3.6-27B baseline pass
-rate plausibly ~55% (longer realistic prompts than HE+MBPP). Result:
-α=−100 pushdown gap +33.3pp.
+**Phase 11c (BigCodeBench, single site)**: 30 prompts, L31 pre_tool only.
+Qwen3.6-27B baseline pass rate plausibly ~55%. α=−100 pushdown gap
++33.3pp.
 
-**Phase 11d (Codeforces, rating ≥ 2000)**: 30 prompts from the
-`open-r1/codeforces` dataset filtered to competitive-programming
-ratings ≥ 2000. Qwen3.6-27B pass rate at this difficulty is widely
-reported around 5-10% — the lowest-saturation regime we could
-plausibly construct without leaving code modality. Result: α=−100
-pushdown gap +40.0pp.
+**Phase 11d (Codeforces, single site)**: 30 prompts from
+`open-r1/codeforces` filtered to ratings ≥ 2000. Qwen pass rate ~5-10%
+(lowest in-modality regime). L31 pre_tool only. α=−100 pushdown gap
++40.0pp.
 
-| α | P11 (HE+MBPP) | P11c (BCB) | P11d (CF ≥2000) |
-|---|---|---|---|
-| Qwen pass-rate | ~89% | ~55% | ~7% |
-| **−100** | **+40pp** | **+33.3pp** | **+40.0pp** |
-| −200 | +33pp | +13.3pp | +10.0pp |
-| −50 | +27pp | +10.0pp | −3.3pp |
-| −20 | +16pp | −10.0pp | −3.3pp |
-| ±5..±2 | flat | flat | flat |
-| +20 | 0pp | +26.7pp | +13.3pp |
-| +50 | +3pp | +3.3pp | −6.7pp |
-| +100 | −3pp | −16.7pp | −13.3pp |
-| +200 | −14pp | +23.3pp | +6.7pp |
+**Phase 11e (Codeforces, four sites)**: same 30 Codeforces prompts
+applied to all four pushdown-asymmetric capability sites identified in
+Phase 11+11b. The four-site test partitions the sites into two regimes:
 
-The α=−100 locus is **saturation-independent**: probe-vs-random gap
-holds at +33-40pp across distributions spanning ~12× variation in Qwen
-baseline pass rate. We name this the **α=−100 robustness theorem** for
-the L31 pre_tool capability lever.
+| Site | HE+MBPP α=−100 | Codeforces α=−100 | Δ | Regime |
+|---|---|---|---|---|
+| L23 pre_tool | +50pp | **+43.3pp** | −6.7 | saturation-independent |
+| L31 pre_tool | +40pp | **+36.7pp** | −3.3 | saturation-independent |
+| L43 turn_end | +40pp | +6.7pp | −33.3 | saturation-coupled |
+| L55 pre_tool | +34pp | −3.3pp | −37.3 | direction-flipped |
 
-#### Pre-registered falsification of the saturation-magnitude corollary
+Two of four sites — both at *pre_tool* position in early-to-mid layers —
+show saturation-independent α=−100 lever (gap holds at 87-94% of
+HE+MBPP value across the saturation range). Two of four sites — both at
+late-layer / non-*pre_tool* positions — do not. L43 turn_end's lever
+collapses with saturation; L55 pre_tool's lever *flips direction*,
+showing pushdown on the saturated distribution and a +40pp pushup at
+α=+200 on the unsaturated distribution.
 
-After Phase 11c we briefly (~3h) maintained a corollary to the
-saturation-direction principle:
+The α=−100 robustness theorem therefore holds **conditionally**: at
+decision-bottleneck pre_tool positions in early-to-mid layers, the
+pushdown lever is saturation-independent across code distributions
+spanning Qwen pass-rate ~7-89%. At other capability sites within the
+same broader class, the lever is saturation-coupled or direction-coupled.
 
-> *(provisional, since refuted)* The asymmetric lever magnitude is
-> proportional to the degree of baseline saturation along the probe
-> axis: strongly-saturated distributions give clean unidirectional
-> levers; weakly-saturated distributions give weaker bidirectional
-> levers.
+#### The L55 pre_tool direction flip *supports* saturation-direction
 
-The corollary made a sharp prediction for Phase 11d. Codeforces
-(rating ≥ 2000) is the lowest-saturation regime we could test,
-so the corollary predicted: pushdown gap should *collapse* (to <15pp
-or null) and pushup direction should *emerge* with gap >20pp at
-α ∈ {+20, +200}.
+The most informative finding is L55 pre_tool's direction reversal. On
+HumanEval+MBPP, where Qwen reaches ~89% pass rate (residual saturated
+toward success), the L55 pre_tool probe levers in the pushdown
+direction at α=−100 (+34pp gap). On Codeforces ≥2000, where Qwen
+reaches ~7% pass rate (residual saturated toward failure), the same
+probe direction levers in the *pushup* direction at α=+200 (+40pp
+gap). The lever pushes against the baseline saturation, and when the
+saturation flips, the lever flips. This is exactly what
+saturation-direction theory (§5.1) predicts. The α=−100 robustness
+theorem (uniform pushdown across distributions) is the *special case*
+of the saturation-direction principle in which the saturation
+direction is itself stable across distributions; when the saturation
+direction varies, the lever direction tracks it.
 
-The Codeforces data refutes both predictions:
-- Pushdown gap *did not* collapse — it landed at +40pp at α=−100,
-  numerically matching the highest-saturation regime.
-- Pushup direction *did not* strengthen — α=+20 gap is +13.3pp on CF
-  (vs +26.7pp on BCB) and α=+200 gap is +6.7pp on CF (vs +23.3pp on
-  BCB). The lower-saturation distribution shows a *weaker* pushup
-  signal than the moderate-saturation one.
+We refine the theory accordingly. **The site-partitioned robustness
+profile** of paper-5 capability sites:
 
-The BCB α=+20/+200 pushup signal was therefore distribution-specific
-noise, not a saturation-magnitude effect. The corollary is dropped.
-The simpler saturation-direction principle (§5.1) survives both
-falsification cycles (persona in §5.6, saturation-magnitude here).
+- **Saturation-independent** (L23 pre_tool, L31 pre_tool): baseline
+  residual is saturated toward success regardless of distribution.
+  α=−100 pushdown lever holds.
+- **Saturation-magnitude-coupled** (L43 turn_end): lever direction
+  matches baseline (pushdown) but magnitude scales with saturation
+  degree. The original §5.5 corollary applies here, after all.
+- **Saturation-direction-coupled** (L55 pre_tool): baseline saturation
+  direction itself flips with distribution. Lever direction follows.
 
-**Practical safety implication**: at moderate amplitude (α=−100), the
-L31 pre_tool capability probe yields a transferable pushdown lever
-across code distributions of widely varying difficulty. This is
-unusual — most probe-derived interventions reported in the literature
-do not transfer across saturation regimes. The robustness suggests
-the L31 pre_tool direction encodes a code-modality-general capability
-axis, not a HumanEval/MBPP-specific shortcut. We do not know whether
-this generalizes beyond the code modality (refusal, persona,
-factual-recall probes are open questions for paper-5 v2).
+#### What this does to the saturation-magnitude corollary we walked back
+
+We walked back the saturation-magnitude corollary in v3 of this paper
+when Phase 11d single-site (L31 pre_tool only) showed the gap holding
+at +40pp on Codeforces. With Phase 11e multi-site, the corollary is
+*partially* rehabilitated: it holds at L43 turn_end (gap collapsed
++40 → +7pp), is too weak at L23/L31 pre_tool (gap held), and is
+*backwards* at L55 pre_tool (saturation flips direction, not just
+magnitude). The saturation-direction principle is the more general
+truth; saturation-magnitude is one of three regimes within it.
+
+**Practical safety implication**: any deployment that treats the
+α=−100 capability lever as a generic intervention will hit
+site-specific failure modes. The lever is robust where the residual
+encodes a stable saturation direction across distributions. It is
+unstable where the saturation direction depends on the test
+distribution. Production probe deployments need site-by-site
+robustness measurement, not aggregate guarantees.
 
 ### 5.6 The 4 sanity checks save publishable claims
 
@@ -571,29 +592,35 @@ regime in Qwen3.6-27B, and identified a single unifying principle —
 that explains all five asymmetric-lever cases. The principle was
 arrived at via explicit falsification of an earlier
 categorical-vs-continuous frame using a persona-switch experiment that
-produced the opposite direction of the naive prediction. Two
-cross-distribution validations (BigCodeBench at Qwen pass-rate ~55%
-and Codeforces at ~7%) extended the L31 pre_tool +40pp pushdown gap
-to +33pp and +40pp respectively, matching the +40pp on HumanEval+MBPP
-(~89%). The α=−100 locus is saturation-independent across
-distributions spanning ~12× pass-rate variation — the **α=−100
-robustness theorem**. A second pre-registered prediction
-(saturation-magnitude corollary, holding that lever magnitude
-should scale with saturation degree) was falsified by the Codeforces
-data and is dropped, leaving the simpler saturation-direction
-principle as the surviving claim. We release all 7 capture batches,
-all per-site verdicts, and the unified protocol under Apache-2.0.
+produced the opposite direction of the naive prediction. Three
+cross-distribution validations (BigCodeBench at Qwen pass-rate ~55%,
+Codeforces at ~7%, and a four-site multi-locus extension on Codeforces)
+revealed that the α=−100 robustness is **site-partitioned**: at
+decision-bottleneck pre_tool positions in early-to-mid layers (L23,
+L31), the pushdown gap holds saturation-independently across
+distributions spanning ~12× pass-rate variation; at late-layer or
+non-pre_tool positions (L43 turn_end, L55 pre_tool) the lever shows
+saturation-magnitude or saturation-direction coupling. The most
+informative sub-finding is L55 pre_tool's *direction reversal*:
+pushdown on the saturated distribution, pushup on the unsaturated
+distribution at α=+200. The lever pushes against the baseline
+saturation, and when saturation flips, the lever flips — saturation-direction
+theory's central claim, expressed as data. The α=−100 robustness
+theorem is the special case in which the saturation direction itself
+is stable across distributions. We release all 8 capture batches, all
+per-site verdicts, and the unified protocol under Apache-2.0.
 
 The four sanity checks (paper-3 §3.1–§3.4) are mandatory rather than
 optional; three of the four caught confident-but-wrong claims during
-this work. The two pre-registered falsification cycles (persona →
-direction class refinement; saturation-magnitude corollary →
-α=−100 robustness theorem) further demonstrate that our claims
-have been stress-tested, not curated. We invite the community to
-apply the protocol to other probes and other models, and to test
-whether the α=−100 robustness extends across model families, modalities
-(refusal, persona, factual recall), and to non-code reasoning
-distributions.
+this work. We pre-registered and walked back two predictions in this
+paper — categorical-vs-continuous lever class (Phase 12 persona) and
+the saturation-magnitude corollary (Phase 11d single-site) — and the
+multi-site extension (Phase 11e) further refines the surviving claim
+to a *site-partitioned* form. We invite the community to apply the
+protocol to other probes and other models, and to test whether the
+site-partition (saturation-independent vs saturation-magnitude-coupled
+vs saturation-direction-coupled) replicates across model architectures
+and behavior classes beyond capability.
 
 ---
 
@@ -610,9 +637,10 @@ All artifacts public under Apache-2.0:
 | Phase 11b capability extension notebook | `notebooks/nb_swebench_v11b_capability_locus_extension.ipynb` |
 | Phase 12 persona-falsifier notebook | `notebooks/nb_swebench_v12_persona_falsifier.ipynb` |
 | Phase 11c cross-distribution notebook (BCB) | `notebooks/nb_swebench_v11c_cross_distribution.ipynb` |
-| Phase 11d cross-distribution Round 2 (Codeforces) | append-cells in `nb_swebench_v11c_cross_distribution.ipynb` |
+| Phase 11d cross-distribution Round 2 (Codeforces) | `notebooks/nb_swebench_v11d_codeforces.ipynb` |
+| Phase 11e multi-site Codeforces validation | `notebooks/nb_swebench_v11e_multisite_cf.ipynb` |
 | Phase 6 N=99 capture corpus | Drive `swebench_v6_phase6/` (99 traces, 89/10 labels, ~12k captures) |
-| Per-site verdict JSONs | Drive `phase7..phase12/*verdict.json`, `phase11c_cross_distribution/verdict.json`, `phase11d_cross_distribution_round2/verdict.json` |
+| Per-site verdict JSONs | Drive `phase7..phase12/*verdict.json`, `phase11c..11e_*/verdict.json` |
 | Causal locus protocol spec | `openinterp-swebench-harness/paper/paper5_causal_locus_protocol.md` |
 | Meta-analysis of probe AUROCs | `paper/paper5_causal_locus_meta_analysis.md` |
 | openinterp SDK | `pip install openinterp` (v0.3.1+) |
