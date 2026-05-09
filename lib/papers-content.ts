@@ -16,6 +16,25 @@ export interface PaperMeta {
 
 export const papers: PaperMeta[] = [
   {
+    slug: "activation-bounded-cot-monitorability",
+    title: "Activation-Bounded Chain-of-Thought Monitorability",
+    subtitle:
+      "Template-locked reasoning decisions and the structural ceiling on text-only CoT monitoring in Qwen3.6-27B",
+    authors: "Caio Vicentino",
+    venue: "Position paper, May 2026",
+    status: "draft",
+    date: "2026-05-09",
+    abstract:
+      "Chain-of-thought monitoring has emerged as a leading candidate for scalable AI safety oversight: if a long, serial reasoning process must pass through a textual trace, then reading that trace should reveal what the model is thinking. We argue this view is structurally incomplete in instruction-tuned reasoning models. The chat template that activates thinking mode in Qwen3.6-27B injects a fixed <think></think> token pair into the input itself; the decision to think at all is encoded in the prompt before the residual stream encodes anything else. We document this template-lock experimentally (bidirectional α-sweep up to ±200 in the L55 thinking probe direction produces zero behavioral change) and contrast it with three other reasoning loci where decisions are residual-stream-encoded and steerable: capability deployment (+33-40pp pushdown gap across distributions at α=−100), persona (+60pp pushdown at α=−200), and mid-reasoning quality (+30pp pushup at α=+200). We use this evidence to argue for an activation-derived monitorability bound: text-only CoT monitoring cannot, by construction, observe decisions made before the residual stream encodes them. Activation-derived monitoring is the structurally complementary half of any complete monitoring strategy. We discuss implications for the Frontier Model Forum's January 2026 issue brief and Anthropic's 2027 detection goal.",
+    artifacts: [
+      { label: "Paper-5 (empirical foundation)", href: "https://openinterp.org/research/papers/saturation-direction-probe-levers" },
+      { label: "SWE-bench harness (GitHub)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness" },
+      { label: "Phase 8 template-lock notebook", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/notebooks/nb_swebench_v9_phase8_causal_cot.ipynb" },
+      { label: "openinterp SDK (PyPI)", href: "https://pypi.org/project/openinterp/" },
+    ],
+    tags: ["chain-of-thought", "monitorability", "AI safety", "activation steering", "template-lock", "Qwen3.6-27B", "Frontier Model Forum"],
+  },
+  {
     slug: "saturation-direction-probe-levers",
     title: "Saturation-Direction Lever",
     subtitle:
