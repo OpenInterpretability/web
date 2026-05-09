@@ -27,6 +27,22 @@ const artifacts = [
       'L43 K=10 capability + L55 K=5 thinking probes for Qwen3.6-27B. CV AUROC 0.83 / 0.85 with random K-matched gap +0.08 / +0.15. Cross-env transfer caveat documented in paper Appendix C.',
   },
   {
+    title: 'NLA two-tier verbalization — three-model dataset',
+    venue: 'HF dataset · caiovicentino1/openinterp-paper7-nla-two-tier-verbalization',
+    status: 'Live · Apache-2.0',
+    url: 'https://huggingface.co/datasets/caiovicentino1/openinterp-paper7-nla-two-tier-verbalization',
+    summary:
+      'Reproducibility artifacts for the "Reconstruction Without Recall" paper — Phase 16 result JSONs (N=150 per model) + AV explanations across V1 Qwen2.5-7B-L20, V2 Gemma-3-12B-L32, V3 Gemma-3-27B-L41 NLA pairs from the kitft release. Documents the three differential scaling axes and format-prior contraction.',
+  },
+  {
+    title: 'Probe-detected grokking — DPO sweep dataset',
+    venue: 'HF dataset · caiovicentino1/openinterp-41v2-grokking-extended',
+    status: 'Live · Apache-2.0',
+    url: 'https://huggingface.co/datasets/caiovicentino1/openinterp-41v2-grokking-extended',
+    summary:
+      'Forward-only sweep across 11 multi-probe DPO checkpoints on Qwen3.6-27B. Fresh-probe AUROC trajectory 0.472 → 0.528 with late/early slope ratio 2.60 — the grokking signature orthogonal to original FG/RG axes. Companion to the multi-probe DPO checkpoints (caiovicentino1/openinterp-37v2-multiprobe-dpo-extended).',
+  },
+  {
     title: 'Qwen3.6-27B paper-grade SAE',
     venue: 'HF model · caiovicentino1/qwen36-27b-sae-papergrade',
     status: 'Live · Apache-2.0',
@@ -35,12 +51,28 @@ const artifacts = [
       'Multi-layer SAE on Qwen3.6-27B trained on 200M tokens. L11 ve=0.842 / L31 0.706 / L55 0.808. Only public SAE for Qwen3.6 reasoning model as of May 2026. Used by FabricationGuard, ReasonGuard, agent-probe-guard.',
   },
   {
+    title: 'Qwen3.6-27B full-stack SAE (PGAC)',
+    venue: 'HF model · caiovicentino1/qwen36-27b-sae-fullstack',
+    status: 'Live · Apache-2.0',
+    url: 'https://huggingface.co/caiovicentino1/qwen36-27b-sae-fullstack',
+    summary:
+      'Eleven-layer TopK SAE stack covering every 5th layer of Qwen3.6-27B for Probe-Gated Adaptive Compute (PGAC). d_sae 40,960, k=128, 200M tokens. Substrate for the 3.57× compound inference speedup at iso-SAE-floor result.',
+  },
+  {
     title: 'Gemma-2-2B base/IT crosscoder (paper-grade)',
     venue: 'HF model · caiovicentino1/gemma2-2b-crosscoder-model-diff-papergrade',
     status: 'Live · Apache-2.0',
     url: 'https://huggingface.co/caiovicentino1/gemma2-2b-crosscoder-model-diff-papergrade',
     summary:
       'BatchTopK crosscoder, 73,728 latents, k=100, expansion 32, layer 13. Trained on 100M tokens (FineWeb-Edu + UltraChat-200k). VE_A 0.877 / VE_B 0.867. Substrate for the Cosine-Causal Gap paper.',
+  },
+  {
+    title: 'FabricationGuard linear probe',
+    venue: 'HF dataset · caiovicentino1/FabricationGuard-linearprobe-qwen36-27b',
+    status: 'Live · Apache-2.0',
+    url: 'https://huggingface.co/datasets/caiovicentino1/FabricationGuard-linearprobe-qwen36-27b',
+    summary:
+      'Linear probe at L31 on Qwen3.6-27B residual stream. HaluEval within 0.90, SimpleQA cross 0.88, −88% confidently-wrong reduction in SimpleQA. Powers the FabricationGuard product and the multi-probe DPO joint reward.',
   },
   {
     title: 'SWE-bench Pro reproducible harness',
@@ -133,6 +165,32 @@ export default function ResearchPage() {
               </div>
             </article>
           ))}
+        </div>
+
+        <div className="mt-6 card p-5 bg-brand-500/5 flex flex-wrap items-center justify-between gap-4">
+          <div className="text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
+            Plus <span className="font-semibold text-ink-900 dark:text-ink-50">~60 SAEs, probes, datasets, and intermediate artifacts</span> on
+            Hugging Face — every published paper&apos;s reproducibility data, training checkpoints, and probe weights.
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="https://huggingface.co/caiovicentino1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 underline decoration-dotted"
+            >
+              Browse all on Hugging Face <ExternalLink className="h-3.5 w-3.5" />
+            </Link>
+            <span className="text-ink-900/30 dark:text-ink-50/30">·</span>
+            <Link
+              href="https://github.com/OpenInterpretability"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 underline decoration-dotted"
+            >
+              GitHub org <ExternalLink className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </div>
       </section>
 
