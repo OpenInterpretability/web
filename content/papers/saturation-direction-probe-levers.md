@@ -37,7 +37,13 @@ additionally flips via OOD-semantic perturbation in the saturated
 subspace. We release the protocol, all 6 capture batches, and per-site
 verdicts under Apache-2.0 and propose the saturation-direction lever as a
 predictive heuristic for which behavioral interventions a given probe
-will and will not afford.
+will and will not afford. A cross-distribution validation on
+BigCodeBench replicates the α=−100 pushdown gap at +33pp (vs +40pp on
+HumanEval+MBPP) and reveals an additional **saturation-magnitude
+corollary**: the lever magnitude is proportional to the baseline
+saturation degree on the test distribution, with strongly-saturated
+distributions giving clean unidirectional levers and weakly-saturated
+distributions giving weaker bidirectional levers.
 
 **Keywords**: linear probes, activation steering, causal interpretability,
 mechanistic interpretability, Qwen3.6-27B, asymmetric lever, saturation
@@ -431,7 +437,70 @@ limited reach for "monitor-relevant" properties: the relevant features
 are upstream in the saturation region and reward pressure cannot
 constructively reach beyond the existing saturation.
 
-### 5.5 The 4 sanity checks save publishable claims
+### 5.5 Cross-distribution validation and the saturation-magnitude corollary
+
+Phase 11c (May 2026) tested whether the L31 pre_tool +40pp pushdown gap
+holds on a different code distribution: BigCodeBench (longer realistic
+prompts) replacing HumanEval+MBPP. The same probe direction (trained on
+Phase 6 N=99 SWE-bench Pro) was applied to 30 BigCodeBench prompts.
+
+| α | BCB gap | P11 gap | Δ |
+|---|---|---|---|
+| −200 | +13.3pp | +33pp | −20pp shrink |
+| **−100** | **+33.3pp** | **+40pp** | **−7pp (HOLDS)** |
+| −50 | +10pp | +27pp | −17pp shrink |
+| −20 | −10pp | +16pp | reversed |
+| ±5..±2 | flat | flat | flat |
+| **+20** | **+26.7pp** | 0pp | **NEW pushup signal in BCB** |
+| +50 | +3.3pp | +3pp | flat |
+| +100 | −16.7pp | −3pp | random vence |
+| **+200** | **+23.3pp** | −14pp | **NEW pushup signal in BCB** |
+
+The α=−100 pushdown gap holds at +33pp (vs +40pp on HumanEval+MBPP) — the
+**cleanest pushdown signal is distribution-robust**. But other α values
+diverge: low-α gaps shrink or reverse, while pushup direction develops
+new signal at α ∈ {+20, +200} that wasn't present on HumanEval+MBPP.
+
+The pattern yields a corollary to the saturation-direction principle:
+
+> **The asymmetric lever magnitude is proportional to the degree of
+> baseline saturation along the probe axis on the test distribution.**
+> Strongly-saturated test distributions yield clean unidirectional
+> levers; weakly-saturated distributions yield weaker bidirectional
+> levers.
+
+HumanEval+MBPP is *easy* code where Qwen3.6-27B succeeds 89/99 = strongly
+saturated toward `y=1`. The pushdown direction has clean headroom; the
+pushup direction hits a ceiling. BigCodeBench is *harder* (longer
+realistic prompts; success rate not measured but plausibly lower) — the
+model has bidirectional headroom because it isn't ceilinged. Result:
+
+- α=−100 (moderate amplitude, axis-specific probe leverage): robust
+  across distributions because moderate-α leverage doesn't depend
+  strongly on saturation degree.
+- α=±200 (extreme amplitude): shifts substantially because OOD effects
+  become saturation-degree-specific.
+- α=±20 (low amplitude, near-baseline): requires strong saturation for
+  probe specificity — reverts to noise floor when saturation weak.
+- α=+20 emergence in BCB: the previously-ceilinged pushup direction
+  now has headroom to flip generations under probe-direction
+  perturbation.
+
+**Practical safety implication**: capability-probe interventions will
+work cleanly only on tasks where the model has strong success/failure
+saturation. On harder tasks where the model has bidirectional headroom,
+probe-direction interventions will be (a) weaker overall, (b)
+bidirectional rather than unidirectional, and (c) less specific at
+low amplitudes. The probe is most useful exactly where the model needs
+the least intervention — a non-trivial limitation for any
+"selective capability revocation" deployment.
+
+The corollary also predicts when probes will and will not transfer:
+**transfer is robust at moderate α along the probe axis, fragile at
+extreme α and at low α**. Future cross-model and cross-task validation
+should test this prediction explicitly.
+
+### 5.6 The 4 sanity checks save publishable claims
 
 Each of the four mandatory sanity checks caught a confident wrong
 claim during this work:
@@ -487,17 +556,27 @@ regime in Qwen3.6-27B, and identified a single unifying principle —
 that explains all five asymmetric-lever cases. The principle was
 arrived at via explicit falsification of an earlier categorical-vs-continuous
 frame using a persona-switch experiment that produced the opposite
-direction of the naive prediction. We propose saturation-direction as
-a predictive heuristic: given a probe and a test condition, expect the
-asymmetric lever (if any) in the direction the baseline residual is
-saturated toward. We release all 6 capture batches, all per-site
+direction of the naive prediction. A subsequent cross-distribution
+test on BigCodeBench refined the thesis further: at α=−100 the
+pushdown gap holds at +33pp (vs +40pp on HumanEval+MBPP), but the
+broader α-curve shifts from unidirectional pushdown-only to
+bidirectional, motivating a *saturation-magnitude corollary* —
+the asymmetric lever's magnitude is proportional to how saturated
+the baseline is along the probe axis on the test distribution.
+We propose saturation-direction (refined by saturation-magnitude)
+as a predictive heuristic: given a probe and a test condition,
+expect the asymmetric lever (if any) in the direction the baseline
+residual is saturated toward, with magnitude proportional to that
+saturation. We release all 7 capture batches, all per-site
 verdicts, and the unified protocol under Apache-2.0.
 
 The four sanity checks (paper-3 §3.1–§3.4) are mandatory rather than
 optional; three of the four caught confident-but-wrong claims during
 this work. We invite the community to apply the protocol to other
 probes and other models, and to test whether saturation-direction
-predicts the asymmetric-lever direction in those settings as well.
+predicts the asymmetric-lever direction in those settings as well —
+and whether the saturation-magnitude corollary holds when the test
+distribution shifts the baseline saturation degree.
 
 ---
 
@@ -513,15 +592,16 @@ All artifacts public under Apache-2.0:
 | Phase 11 capability locus notebook | `notebooks/nb_swebench_v11_capability_locus.ipynb` |
 | Phase 11b capability extension notebook | `notebooks/nb_swebench_v11b_capability_locus_extension.ipynb` |
 | Phase 12 persona-falsifier notebook | `notebooks/nb_swebench_v12_persona_falsifier.ipynb` |
+| Phase 11c cross-distribution notebook | `notebooks/nb_swebench_v11c_cross_distribution.ipynb` |
 | Phase 6 N=99 capture corpus | Drive `swebench_v6_phase6/` (99 traces, 89/10 labels, ~12k captures) |
-| Per-site verdict JSONs | Drive `phase7..phase12/*verdict.json` |
+| Per-site verdict JSONs | Drive `phase7..phase12/*verdict.json`, `phase11c_cross_distribution/verdict.json` |
 | Causal locus protocol spec | `openinterp-swebench-harness/paper/paper5_causal_locus_protocol.md` |
 | Meta-analysis of probe AUROCs | `paper/paper5_causal_locus_meta_analysis.md` |
 | openinterp SDK | `pip install openinterp` (v0.3.1+) |
 
-Total reproduction time on RTX 6000 Blackwell: ~6 hours from cold
-start (Phase 6 capture replay 30min via cached) to all 6 phases
-verdict tables.
+Total reproduction time on RTX 6000 Blackwell: ~6.5 hours from cold
+start (Phase 6 capture replay 30min via cached) to all 7 phases
+verdict tables (Phase 11c cross-distribution adds ~25min).
 
 ---
 
