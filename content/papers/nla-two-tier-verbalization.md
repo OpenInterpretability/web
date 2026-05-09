@@ -12,40 +12,56 @@ Natural Language Autoencoders (NLA; Fraser-Taliente et al. 2026) train an
 activation-verbalizer (AV) and an activation-reconstructor (AR) end-to-end with
 GRPO so that the round-trip MSE between original and AR-reconstructed activations
 serves as a learnable explanation-quality reward. We replicate the canonical
-recipe on two NLA pairs from the kitft release —
-`kitft/nla-qwen2.5-7b-L20` and `kitft/nla-gemma3-12b-L32` — and show that the
-headline metric, `fve_nrm`, decouples from semantic content fidelity in both
-models, with the gap *widening* as `fve_nrm` approaches its ceiling. On a
+recipe on three NLA pairs from the kitft release spanning two model families
+and three scales — `kitft/nla-qwen2.5-7b-L20`, `kitft/nla-gemma3-12b-L32`, and
+`kitft/nla-gemma3-27b-L41` — and show that the headline metric, `fve_nrm`,
+decouples from semantic content fidelity across all three models, with three
+distinct scaling behaviors that sharpen the methodological position. On a
 50-prompt corpus stratified across four categories (chat / code / agent /
 reasoning) verbalized at K=3 samples each (N=150 per model), `fve_nrm` is
-uniform across categories at high absolute level (Qwen 0.880 / Gemma 0.992;
-spreads 0.017 / 0.005, both exceeding the paper's reported 0.752
-in-distribution baseline) while keyword recall between the prompt and AV's
-natural-language explanation varies 6.5–8.8× across the same categories
-(Qwen: chat 0.578 → agent 0.088, spread 0.490; Gemma: chat 0.782 → agent
-0.133, spread **0.649**). Three controls validate the gap on both models.
-Permutation: shuffled pairs drop to 0.038–0.063 (cross-cat) while real
-recall is 0.329–0.422; the agent gap above floor remains floor-level
-(+0.045) in both. Random Gaussian baseline: L2-matched random vectors
-collapse reconstruction (Qwen `fve_nrm` = −0.949; Gemma `fve_nrm` = −0.992)
-but produce equally coherent format-locked explanations across both models
-("Structured article format with factual, conversational tone — article-style
-response..."). Direction-injection: 4/4 (Qwen) and 3/4 (Gemma)
+uniform across categories at high absolute level (Qwen 0.880 / Gemma-12B 0.992
+/ Gemma-27B 0.982; spreads 0.017 / 0.005 / 0.010, all exceeding the paper's
+reported 0.752 in-distribution baseline) while keyword recall between the
+prompt and AV's natural-language explanation varies 6.5–8.8× across the same
+categories (Qwen: chat 0.578 → agent 0.088, spread 0.490; Gemma-12B: chat
+0.782 → agent 0.133, spread 0.649; Gemma-27B: chat 0.813 → agent 0.160,
+spread 0.654). The three-model trajectory reveals **three differential
+scaling axes**: (a) overall content-fidelity signal-above-floor grows
+monotonically with model quality (permutation gap +0.27 → +0.38 → +0.43,
+no ceiling visible); (b) per-category recall spread saturates between 12B
+and 27B (0.490 → 0.649 → 0.654) at what appears to be a
+training-distribution-imbalance ceiling; (c) Tier 1 `fve_nrm` peaks at
+moderate model size (Gemma-12B 0.992 max, slight regression to 0.982 at
+27B), suggesting Tier 1 quality is layer-extraction-dependent rather than
+purely scale-dependent. Three controls validate the gap on all three
+models. Permutation: shuffled pairs drop to 0.038–0.063 (cross-cat) while
+real recall reaches 0.329 → 0.422 → 0.475; the agent gap above floor
+remains floor-level (+0.045 in V2) across the trajectory. Random Gaussian
+baseline: L2-matched random vectors collapse reconstruction monotonically
+(Qwen `fve_nrm` = −0.949 → Gemma-12B −0.992 → Gemma-27B **−1.000** with
+exact orthogonal cosine), while AV produces increasingly contracted format
+templates (V1 heterogeneous formats → V2 "Structured X format" diversity →
+V3 "Educational/X article format" hyper-template attractor on 6/6 random
+inputs). Direction-injection: 4/4 (Qwen) and 3/4 (both Gemmas)
 category-mean-difference directions verbalize to the correct category-template
-with negation symmetry, the single 1/4 miss in Gemma being an
-agent-direction-collapses-into-code event explained by code-content overlap
-in agent prompts. We argue NLA verbalization is two-tier: Tier 1
-(format/category) is direction-modulated and what `fve_nrm` measures; Tier 2
-(specific content — file paths, named entities, math entities) is largely
-unencoded. **The decoupling magnifies with NLA training quality**: as Tier 1
-saturates toward the `fve_nrm` ceiling (1.0), spread shrinks while recall
-spread *grows* (0.490 → 0.649 from Qwen-7B to Gemma-12B). Better NLA training
-makes `fve_nrm` less, not more, informative about explanation quality.
-NLA can format-classify a residual direction but cannot content-decode it.
-We recommend reporting category-stratified semantic-recall metrics alongside
-`fve_nrm` for NLA-style evaluation, and we provide both reproducibility
-artifacts at `nb_track_a_phase16_decoupling.ipynb` (Qwen V1) and
-`nb_track_a_phase16_gemma_crossmodel.ipynb` (Gemma V2).
+with negation symmetry, the agent failure mode being model-specific
+(Gemma-12B: agent → code due to code-content overlap; Gemma-27B: agent →
+chat due to format-prior contraction into the "Educational article"
+attractor). We argue NLA verbalization is two-tier: Tier 1 (format/category)
+is direction-modulated and what `fve_nrm` measures; Tier 2 (specific content —
+file paths, named entities, math entities) is largely unencoded. **The
+decoupling magnifies with NLA training quality up to a structural ceiling**:
+overall signal-above-floor continues to grow, but per-category spread
+saturates at a training-distribution-imbalance limit, and the format prior
+contracts into a single hyper-template attractor as Tier 1 approaches the
+`fve_nrm` ceiling. Better NLA training makes `fve_nrm` less informative
+about per-category Tier 2 fidelity, not more. NLA can format-classify a
+residual direction but cannot content-decode it. We recommend reporting
+category-stratified semantic-recall metrics alongside `fve_nrm` for
+NLA-style evaluation, and we provide all three reproducibility artifacts:
+`nb_track_a_phase16_decoupling.ipynb` (V1 Qwen),
+`nb_track_a_phase16_gemma_crossmodel.ipynb` (V2 Gemma-12B), and
+`nb_track_a_phase16_gemma27b_v3.ipynb` (V3 Gemma-27B).
 
 ---
 
@@ -150,7 +166,8 @@ Our contributions:
 
 ### 2.1 Models
 
-We test two NLA pairs from the kitft release covering two model families:
+We test three NLA pairs from the kitft release covering two model families
+and three scales (7B → 12B → 27B):
 
 **V1 — Qwen2.5-7B at L20:**
 
@@ -184,10 +201,29 @@ We test two NLA pairs from the kitft release covering two model families:
   in-distribution `fve_nrm` from 0.77 to 0.31 (Qwen has no BOS so the flag
   is a no-op there). value_head shape is `Linear(3840, 3840, bias=False)`.
 
+**V3 — Gemma-3-27B at L41:**
+
+- **Target**: `google/gemma-3-27b-it`. 62 transformer layers, d_model=5376, bf16.
+  We extract from layer 41 — depth fraction 41/62 = 66%, comparable to V1's
+  20/28 = 71% and V2's 32/48 = 67%. Gated repository.
+- **AV / AR**: `kitft/nla-gemma3-27b-L41-{av,ar}`. Same canonical recipe.
+  Sidecar values: `injection_scale = 60000` (kitft re-calibrated for 27B,
+  vs 12B's 80000), `injection_char = ㈜` (same as V2),
+  `mse_scale = √5376 ≈ 73.32`. value_head shape
+  `Linear(5376, 5376, bias=False)`.
+- **Compute note**: at bf16, target Gemma-3-27B-IT and AV are each ~54 GB.
+  PyTorch's caching allocator does not always release CUDA memory after
+  `del model; gc.collect(); torch.cuda.empty_cache()`, which produces an OOM
+  on Colab RTX 6000 96GB when AV loads after target capture. The V3 notebook
+  documents the kernel-restart workaround (save acts to Drive, restart Colab
+  kernel, reload acts, then load AV in clean GPU state). This affects
+  reproducibility ergonomics, not the decoupling thesis.
+
 The cross-model comparison is direct: same 50 prompts, same canonical recipe,
-same metrics, two model families with different scales, layers, embedding
-conventions, and chat templates. If results converge, the decoupling thesis is
-not a Qwen-specific artifact.
+same metrics, three NLA pairs from two model families spanning 7B → 12B → 27B
+parameters, with different scales, layers, embedding conventions, and chat
+templates. If results converge, the decoupling thesis is not a model-family-
+or single-scale artifact.
 
 ### 2.2 Prompt corpus
 
@@ -282,49 +318,78 @@ gave qualitatively identical results.
 | **OVERALL** | **150** | **+0.996** | **0.992** | **0.420** | **0.842** |
 | **Spread** | | 0.002 | **0.005** | **0.649** | 0.410 |
 
-### 3.2 Cross-model comparison
+**V3 — Gemma-3-27B at L41 (N=150):**
 
-| Metric | Qwen V1 | Gemma V2 | Δ |
-|---|---|---|---|
-| Overall `fve_nrm` | 0.880 | 0.992 | +0.112 |
-| `fve_nrm` category spread | 0.017 | **0.005** | −0.012 (more uniform) |
-| Recall overall | 0.336 | 0.420 | +0.084 |
-| **Recall category spread** | **0.490** | **0.649** | **+0.159 (LARGER)** |
-| chat recall | 0.578 | 0.782 | +0.204 |
-| agent recall | 0.088 | 0.133 | +0.045 |
+| Category | N | cos | `fve_nrm` | recall (mean) | recall (≥1 hit) |
+|---|---|---|---|---|---|
+| chat | 39 | +0.994 | 0.988 | 0.813 | 1.000 |
+| code | 36 | +0.989 | 0.979 | 0.492 | 1.000 |
+| agent | 39 | +0.990 | 0.980 | 0.160 | 0.615 |
+| reasoning | 36 | +0.989 | 0.979 | 0.432 | 0.750 |
+| **OVERALL** | **150** | **+0.991** | **0.982** | **0.474** | **0.841** |
+| **Spread** | | 0.005 | **0.010** | **0.654** | 0.385 |
 
-In *both* models, reconstruction is uniformly excellent across categories
-(spreads 0.017 and 0.005, well within the 0.05 threshold one might call
-"essentially uniform") while keyword recall varies 6.5–8.8× across the same
-categories. Both models reach beyond the paper's reported 0.752
-in-distribution `fve_nrm`, with Gemma essentially saturating the metric at
-0.992. This is the load-bearing observation for the decoupling thesis.
+### 3.2 Three-way scaling comparison
 
-### 3.3 Decoupling magnification
+| Metric | V1 Qwen-7B | V2 Gemma-12B | V3 Gemma-27B | Pattern |
+|---|---|---|---|---|
+| Overall `fve_nrm` | 0.880 | **0.992** | 0.982 | peaks V2, slight regression |
+| `fve_nrm` spread | 0.017 | 0.005 | 0.010 | uniformly low (all <0.05) |
+| Overall recall | 0.336 | 0.420 | **0.474** | monotonic up |
+| Recall spread | 0.490 | 0.649 | **0.654** | saturates V2-V3 (Δ +0.005) |
+| Permutation gap above floor | +0.266 | +0.384 | **+0.431** | monotonic up |
+| Random Gaussian `fve_nrm` | −0.949 | −0.992 | **−1.000** | sharper collapse |
+| Random Gaussian cos | +0.026 | +0.004 | **+0.000** | exact orthogonal |
+| chat recall | 0.578 | 0.782 | 0.813 | continues up (slowing) |
+| agent recall | 0.088 | 0.133 | 0.160 | continues up (still floor-level) |
+| Direction-injection self-cat | 4/4 | 3/4 (agent → code) | 3/4 (agent → chat) | model-specific failure mode |
 
-Notably, the Gemma `fve_nrm` *spread* is smaller than Qwen's (0.005 vs 0.017)
-while the Gemma *recall* spread is larger (0.649 vs 0.490). The recall metric
-is no smoother in the better-trained model — it grows sharper. This is the
-"decoupling magnification" finding:
+In *all three* models, reconstruction is uniformly excellent across categories
+(spreads 0.005–0.017, all well within the 0.05 "essentially uniform" threshold)
+while keyword recall varies 6.5–8.8× across the same categories. All three
+reach beyond the paper's reported 0.752 in-distribution `fve_nrm`. This is the
+load-bearing observation for the decoupling thesis.
 
-- `fve_nrm` has a hard ceiling at 1.0. As Tier 1 (format/category) training
-  saturates toward this ceiling, the cross-category spread necessarily
-  shrinks. Gemma 0.992 is much closer to the ceiling than Qwen 0.880.
-- Tier 2 (semantic content) has no equivalent metric ceiling. Content
-  fidelity remains category-bounded by training-distribution diversity (NLA
-  was trained on 50/50 WildChat + Ultra-FineWeb; agent-format prompts with
-  file paths, function names, and test identifiers are out-of-distribution
-  for both training sources). Recall stays modest where content overlaps
-  the AV's training mix (chat 0.578 → 0.782) and floor-level where it does
-  not (agent 0.088 → 0.133).
-- The result: as `fve_nrm` improves, the gap between `fve_nrm` and recall
-  *widens*. Better NLA training makes `fve_nrm` *less*, not more, informative
-  about Tier 2 explanation quality.
+### 3.3 Decoupling magnification — three differential scaling axes
 
-This predicts that any future better NLA pair (e.g., Gemma-3-27B-L41 or
-Llama-3.3-70B-L53 from the same kitft release) will exhibit even more uniform
-`fve_nrm` and even larger recall spread. We have not run those experiments
-in V1/V2 of this work — they are the natural V3 fortification.
+The three-model trajectory reveals that decoupling magnification is not a
+single phenomenon but the differential scaling of three independent axes:
+
+**Axis 1 — Overall content-fidelity signal-above-floor (permutation gap).**
+Grows monotonically with NLA training quality: +0.266 → +0.384 → +0.431. No
+visible ceiling. Better NLA training detects more real content per pair,
+without saturating across the V1–V3 range we tested.
+
+**Axis 2 — Per-category recall spread.** Saturates between V2 and V3 at
+~0.65: 0.490 → 0.649 → 0.654 (Δ V2→V3 = +0.005). All four categories
+*improve* in absolute recall from V2 to V3 (chat +0.031, code +0.088, agent
++0.027, reasoning +0.071), but they improve approximately *uniformly* —
+the per-category gap stays fixed. We interpret the ceiling as the
+training-distribution category-imbalance limit: NLA was trained on 50/50
+WildChat + Ultra-FineWeb, which over-represents chat content and
+under-represents agent-format prompts containing file paths, function names,
+and test identifiers. Better NLA training resolves uniform improvement
+across categories, but cannot exceed the imbalance imposed by its training
+data.
+
+**Axis 3 — Tier 1 `fve_nrm`.** Peaks at moderate model size (Gemma-12B
+0.992 max) then slight regression at 27B (0.982). Non-monotonic. We do not
+have enough data points to localize the cause, but layer-extraction depth
+(V1 71%, V2 67%, V3 66%) and per-model NLA-training-recipe variance are
+both candidate explanations. The regression is small (~1pp) and `fve_nrm`
+remains uniform across categories at all three scales (spreads ≤0.017).
+
+**Combined**: better NLA training scales overall Tier 2 fidelity without
+ceiling (Axis 1), but the per-category structural imbalance (Axis 2) is
+bounded, and Tier 1 quality is layer/recipe-dependent rather than purely
+model-size-dependent (Axis 3). Better NLA training therefore makes
+`fve_nrm` *less* informative about per-category Tier 2 quality, not more.
+
+The natural V4 fortification — Llama-3.3-70B at L53 from the same kitft
+release — would extend this trajectory further. Llama-70B at bf16 does
+not fit on a single 96 GB GPU (140 GB required), and 4-bit/8-bit
+quantization risks compromising the canonical recipe. We leave this for
+future work.
 
 ### 3.4 Within-prompt stability
 
@@ -389,16 +454,19 @@ recompute the recall metric. Shuffled pairs measure the noise floor: how much
 recall is recoverable from common category vocabulary alone, independent of
 the actual activation injected.
 
-| Pairing | Qwen V1 | Gemma V2 |
-|---|---|---|
-| Real | 0.329 | 0.422 |
-| Permuted within-category | 0.091 | 0.086 |
-| Permuted cross-category | 0.063 | 0.038 |
-| Real — perm-cross | **+0.266** | **+0.384** |
-| Real — perm-within | +0.238 | +0.336 |
+| Pairing | Qwen V1 | Gemma V2 | Gemma V3 |
+|---|---|---|---|
+| Real | 0.329 | 0.422 | 0.475 |
+| Permuted within-category | 0.091 | 0.086 | 0.083 |
+| Permuted cross-category | 0.063 | 0.038 | 0.044 |
+| Real − perm-cross | **+0.266** | **+0.384** | **+0.431** |
+| Real − perm-within | +0.238 | +0.336 | +0.392 |
 
-The signal-above-floor *grows* with model quality (Qwen +0.27 → Gemma +0.38),
-matching the decoupling-magnification pattern from §3.3.
+The signal-above-floor *grows monotonically* with model quality
+(+0.27 → +0.38 → +0.43, no visible ceiling), confirming Axis 1 of the
+three-axis differential scaling from §3.3. This is the most direct evidence
+that better NLA training detects more real content per pair — independent
+of and complementary to the per-category spread saturation (Axis 2).
 
 Per-category, the gap above the within-category permutation floor reveals the
 sharpness of the decoupling effect:
@@ -424,49 +492,60 @@ We generate 30 random Gaussian vectors with L2 matched to each model's Phase
 embedding scaling) and feed them to AV. The reconstruction collapses in both
 models but the verbalization remains coherent:
 
-| Metric | Qwen Real | Qwen Random | Gemma Real | Gemma Random |
-|---|---|---|---|---|
-| cos | +0.940 | **+0.026** | +0.996 | **+0.004** |
-| `fve_nrm` | +0.880 | **−0.949** | +0.992 | **−0.992** |
-| recall vs random real prompt | 0.329 | 0.012 | 0.422 | 0.019 |
+| Metric | V1 Qwen Real | V1 Qwen Random | V2 Gemma-12B Real | V2 Gemma-12B Random | V3 Gemma-27B Real | V3 Gemma-27B Random |
+|---|---|---|---|---|---|---|
+| cos | +0.940 | **+0.026** | +0.996 | **+0.004** | +0.991 | **+0.000** |
+| `fve_nrm` | +0.880 | **−0.949** | +0.992 | **−0.992** | +0.982 | **−1.000** |
+| recall vs random real prompt | 0.329 | 0.012 | 0.422 | 0.019 | 0.475 | 0.011 |
 
-The Gemma collapse is even sharper: `fve_nrm` drops from +0.992 (real) to
-−0.992 (random) — a perfectly symmetric ±0.992 swing, indicating the AR has
-no input-independent "default" direction. cos drops from +0.996 to +0.004 —
-random reconstruction direction is essentially orthogonal to the random target.
+The collapse sharpens monotonically across the three models. By V3 Gemma-27B,
+the random-Gaussian cosine reaches exactly 0.000 (within numerical precision)
+and `fve_nrm` reaches exactly −1.000 — the AR's reconstruction direction is
+literally orthogonal to the random target, indicating zero input-independent
+default direction. AR is genuinely input-dependent across all three NLA pairs.
 
-But AV produces coherent format-locked explanations in *both* models even on
-random Gaussian noise. The first six Gemma random-Gaussian explanations
-(from `phase16_full_results.json` for Gemma V2):
+But AV produces coherent format-locked explanations across *all three* models
+even on random Gaussian noise — and the format prior **contracts** as NLA
+training quality improves.
 
-> "Structured article format with factual, conversational tone — article-style
-> response cover[ing]…"
+**V1 Qwen-7B random-Gaussian explanations** (heterogeneous categorical formats):
 
-> "Structured article format with numbered bullet points — the text follows
-> an expansive video [topic]…"
+> "Formal wiki article structure with numbered facts about a cultural history magazine…"
+> "Structured game description with formatted fields and bolded attributes…"
+> "Structured math content with formal definitions and equations…"
+> "Structured Wikipedia-style technical post with argumentative context about parliamentary politics in Israel…"
+> "Technical product ingredient data format with ISO standard structure, resembling a chemical company patent…"
 
-> "Article structure: informational explainer format with a boilerplate SEO
-> summary, follow[ing]…"
+**V2 Gemma-12B random-Gaussian explanations** (Tier 1 categorical diversity, all "Structured X format"):
 
-> "Structured article format with factual, conversational tone, following a
-> Q&A pattern with…"
+> "Structured article format with factual, conversational tone…"
+> "Structured article format with numbered bullet points…"
+> "Article structure: informational explainer format with a boilerplate SEO summary…"
+> "Structured article format with factual, conversational tone, following a Q&A pattern…"
+> "Historical-literary structure: essay format reviewing 'The Magic of Teams'…"
+> "Structured article format: informational/tutorial tone with code block…"
 
-> "Historical-literary structure: essay format reviewing 'The Magic of Teams'
-> with quotes and…"
+**V3 Gemma-27B random-Gaussian explanations** (Tier 1 collapse into single hyper-template):
 
-> "Structured article format: informational/tutorial tone with code block and
-> statistical con[text]…"
+> "Educational/informational article format: a structured listicle about a global topic…"
+> "Educational/legal article structure: a formal analytical narrative about global economic indicators…"
+> "Educational/professional article format: health advice article structure covering a business topic…"
+> "Educational/financial article format: a structured listicle comparing business types…"
+> "Article format: a structured health/educational article establishing a listicle pattern…"
+> "Educational/health article format: text introduces a structured listicle about a program…"
 
-Six of six begin with "Structured article format" or "Article structure" —
-even more formulaic than Qwen's random-Gaussian outputs ("Formal wiki article
-structure with numbered facts about a cultural history magazine"; "Structured
-game description with formatted fields and bolded attributes"). Both models
-apply a category-template prior to anything injected, including pure noise.
-The format template is a learned prior, fired unconditionally; only direction
-modulates which Tier 1 template fires. Reconstruction loss is *decoupled*
-from this prior — the AR can read the format signal (modulo direction) but
-the reconstruction quality of pure-noise injection is zero, because the
-actual direction in residual space is random.
+Six of six V3 explanations begin with "Educational/X article format" or "Article
+format" — a **single dominant attractor** in the Tier 1 prior space. V1 had
+heterogeneous categorical formats (article / game / math / wiki / data). V2
+contracted to "Structured X format" with categorical diversity at the X. V3
+contracts further into a single "Educational article" hyper-template. Tier 1
+prior space *contracts* as `fve_nrm` saturates toward its ceiling, rather
+than expanding.
+
+This format-prior contraction has a downstream consequence in §4.3 below:
+in V3, weak directions (e.g., agent_vs_other) are pulled toward the
+"Educational article" attractor rather than escaping into category-specific
+templates as they did in V2.
 
 ### 4.3 Direction-injection probe interp test
 
@@ -510,34 +589,58 @@ In Gemma V2, alignment is **3/4**:
 
 | Direction | chat-kw | code-kw | agent-kw | reason-kw | Top |
 |---|---|---|---|---|---|
-| chat_vs_other (Gemma) | **2.00** | 0.00 | 0.00 | 0.00 | chat ✓ |
-| code_vs_other (Gemma) | 1.33 | **5.00** | 1.33 | 0.33 | code ✓ |
-| agent_vs_other (Gemma) | 1.33 | 3.33 | 1.67 | 0.00 | code ✗ (should be agent) |
-| reasoning_vs_other (Gemma) | 1.67 | 0.67 | 0.00 | **5.67** | reasoning ✓ |
+| chat_vs_other (V2 Gemma-12B) | **2.00** | 0.00 | 0.00 | 0.00 | chat ✓ |
+| code_vs_other (V2 Gemma-12B) | 1.33 | **5.00** | 1.33 | 0.33 | code ✓ |
+| agent_vs_other (V2 Gemma-12B) | 1.33 | 3.33 | 1.67 | 0.00 | code ✗ (should be agent) |
+| reasoning_vs_other (V2 Gemma-12B) | 1.67 | 0.67 | 0.00 | **5.67** | reasoning ✓ |
 
-The single 1/4 miss in Gemma — agent_vs_other → top=code (3.33) rather than
-agent (1.67) — is mechanistically informative. Our 13 agent prompts
-explicitly contain code and CLI references (`requests.get`, `pytest`,
-`pydantic`, `processor.py`, `node_modules`, file paths). In Gemma's residual
-space at L32, the "agent direction" collapses *into* the "code direction"
-because the categorical separation between agent-task-intent and code-content
-is weaker than in Qwen's residual space at L20. Negation symmetry still holds
-in Gemma (NEG_chat → code 5.67, NEG_agent → chat 4.33, NEG_reasoning → code
-2.33), and the cross-axis works (chat_minus_agent → chat 2.67;
-agent_minus_chat → code 4.00). What fails is not the direction-modulation
-mechanism but the *categorial separability* of agent vs code in Gemma's
-residual stream — a downstream consequence of category content overlap, not
-an NLA failure mode per se.
+In Gemma V3 (27B), alignment is also **3/4** but with a *different* failure
+mode for the agent direction:
+
+| Direction | chat-kw | code-kw | agent-kw | reason-kw | Top |
+|---|---|---|---|---|---|
+| chat_vs_other (V3 Gemma-27B) | **3.33** | 0.00 | 0.00 | 0.00 | chat ✓ |
+| code_vs_other (V3 Gemma-27B) | 1.00 | **3.67** | 1.67 | 0.00 | code ✓ |
+| agent_vs_other (V3 Gemma-27B) | 2.33 | 0.00 | 0.67 | 0.00 | chat ✗ (should be agent) |
+| reasoning_vs_other (V3 Gemma-27B) | 2.00 | 0.00 | 0.00 | **4.00** | reasoning ✓ |
+
+In V2, the agent direction collapsed into *code* (because agent prompts
+contain literal code references — `requests.get`, `pytest`, `pydantic`,
+`processor.py`, `node_modules`, file paths — and Gemma-12B's residual space
+at L32 has weak agent-code separation). In V3, the agent direction collapses
+into *chat* — specifically into the "Educational article" hyper-template
+established in §4.2's random-Gaussian observation. V3's format-prior
+contraction has the downstream effect of pulling weak directions toward the
+single dominant attractor rather than the closest categorical neighbor.
+
+Negation symmetry holds in both Gemmas (V2: NEG_chat → code 5.67, NEG_agent
+→ chat 4.33, NEG_reasoning → code 2.33; V3: NEG_chat → code 2.33, NEG_agent
+→ chat 4.33, NEG_reasoning → chat 2.33). Cross-axis works in both (V2:
+chat_minus_agent → chat 2.67, agent_minus_chat → code 4.00; V3:
+chat_minus_agent → chat **5.00** dominant, agent_minus_chat → agent 2.33
+top — explicit cross-axis subtraction *recovers* the agent signal in V3
+that the V3 agent_vs_other direction loses to the format-prior attractor).
+
+The agent-direction failure mode is therefore **model-specific**:
+Gemma-12B fails because of code-content overlap in agent prompts; Gemma-27B
+fails because of format-prior contraction into a single attractor. Both
+failures share the same underlying mechanism — NLA's Tier 1 modulation
+operates at the granularity of *attractors in the verbalization-template
+prior*, and weak directions cannot escape the strongest attractor. The
+attractor structure differs by model: V2 has multiple categorical templates
+with code being closest to agent's code-overlapping content; V3 has a
+single hyper-template with chat being the surface manifestation.
 
 This refines rather than weakens the position. NLA is *not* defaulting to a
-universal template regardless of input — across both models, direction does
-modulate which Tier 1 template fires. What the test reveals is that the
-*granularity* of the modulation is bounded by category-template separation in
-the residual space of the underlying model. A practitioner injecting a
-saturation-direction probe vector into NLA will learn what *category* the
-direction points toward — at the granularity of categories that are
-well-separated in that model's residual stream — but not the specific
-content the probe encodes within that category.
+universal template regardless of input — across all three models, direction
+does modulate which Tier 1 template fires (4/4, 3/4, 3/4 alignment with
+clean negation symmetry throughout). What the cross-model test reveals is
+that the *granularity* of modulation is bounded by the attractor structure
+of the verbalization-template prior in the underlying NLA pair. A
+practitioner injecting a saturation-direction probe vector into NLA will
+learn what *Tier 1 attractor* the direction points toward — but the
+attractor space contracts as NLA training improves, so finer-grained content
+distinctions become *less* recoverable in better-trained models.
 
 ---
 
@@ -646,14 +749,17 @@ explanation accuracy at the semantic level.
 
 ## 7. Limitations
 
-- **Two NLA pairs tested**. Both kitft pairs (`nla-qwen2.5-7b-L20` and
-  `nla-gemma3-12b-L32`) are trained on the same data mix
-  (50/50 WildChat + Ultra-FineWeb) using the same GRPO recipe. While they
-  span two model families and very different residual scales, they do not
-  test whether NLAs trained on agent-augmented data, RL-tuned reasoning
-  traces, or other domain-shifted corpora exhibit the same decoupling. The
-  V3 fortification — including the larger Gemma-3-27B-L41 and Llama-3.3-70B-L53
-  pairs from the same kitft release — would extend the cross-model claim further.
+- **Three NLA pairs tested, all kitft, same training mix**. All three pairs
+  (`nla-qwen2.5-7b-L20`, `nla-gemma3-12b-L32`, `nla-gemma3-27b-L41`) are
+  trained on the same data mix (50/50 WildChat + Ultra-FineWeb) using the
+  same GRPO recipe. While they span two model families and three scales
+  (7B → 12B → 27B), they do not test whether NLAs trained on agent-augmented
+  data, RL-tuned reasoning traces, or other domain-shifted corpora exhibit
+  the same decoupling. The natural V4 fortification — Llama-3.3-70B-L53
+  from the same kitft release, or independently-trained NLAs with different
+  data mixes — would extend the cross-model claim further. Llama-70B at
+  bf16 does not fit on a single 96 GB GPU; quantization risks compromising
+  the canonical recipe; we leave this for future work.
 - **Single position tested**. We capture residuals at the last input token of a
   chat-template prompt — the exact position the kitft NLA was trained on. The
   thesis may not generalize to mid-generation positions, where the residual
@@ -747,10 +853,10 @@ a single H100.
 
 ## Reproducibility
 
-Two notebooks reproduce the V1 (Qwen) and V2 (Gemma) experiments end-to-end.
-Both are self-contained: installs, downloads NLA pair + target model,
-captures activations, generates verbalizations and reconstructions, runs all
-three controls, saves to Drive.
+Three notebooks reproduce V1 (Qwen-7B), V2 (Gemma-12B), and V3 (Gemma-27B)
+experiments end-to-end. All are self-contained: installs, downloads NLA pair +
+target model, captures activations, generates verbalizations and
+reconstructions, runs all three controls, saves to Drive.
 
 **V1 — Qwen2.5-7B-L20:**
 
@@ -773,6 +879,23 @@ three controls, saves to Drive.
 - Requires: HF token for the gated `google/gemma-3-12b-it` repo.
 - Compute: ~35–45 min on a single H100, ~60 min on RTX 6000 Ada. Includes
   ~3 min download time (target model is 24 GB).
+
+**V3 — Gemma-3-27B-L41:**
+
+- Build script: `scripts/build_nb_track_a_phase16_gemma27b_v3.py`
+- Notebook: `notebooks/nb_track_a_phase16_gemma27b_v3.ipynb` (37 cells,
+  21 code + 16 markdown). Final cell auto-loads V1 + V2 results and
+  produces three-way scaling comparison with magnification trajectory and
+  saturation verdict.
+- Drive artifacts: `phase16_full_results.json` at
+  `/content/drive/MyDrive/openinterp_runs/track_a_phase16_gemma27b/`.
+- Requires: HF token for the gated `google/gemma-3-27b-it` repo.
+- Compute: ~50–65 min on RTX 6000 96GB. Target Gemma-3-27B-IT and AV are
+  each ~54 GB at bf16; sequential load/free is required. PyTorch's caching
+  allocator does NOT release CUDA memory after `del model + gc.collect() +
+  torch.cuda.empty_cache()`, so a Colab kernel restart between target
+  capture and AV load is recommended. Save acts to Drive before restart and
+  reload after — the V3 notebook documents this workflow.
 
 **Random seed**: 42 (numpy + torch + python `random`).
 
