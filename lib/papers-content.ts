@@ -16,6 +16,29 @@ export interface PaperMeta {
 
 export const papers: PaperMeta[] = [
   {
+    slug: "nla-two-tier-verbalization",
+    title: "Reconstruction Without Recall",
+    subtitle:
+      "Two-Tier Verbalization in Natural Language Autoencoders — Cross-Model Format-Content Decoupling on Qwen2.5-7B and Gemma-3-12B",
+    authors: "Caio Vicentino",
+    venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft)",
+    status: "draft",
+    date: "2026-05-09",
+    abstract:
+      "Natural Language Autoencoders (Fraser-Taliente et al. 2026) train an activation-verbalizer (AV) and an activation-reconstructor (AR) end-to-end with GRPO so that round-trip MSE between original and AR-reconstructed activations serves as a learnable explanation-quality reward. We replicate the canonical recipe on TWO NLA pairs from the kitft release — kitft/nla-qwen2.5-7b-L20 and kitft/nla-gemma3-12b-L32 — and show that the headline metric, fve_nrm, decouples from semantic content fidelity in both models, with the gap WIDENING as fve_nrm approaches its ceiling. On a 50-prompt corpus stratified across 4 categories (chat / code / agent / reasoning) at K=3 samples (N=150 per model), fve_nrm is uniform at high absolute level (Qwen 0.880, Gemma 0.992; spreads 0.017, 0.005) while keyword recall varies 6.5–8.8× across categories (Qwen spread 0.490, Gemma spread 0.649; chat reaches 0.578/0.782 while agent collapses to 0.088/0.133, both at permutation floor). Three controls validate on both models: permutation gap above floor +0.27/+0.38; random Gaussian L2-matched vectors collapse reconstruction to fve_nrm = −0.949/−0.992 yet produce equally coherent format-locked explanations ('Structured article format with factual, conversational tone'); direction-injection 4/4 (Qwen) and 3/4 (Gemma) self-category alignment with negation symmetry — the single 1/4 miss being agent-direction-collapses-into-code in Gemma due to literal code content in agent prompts. We argue NLA verbalization is two-tier: Tier 1 (format/category) is direction-modulated and what fve_nrm measures; Tier 2 (specific content — file paths, named entities, math entities) is largely unencoded. The decoupling magnifies with NLA training quality: as Tier 1 saturates toward the fve_nrm ceiling, recall spread grows. Better NLA training makes fve_nrm less, not more, informative about explanation quality.",
+    artifacts: [
+      { label: "V1 notebook — Qwen2.5-7B-L20", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/notebooks/nb_track_a_phase16_decoupling.ipynb" },
+      { label: "V2 notebook — Gemma-3-12B-L32 cross-model", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/notebooks/nb_track_a_phase16_gemma_crossmodel.ipynb" },
+      { label: "kitft NLA Qwen2.5-7B-L20 AV (HF)", href: "https://huggingface.co/kitft/nla-qwen2.5-7b-L20-av" },
+      { label: "kitft NLA Qwen2.5-7B-L20 AR (HF)", href: "https://huggingface.co/kitft/nla-qwen2.5-7b-L20-ar" },
+      { label: "kitft NLA Gemma-3-12B-L32 AV (HF)", href: "https://huggingface.co/kitft/nla-gemma3-12b-L32-av" },
+      { label: "kitft NLA Gemma-3-12B-L32 AR (HF)", href: "https://huggingface.co/kitft/nla-gemma3-12b-L32-ar" },
+      { label: "Anthropic NLA paper", href: "https://transformer-circuits.pub/2026/nla/index.html" },
+      { label: "kitft/nla-inference (canonical recipe)", href: "https://github.com/kitft/nla-inference" },
+    ],
+    tags: ["natural language autoencoders", "activation decoding", "interpretability evaluation", "format priors", "decoupling magnification", "cross-model validation", "Qwen2.5-7B", "Gemma-3-12B", "Anthropic NLA"],
+  },
+  {
     slug: "activation-bounded-cot-monitorability",
     title: "Activation-Bounded Chain-of-Thought Monitorability",
     subtitle:
