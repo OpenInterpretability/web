@@ -80,11 +80,11 @@ export default async function Image() {
               fontSize: 28,
               color: '#a1a1aa',
               marginTop: 24,
-              maxWidth: 1000,
+              maxWidth: 1050,
               lineHeight: 1.3,
             }}
           >
-            Trace every feature. Every circuit. Every second of reasoning. Open source interpretability — Apache-2.0.
+            MCP server + production probes + ProbeBench leaderboard. Any agent — Claude Code, Cursor, Cline — runs interp on your Colab. Privacy-first · Apache-2.0.
           </div>
         </div>
 
@@ -100,7 +100,7 @@ export default async function Image() {
           }}
         >
           <span>openinterp.org</span>
-          <span>pip install openinterp</span>
+          <span>pip install openinterp-mcp</span>
         </div>
       </div>
     ),

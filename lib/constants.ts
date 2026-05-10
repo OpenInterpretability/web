@@ -3,7 +3,7 @@ export const site = {
   shortName: 'OpenInterp',
   tagline: 'Watch language models think.',
   description:
-    'Open source mechanistic interpretability — trace every feature, every circuit, every second of reasoning. Train SAEs in 30 min on free Colab or paper-grade on cloud. Apache-2.0 licensed.',
+    'Open-source mechanistic interpretability — production probes (FabricationGuard, agent-probe-guard), MCP server that lets Claude Code / Cursor / Cline run interp on your Colab, ProbeBench leaderboard with anti-Goodhart norms, SAE training from 30-min free Colab to paper-grade. Apache-2.0.',
   url: 'https://openinterp.org',
   github: 'https://github.com/OpenInterpretability',
   huggingface: 'https://huggingface.co/caiovicentino1',
