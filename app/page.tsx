@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Github, Zap, ShieldCheck, GitBranch, Cpu, Atom, Package, Play, Trophy } from 'lucide-react'
+import { ArrowRight, Github, Zap, ShieldCheck, GitBranch, Cpu, Atom, Package, Play, Trophy, Terminal, Layers } from 'lucide-react'
 import { headline, moat, saes, benchmarks, priorWork, stages, site } from '@/lib/constants'
 import { pillars, threePillars, threeMoats, roadmap, heroNew } from '@/lib/pillars'
 import { PillarCard } from '@/components/pillar-card'
@@ -34,18 +34,19 @@ export default function HomePage() {
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/products/agent-probe-guard"
+              href="/start"
               className="group inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:shadow-xl hover:shadow-brand-600/40 transition-all"
             >
-              Try agent-probe-guard
+              <Terminal className="h-3.5 w-3.5" />
+              Try openinterp-mcp
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
-              href="/products/fabricationguard"
+              href="/products/agent-probe-guard"
               className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
             >
               <ShieldCheck className="h-3.5 w-3.5" />
-              FabricationGuard
+              agent-probe-guard
             </Link>
             <Link
               href="/probebench"
@@ -62,8 +63,15 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Install pill */}
-          <div className="mt-12 mx-auto max-w-md">
+          {/* Install pills */}
+          <div className="mt-12 mx-auto max-w-md space-y-2.5">
+            <div className="font-mono text-sm card px-5 py-3.5 flex items-center gap-3 shadow-md">
+              <span className="text-brand-500 select-none">$</span>
+              <code className="flex-1 text-left text-ink-900 dark:text-ink-50">pip install &quot;openinterp-mcp[server]&quot;</code>
+              <span className="chip bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30">
+                v0.1.0 new
+              </span>
+            </div>
             <div className="font-mono text-sm card px-5 py-3.5 flex items-center gap-3 shadow-md">
               <span className="text-brand-500 select-none">$</span>
               <code className="flex-1 text-left text-ink-900 dark:text-ink-50">pip install openinterp</code>
@@ -78,10 +86,10 @@ export default function HomePage() {
       {/* ===== Concrete proof strip ===== */}
       <section className="mx-auto max-w-7xl px-6 -mt-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Metric label="⚡ 8 typed tools" value="openinterp-mcp" detail="bring-your-own-agent · privacy-first · PyPI v0.1.0" />
           <Metric label="🛡️ 0.85 / 0.85" value="agent-probe-guard" detail="capability + thinking · ~50ms · v0.3.0 · detect-only" />
           <Metric label="🎯 0.88 AUROC" value="FabricationGuard" detail="cross-task hallucination · ~1ms · PyPI v0.2.0" />
           <Metric label="📊 5 probes" value="ProbeBench" detail="anti-Goodhart leaderboard · 7-axis ProbeScore · v0.0.1" />
-          <Metric label="📜 ICML MI #73" value="Paper-1 in review" detail="Hallucination-Induction, Not Calibration · June 12" />
         </div>
       </section>
 
@@ -186,6 +194,107 @@ export default function HomePage() {
           {pillars.map((p) => (
             <PillarCard key={p.id} pillar={p} />
           ))}
+        </div>
+      </section>
+
+      {/* ===== openinterp-mcp teaser (NEWEST FLAGSHIP) ===== */}
+      <section className="mx-auto max-w-7xl px-6 mt-24">
+        <div className="card p-8 sm:p-10 relative overflow-hidden">
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-brand-500/10 via-transparent to-emerald-500/10"
+            aria-hidden="true"
+          />
+          <div
+            className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-emerald-500/10 blur-3xl"
+            aria-hidden="true"
+          />
+          <div className="relative grid gap-8 lg:grid-cols-[1.1fr_1fr] items-center">
+            <div>
+              <span className="chip bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30 ring-inset inline-flex items-center gap-1.5">
+                <Terminal className="h-3 w-3" />
+                NEW · PyPI v0.1.0
+              </span>
+              <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
+                Bring-your-own-agent interp infrastructure.
+              </h2>
+              <p className="mt-4 text-base text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
+                <strong className="text-ink-900 dark:text-ink-50">openinterp-mcp</strong> is an MCP server that lets any agent —
+                Claude Code, Cursor, Cline, OpenHands, Aider — run probe-causality experiments on{' '}
+                <em>your</em> Colab session. 8 typed tools. Methodology built-in (3 mandatory
+                baselines, 5-class verdict). We never see your model, data, or keys.
+              </p>
+              <div className="mt-5 grid grid-cols-2 gap-2 text-xs text-ink-900/60 dark:text-ink-50/60">
+                <div className="flex items-start gap-1.5">
+                  <ShieldCheck className="mt-0.5 h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>Privacy-first · zero hosted inference</span>
+                </div>
+                <div className="flex items-start gap-1.5">
+                  <Layers className="mt-0.5 h-3.5 w-3.5 text-brand-600 dark:text-brand-400 shrink-0" />
+                  <span>Claude-Code-as-judge replication</span>
+                </div>
+                <div className="flex items-start gap-1.5">
+                  <Cpu className="mt-0.5 h-3.5 w-3.5 text-sky-600 dark:text-sky-400 shrink-0" />
+                  <span>Colab + vast.ai + runpod compatible</span>
+                </div>
+                <div className="flex items-start gap-1.5">
+                  <Package className="mt-0.5 h-3.5 w-3.5 text-orange-600 dark:text-orange-400 shrink-0" />
+                  <span>Atlas + Zenodo DOIs for results</span>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/start"
+                  className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
+                >
+                  <Terminal className="h-3.5 w-3.5" /> First result in 10 minutes
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+                <Link
+                  href="/mcp"
+                  className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                >
+                  Architecture + 8 primitives
+                </Link>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="card p-4 bg-ink-950/95 font-mono text-[11px] leading-relaxed text-emerald-200 overflow-x-auto">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-300/60 mb-3">
+                  Your agent · talking to your Colab
+                </div>
+                <div className="space-y-1.5">
+                  <div>
+                    <span className="text-emerald-400">/colab-attach</span>{' '}
+                    <span className="text-emerald-200/80">https://abc123.ngrok-free.app</span>
+                  </div>
+                  <div className="text-emerald-200/50">› connected · qwen3.6-27b · 3 probes loaded</div>
+                  <div className="pt-2">
+                    <span className="text-emerald-400">capture_acts</span>
+                    <span className="text-emerald-200/80">(L20, end_question)</span>
+                  </div>
+                  <div className="text-emerald-200/50">› capture_id=cap_8f3a · n=20 tokens</div>
+                  <div className="pt-2">
+                    <span className="text-emerald-400">causality_protocol</span>
+                    <span className="text-emerald-200/80">(saturation-dir-L20, α=[5,50,200])</span>
+                  </div>
+                  <div className="text-emerald-200/50">› running 3 baselines · 4 α-sweeps · 30s</div>
+                  <div className="pt-2 text-amber-300">
+                    verdict: <span className="font-semibold">epiphenomenal-softmax</span>
+                  </div>
+                  <div className="text-emerald-200/50">Δrel = −0.046 · structural-rigidity confirmed</div>
+                  <div className="pt-2">
+                    <span className="text-emerald-400">publish</span>
+                    <span className="text-emerald-200/80">(title=&quot;L20 sat-dir epiphenomenal&quot;)</span>
+                  </div>
+                  <div className="text-emerald-200/50">› HF dataset · Zenodo DOI · atlas PR opened</div>
+                </div>
+              </div>
+              <div className="mt-3 flex items-center gap-2 text-[10px] text-ink-900/50 dark:text-ink-50/50 font-mono">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse-slow" />
+                Zero state on our infra · everything on your hardware
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

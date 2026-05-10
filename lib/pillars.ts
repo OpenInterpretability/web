@@ -211,14 +211,14 @@ export const roadmap = [
   {
     quarter: 'Q2 2026',
     label: 'NOW',
-    theme: 'Probes shipped + paper-1 in review',
+    theme: 'MCP infrastructure + probes + paper-1 in review',
     active: true,
     items: [
+      'openinterp-mcp v0.1.0 live · 8 typed tools · bring-your-own-agent · privacy-first',
       'FabricationGuard v0.2.0 live · 0.88 AUROC cross-task hallucination · ~1ms',
-      'ReasonGuard live · narrow-scope honest negative documented',
+      'agent-probe-guard v0.1 · capability + thinking detection · skip-21% @ 86% accuracy',
       'ProbeBench v0.0.1 · 5 reference probes · 7-axis ProbeScore · anti-Goodhart norms',
       'ICML MI Workshop paper-1 submitted · "Hallucination-Induction, Not Calibration"',
-      'Multi-Probe DPO + Pearson_CE crosscoder methodology (paper-2 finding validated)',
     ],
   },
   {
@@ -263,12 +263,12 @@ export const roadmap = [
 ]
 
 export const heroNew = {
-  eyebrow: 'FabricationGuard live · ProbeBench v0.0.1 · Multi-Probe DPO',
+  eyebrow: 'openinterp-mcp v0.1.0 live · FabricationGuard · ProbeBench v0.0.1',
   watchLine: 'Probes that ship.',
   thinkLine: 'Standards that survive.',
   subBold: 'The application layer for mechanistic interpretability.',
   subText:
-    'We turn frontier-lab interpretability research into production-grade safety probes. Built on Anthropic Persona Vectors, DeepMind Gemma Scope, and Alibaba Qwen-Scope. Apache 2.0 · Anti-Goodhart by construction · ~1ms inference.',
+    'We turn frontier-lab interpretability research into production-grade safety probes — and now an MCP server that lets any agent (Claude Code, Cursor, Cline) run them on your Colab. Apache 2.0 · Anti-Goodhart by construction · privacy-first.',
 }
 
 // Three-pillar reframing (Detect / Standardize / Deploy) — replaces 4-pillar stack.
@@ -304,14 +304,14 @@ export const threePillars = [
   {
     id: 'deploy',
     name: 'Deploy',
-    tagline: 'vLLM/SGLang plugins, agent integrations, regulated-industry adapters.',
+    tagline: 'MCP server, vLLM/SGLang plugins, agent integrations, regulated-industry adapters.',
     products: [
-      { name: 'openinterp SDK', status: 'live', detail: '`pip install openinterp` v0.2.1 · `safe_load_qwen36_lora()` for LoRA save/reload' },
+      { name: 'openinterp-mcp v0.1.0', status: 'live', detail: '8 typed tools · Colab backend · Claude Code / Cursor / Cline · privacy-first' },
+      { name: 'openinterp SDK', status: 'live', detail: '`pip install openinterp` v0.3.0 · agent-probe-guard + FabricationGuard' },
       { name: 'HuggingFace Spaces', status: 'live', detail: 'FabricationGuard ZeroGPU demo + ProbeBench leaderboard' },
-      { name: 'vLLM plugin', status: 'planned', detail: 'inference-time probe scoring · Q2 2026' },
-      { name: 'Medical / financial adapters', status: 'planned', detail: 'EU AI Act + FDA SaMD compliance' },
+      { name: 'vLLM plugin', status: 'planned', detail: 'inference-time probe scoring · Q3 2026' },
     ],
-    href: '/products/fabricationguard',
+    href: '/mcp',
     gradient: 'from-pink-500/20 to-orange-500/20',
   },
 ] as const
