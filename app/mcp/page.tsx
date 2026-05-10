@@ -119,7 +119,7 @@ DOES NOT EXIST: hosted inference, key custody, telemetry, query database.`}
         <h2 className="text-2xl font-medium text-zinc-100">Install</h2>
         <div className="flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-950 p-3 font-mono text-sm">
           <span className="flex-1 text-zinc-300">{installCmd}</span>
-          <CopyButton value={installCmd} />
+          <CopyButton text={installCmd} />
         </div>
         <p className="text-sm text-zinc-500">
           Apache-2.0. <Link href={PYPI_URL} target="_blank" className="underline-offset-4 hover:underline">PyPI</Link> ·{' '}

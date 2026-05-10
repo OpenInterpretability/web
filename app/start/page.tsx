@@ -104,7 +104,7 @@ export default function StartPage() {
             <div className="flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-950 p-3 font-mono text-sm">
               <Terminal className="h-4 w-4 text-zinc-500" />
               <span className="flex-1 text-zinc-300">{installCmd}</span>
-              <CopyButton value={installCmd} />
+              <CopyButton text={installCmd} />
             </div>
           </div>
         </li>
