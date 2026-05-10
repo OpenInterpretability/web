@@ -27,7 +27,7 @@ export default function McpPage() {
         <div className="flex flex-wrap gap-3 pt-4">
           <Link
             href="/start"
-            className="inline-flex items-center gap-2 rounded-md bg-amber-500 px-4 py-2 text-sm font-medium text-ink-950 hover:bg-amber-400"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
           >
             First result in 10 minutes <ArrowRight className="h-4 w-4" />
           </Link>
@@ -89,7 +89,7 @@ DOES NOT EXIST: hosted inference, key custody, telemetry, query database.`}
             </div>
           </li>
           <li className="flex gap-3">
-            <Layers className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
+            <Layers className="mt-0.5 h-5 w-5 shrink-0 text-brand-600 dark:text-brand-400" />
             <div>
               <strong className="text-ink-900 dark:text-ink-50">Claude-Code-as-judge.</strong> Every published
               result can be independently re-executed by a Claude agent loop that uses the same
@@ -136,7 +136,7 @@ DOES NOT EXIST: hosted inference, key custody, telemetry, query database.`}
 function Primitive({ name, desc }: { name: string; desc: string }) {
   return (
     <div className="rounded-md border border-black/10 dark:border-white/15 bg-ink-900/[0.02] dark:bg-white/[0.03] p-4">
-      <code className="text-sm font-mono text-amber-700 dark:text-amber-400">{name}</code>
+      <code className="text-sm font-mono text-brand-600 dark:text-brand-400">{name}</code>
       <p className="mt-1 text-sm text-ink-900/70 dark:text-ink-50/70">{desc}</p>
     </div>
   )

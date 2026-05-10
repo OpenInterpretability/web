@@ -51,7 +51,7 @@ export default function StartPage() {
             <Link
               href={COLAB_TEMPLATE_URL}
               target="_blank"
-              className="inline-flex items-center gap-2 rounded-md bg-amber-500/15 px-4 py-2 text-sm font-medium text-amber-700 dark:text-amber-300 hover:bg-amber-500/25"
+              className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
             >
               Open in Colab <ExternalLink className="h-4 w-4" />
             </Link>
@@ -158,13 +158,13 @@ export default function StartPage() {
         <h3 className="text-lg font-medium text-ink-900 dark:text-ink-50">What you can do next</h3>
         <ul className="mt-3 space-y-2 text-sm text-ink-900/70 dark:text-ink-50/70">
           <li>
-            <Link href="/mcp" className="text-amber-700 dark:text-amber-400 hover:underline">Read the architecture</Link> — privacy model, what lives where, why no hosted inference.
+            <Link href="/mcp" className="text-brand-600 dark:text-brand-400 hover:underline">Read the architecture</Link> — privacy model, what lives where, why no hosted inference.
           </li>
           <li>
-            <Link href="/research" className="text-amber-700 dark:text-amber-400 hover:underline">Browse papers</Link> — methodology and findings driving the toolkit.
+            <Link href="/research" className="text-brand-600 dark:text-brand-400 hover:underline">Browse papers</Link> — methodology and findings driving the toolkit.
           </li>
           <li>
-            <Link href="/research/papers/two-forms-epiphenomenal-probes" className="text-amber-700 dark:text-amber-400 hover:underline">
+            <Link href="/research/papers/two-forms-epiphenomenal-probes" className="text-brand-600 dark:text-brand-400 hover:underline">
               The methodology behind the protocol
             </Link>{' '}
             — paper-6, the three mandatory causality checks.
