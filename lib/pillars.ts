@@ -263,12 +263,12 @@ export const roadmap = [
 ]
 
 export const heroNew = {
-  eyebrow: 'openinterp-mcp v0.1.0 live · FabricationGuard · ProbeBench v0.0.1',
+  eyebrow: 'openinterp-mcp v0.1.0 beta · Atlas with 11 entries · ProbeBench',
   watchLine: 'Probes that ship.',
   thinkLine: 'Standards that survive.',
-  subBold: 'The application layer for mechanistic interpretability.',
+  subBold: 'The reproducibility and runtime layer for mechanistic interpretability.',
   subText:
-    'We turn frontier-lab interpretability research into production-grade safety probes — and now an MCP server that lets any agent (Claude Code, Cursor, Cline) run them on your Colab. Apache 2.0 · Anti-Goodhart by construction · privacy-first.',
+    'Every probe inspectable. Every methodology re-runnable. Every claim citable. MCP server + agent-callable Colab backend + public Atlas with sha256-hashed manifests and Zenodo DOIs. Apache-2.0 · privacy-first · agentic by design.',
 }
 
 // Three-pillar reframing (Detect / Standardize / Deploy) — replaces 4-pillar stack.

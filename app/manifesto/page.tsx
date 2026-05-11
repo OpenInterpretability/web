@@ -26,6 +26,14 @@ export default function ManifestoPage() {
       <h1 className="mt-4 text-5xl sm:text-6xl font-semibold tracking-tight text-balance">
         The microscope is built. Now we need the standards.
       </h1>
+      <div className="mt-6 rounded-xl border border-emerald-500/25 bg-emerald-500/[0.05] p-5">
+        <p className="text-sm font-semibold uppercase tracking-[0.12em] text-emerald-700 dark:text-emerald-300 mb-2">
+          The thesis
+        </p>
+        <p className="text-lg leading-relaxed text-ink-900/85 dark:text-ink-50/85 text-balance">
+          <strong>OpenInterpretability is building the reproducibility and runtime layer for mechanistic interpretability findings in agentic systems</strong> — every probe inspectable, every methodology re-runnable, every claim citable.
+        </p>
+      </div>
 
       <div className="mt-10 space-y-10 text-ink-900/80 dark:text-ink-50/80 text-lg leading-relaxed">
         <p>
