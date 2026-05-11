@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Github, Zap, ShieldCheck, GitBranch, Cpu, Atom, Package, Play, Trophy, Terminal, Layers } from 'lucide-react'
+import { ArrowRight, Github, Zap, ShieldCheck, GitBranch, Cpu, Atom, Package, Play, Trophy, Terminal, Layers, Library, Hash } from 'lucide-react'
 import { headline, moat, saes, benchmarks, priorWork, stages, site } from '@/lib/constants'
 import { pillars, threePillars, threeMoats, roadmap, heroNew } from '@/lib/pillars'
 import { PillarCard } from '@/components/pillar-card'
@@ -435,6 +435,125 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Atlas teaser (NEW) ===== */}
+      <section className="mx-auto max-w-7xl px-6 mt-24">
+        <div className="card p-8 sm:p-10 relative overflow-hidden">
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-brand-500/10"
+            aria-hidden="true"
+          />
+          <div
+            className="absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-emerald-500/10 blur-3xl"
+            aria-hidden="true"
+          />
+          <div className="relative grid gap-8 lg:grid-cols-[1.1fr_1fr] items-center">
+            <div>
+              <span className="chip bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30 ring-inset inline-flex items-center gap-1.5">
+                <Library className="h-3 w-3" />
+                NEW · 11 entries · schema v1
+              </span>
+              <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
+                The Atlas — every public mech-interp finding, hashed and citable.
+              </h2>
+              <p className="mt-4 text-base text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
+                Read-only public registry of probes, causality verdicts, and honest-negative
+                findings. Each entry ships with a content-only sha256, an HF dataset, and an optional
+                Zenodo DOI. Published via <code className="font-mono text-sm bg-black/[0.05] dark:bg-white/[0.08] px-1.5 py-0.5 rounded">openinterp-mcp</code> &gt; <code className="font-mono text-sm bg-black/[0.05] dark:bg-white/[0.08] px-1.5 py-0.5 rounded">publish()</code>.
+              </p>
+              <div className="mt-5 grid grid-cols-2 gap-2 text-xs text-ink-900/65 dark:text-ink-50/65">
+                <div className="flex items-start gap-1.5">
+                  <ShieldCheck className="mt-0.5 h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>Honest-negatives are first-class</span>
+                </div>
+                <div className="flex items-start gap-1.5">
+                  <Hash className="mt-0.5 h-3.5 w-3.5 text-brand-600 dark:text-brand-400 shrink-0" />
+                  <span>Re-hashable manifests · verifiable</span>
+                </div>
+                <div className="flex items-start gap-1.5">
+                  <GitBranch className="mt-0.5 h-3.5 w-3.5 text-sky-600 dark:text-sky-400 shrink-0" />
+                  <span>Public GitHub-native registry</span>
+                </div>
+                <div className="flex items-start gap-1.5">
+                  <Package className="mt-0.5 h-3.5 w-3.5 text-orange-600 dark:text-orange-400 shrink-0" />
+                  <span>Zenodo DOIs auto-minted</span>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/atlas"
+                  className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
+                >
+                  <Library className="h-3.5 w-3.5" /> Browse the Atlas
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+                <Link
+                  href="/start"
+                  className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                >
+                  <Terminal className="h-3.5 w-3.5" /> Publish via your agent
+                </Link>
+              </div>
+            </div>
+            <div className="space-y-2.5">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50 mb-1.5">
+                Preview · 4 of 11 entries
+              </div>
+              <Link
+                href="/atlas/03a6e70bfd"
+                className="block rounded-lg border border-black/5 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-sm p-3 hover:border-brand-500/40 transition-colors group"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="chip bg-brand-500/15 text-brand-700 dark:text-brand-300 ring-brand-500/30 ring-inset text-[10px]">Finding</span>
+                  <span className="font-mono text-[10px] text-ink-900/45 dark:text-ink-50/45">03a6e70bfd</span>
+                </div>
+                <div className="text-sm font-medium text-ink-900 dark:text-ink-50 group-hover:text-brand-600 dark:group-hover:text-brand-400 line-clamp-1">
+                  Saturation-direction principle — 5 classes of probe causality
+                </div>
+              </Link>
+              <Link
+                href="/atlas/60b5c38463"
+                className="block rounded-lg border border-black/5 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-sm p-3 hover:border-brand-500/40 transition-colors group"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="chip bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-amber-500/30 ring-inset text-[10px]">Adversarial</span>
+                  <span className="font-mono text-[10px] text-ink-900/45 dark:text-ink-50/45">60b5c38463</span>
+                </div>
+                <div className="text-sm font-medium text-ink-900 dark:text-ink-50 group-hover:text-brand-600 dark:group-hover:text-brand-400 line-clamp-1">
+                  Capability locus — 4/4 pre_tool/turn_end sites pushdown-asymmetric
+                </div>
+              </Link>
+              <Link
+                href="/atlas/8d5df2d5d5"
+                className="block rounded-lg border border-black/5 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-sm p-3 hover:border-brand-500/40 transition-colors group"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="chip bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30 ring-inset text-[10px]">Probe</span>
+                  <span className="font-mono text-[10px] text-ink-900/45 dark:text-ink-50/45">8d5df2d5d5</span>
+                </div>
+                <div className="text-sm font-medium text-ink-900 dark:text-ink-50 group-hover:text-brand-600 dark:group-hover:text-brand-400 line-clamp-1">
+                  FabricationGuard v2 — L31 cross-task hallucination probe
+                </div>
+              </Link>
+              <Link
+                href="/atlas/a0c01e67c9"
+                className="block rounded-lg border border-black/5 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-sm p-3 hover:border-brand-500/40 transition-colors group"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="chip bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-amber-500/30 ring-inset text-[10px]">Adversarial</span>
+                  <span className="font-mono text-[10px] text-ink-900/45 dark:text-ink-50/45">a0c01e67c9</span>
+                </div>
+                <div className="text-sm font-medium text-ink-900 dark:text-ink-50 group-hover:text-brand-600 dark:group-hover:text-brand-400 line-clamp-1">
+                  L55 CoT-Integrity probe is template-locked epiphenomenal
+                </div>
+              </Link>
+              <div className="text-[10px] text-ink-900/45 dark:text-ink-50/45 font-mono pl-1 pt-1">
+                + 7 more — probe-result · atlas-entry · adversarial-finding
+              </div>
             </div>
           </div>
         </div>
