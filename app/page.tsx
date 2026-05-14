@@ -80,6 +80,23 @@ export default function HomePage() {
               </span>
             </div>
           </div>
+
+          {/* Product Hunt badge */}
+          <div className="mt-10 flex justify-center">
+            <a
+              href="https://www.producthunt.com/products/openinterpretability?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-openinterpretability"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1146555&theme=light&t=1778728126905"
+                alt="OpenInterpretability - Open-source toolkit to audit what your LLM knows | Product Hunt"
+                width={250}
+                height={54}
+              />
+            </a>
+          </div>
         </div>
       </section>
 
