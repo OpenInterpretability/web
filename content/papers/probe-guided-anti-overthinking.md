@@ -1,6 +1,6 @@
-# Probe-Guided Anti-Overthinking: A Causal Termination Basin in Qwen3.6-27B Reasoning
+# Trajectory-Shaping Probe Steering in Qwen3.6-27B Reasoning: Causal, Cross-Domain, and KV-Cache-Bound
 
-**Workshop draft v1 (2026-05-16). Target: NeurIPS 2026 MI Workshop (Sep deadline) with view to ICLR 2027 main paper expansion.**
+**Workshop draft v2 (2026-05-16). Target: NeurIPS 2026 MI Workshop (Sep deadline) with view to ICLR 2027 main paper expansion.**
 
 **Apache-2.0. Reproducible. Single-author submission, double-blind by conventions.**
 
@@ -8,7 +8,7 @@
 
 ## Abstract
 
-We identify, validate, and apply a causally functional subjective-time direction in the residual stream of Qwen3.6-27B, an open-weights 27B-parameter hybrid-attention reasoning model. A linear ridge regression probe trained on residuals at L11/L31/L55 predicts the fraction of thinking-phase completed with R²=0.82-0.86 (Spearman ρ ≥ 0.90), and three baselines (random-feature projection, shuffled-target retraining, constant-mean) cleanly fail to match. Causal validation via forward-hook steering at L31 reveals direction-specific behavioral control: at α=+50 the probe direction shortens GSM8K thinking-length in 9/14 prompts (64%) versus 2/14 for a matched random direction (Fisher exact p=0.0092, odds ratio 10.8). Quality evaluation at N=15 shows 24% mean thinking-token compression at exactly preserved end-to-end accuracy (12/15 correct in both conditions). Dose-response analysis reveals a phase-transition near α=+50, consistent with steering through a discrete "termination basin" attractor. Crucially, the GSM8K-trained probe direction transfers without retraining to SWE-bench Verified code-debugging problems: across N=20 problems stratified over six repositories (astropy, django, sympy, sphinx, matplotlib, scikit-learn), 20/20 baselines hit MAX_NEW_TOK=1024 in overthinking-cap failures (and the astropy N=10 still fail at MAX_NEW_TOK=2048, ruling out budget-artifact). Probe-steering at α=+50 produces clean `</think>` termination in 19/20 (95%) at mean 299 tokens, while a matched random direction terminates only 6/20 (30%) and substantially later (mean 797 tokens when it does). Together these results constitute the first positive causal probe in the OpenInterpretability methodology corpus — contrasting with five prior epiphenomenal cases — and demonstrate a mechanistically-grounded inference-time anti-overthinking intervention that generalizes across reasoning domains. We further extend the Belrose et al. (2024) probe-causality taxonomy with a structural recipe: causal probes arise when their direction aligns with a discrete decision basin the model is structurally biased toward, consistent with the saturation-direction principle.
+We identify a causally functional subjective-time direction in the residual stream of Qwen3.6-27B (open-weights, 27B parameters, hybrid Gated-Delta-Net plus standard attention), validate it across math (GSM8K) and code (SWE-bench Verified) reasoning, and characterize a fundamental operational constraint on its causal effect: the steering intervention works only when applied continuously from generation start. A Ridge regression probe trained on residuals at L11/L31/L55 predicts thinking-phase completion with R²=0.82-0.86 (Spearman ρ ≥ 0.90); three baselines (random-feature, shuffled-target, constant-mean) cleanly fail. Forward-hook steering at L31 with α=+50 from token 1 shortens GSM8K thinking-length in 9/14 prompts vs 2/14 for matched random (Fisher p=0.0092). Cross-domain: 19/20 (95%) probe-clean-termination on SWE-bench Verified across 6 repositories vs 6/20 (30%) random (Fisher p<0.001), at mean 299 thinking-tokens vs unbounded baselines (0/10 terminate even at MAX_NEW_TOK=2048). The mechanism, however, is **trajectory-dependent**: an onset-timing experiment shows that delayed steering — even at decode step 50 — drops termination from 9/10 to 3/10; by step 200, the rescue effect vanishes entirely (0/10). Two closed-loop variants that use the same probe as both sensor and actuator (threshold-trigger Design E across thresholds {0.65, 0.70, 0.85}; plateau-detector Design F at two window/delta configurations) achieve only 1-2/10 termination, confirming that the "termination basin" is mediated through KV-cache state buildup rather than instantaneous residual perturbation. This refines the Belrose et al. (2024) probe-causality taxonomy with a third category beyond "causal" / "epiphenomenal": **operationally-constrained causal** — directions that lever behavior only under specific application protocols. We document Designs E and F as honest negatives and orient the practical intervention (`agent-probe-guard` SDK `anti_overthinking` mode) as a preventive compute-budget enforcer applied from token 1, not an adaptive detect-and-intervene system.
 
 ---
 
@@ -16,17 +16,19 @@ We identify, validate, and apply a causally functional subjective-time direction
 
 A persistent gap in mechanistic interpretability separates *detection* from *causation*. Linear probes routinely achieve high AUROC or R² on residual-stream activations for properties like truthfulness, sentiment, or task-success — yet when those same directions are injected via forward-hook steering at amplitudes appropriate for behavioral intervention, the effects often vanish (Belrose et al. 2024; Caio 2026a, "Two Forms of Epiphenomenal Probes"). The default assumption that "X is in the residual stream" implies "X is causally usable" has accumulated counter-evidence: probes can fit marginal target distributions without per-prompt predictive structure (Caio 2026b, "Marginal-Fit Pathology"); probe-shaped log-probability shifts can be uniform softmax-temperature artifacts (Caio 2026a, Form 1); probes can be locked to template-controlled decisions encoded in input tokens upstream of any residual the probe reads (Caio 2026a, Form 2).
 
-This paper reports the rare opposite. We identify a subjective-time direction in Qwen3.6-27B residuals — a linear feature that encodes "what fraction of the thinking phase has been completed" — and we demonstrate it is *causally functional* for controlling thinking-phase termination. The causal direction is direction-specific (matched random direction fails), survives extensive baselines (random-feature, shuffled-target, constant-mean, and a trivial top-k constant baseline), shows a clean phase-transition dose-response curve consistent with a discrete attractor basin, preserves end-to-end task accuracy under intervention, and — critically — transfers without retraining from GSM8K math reasoning to SWE-bench code-debugging, where it rescues 100% of overthinking-cap failures.
+This paper reports the rare opposite — with a twist. We identify a subjective-time direction in Qwen3.6-27B residuals (a linear feature encoding "what fraction of thinking has been completed") and demonstrate it is *causally functional* for controlling thinking-phase termination. The direction passes all standard baselines, exhibits a clean dose-response, preserves end-to-end task accuracy under intervention, and transfers without retraining from GSM8K to SWE-bench Verified across six repositories. But on close mechanistic examination, the causality is **operationally constrained**: it requires continuous application from generation start. A closed-loop design that uses the same probe as both sensor and actuator — the obvious adaptive intervention — fails almost completely (1-2/10 success). An onset-timing experiment shows the failure is not about the sensor; it is intrinsic to the mechanism. Delaying static steering by as little as 50 decode steps cuts termination from 9/10 to 3/10. By step 200, the effect is dead. The "termination basin" we initially interpreted as a discrete state-attractor turns out to be mediated through the KV-cache buildup of steered residuals — a trajectory-shaping phenomenon, not a state-switching one.
 
-The finding has three contributions:
+The finding has four contributions:
 
-1. **Empirical**: a probe-grade subjective-time direction in Qwen3.6-27B (R²=0.86 at L31) that is causally functional for termination control (Fisher p<0.01) and generalizes cross-domain (10/10 rescue rate on SWE-bench).
+1. **Empirical**: a probe-grade subjective-time direction in Qwen3.6-27B (R²=0.86 at L31) that is causally functional for termination control (Fisher p<0.01 across N=20 cross-repo SWE-bench problems) and generalizes cross-domain at 95% rescue rate.
 
-2. **Mechanistic**: a structural recipe for when a probe is causal. The subjective-time direction aligns with the model's natural "termination basin" — an attractor that produces the `</think>` emission. Steering toward the basin (α=+α) accelerates termination; steering away (α=−α) destabilizes generation without engaging a symmetric attractor, consistent with the saturation-direction principle (Caio 2026c).
+2. **Mechanistic**: probe causality here is *trajectory-dependent*, not state-dependent. The steering effect operates by progressively shaping the K/V cache stored at each decoded token, not by perturbing the current residual into a discrete basin. Onset-timing data confirm this directly.
 
-3. **Practical**: an inference-time anti-overthinking intervention. We demonstrate 24% thinking-token compression on GSM8K at zero accuracy loss, and ship the steering recipe as a candidate feature for the `agent-probe-guard` SDK.
+3. **Negative**: closed-loop variants of the same probe (threshold-triggered Design E + plateau-detector Design F) fail consistently. These are *honest negatives* that save future researchers from chasing the same intuitive but incorrect design pattern.
 
-We position this work as the positive complement to a corpus of methodology papers documenting probe-causality failure modes (Caio 2026a/b/c). Together they enable a decision procedure: probes that satisfy the structural conditions documented here (decision-basin alignment, saturation-direction asymmetry, sparse-target avoidance) are candidates for causal intervention; probes that lack them should be treated as detection-only.
+4. **Practical**: the inference-time intervention is viable but as a *preventive* compute-budget enforcer (continuous steering applied from token 1, achieving 24% compression on GSM8K at zero accuracy loss and ~70% compression on SWE-bench while maintaining termination), not as an adaptive detection-then-intervention system.
+
+We position this work as a refinement of the broader probe-causality taxonomy: in addition to the "causal" and "epiphenomenal" categories documented in prior work (Belrose et al. 2024; Caio 2026a/b/c), a third category emerges — **operationally-constrained causal**, where the direction levers behavior only under specific application protocols.
 
 ---
 
@@ -146,6 +148,10 @@ The negative-α regime is structurally different from positive-α. Both probe an
 
 This is consistent with the saturation-direction principle (Caio 2026c): the model has a discrete "termination basin" feature (the decision to emit `</think>`) that probe-direction +α aligns with, but there is no symmetric "just-started" attractor for the model to fall into — because "continue thinking" is the default action, not a feature that needs to be represented. Probe direction in the −α regime is therefore behaviorally equivalent to random noise.
 
+### 4.5 Critical caveat: steering must be persistent from token 1
+
+All causal effects reported in this section are observed under steering applied at **every** generation token from the first generated token onward. This protocol seems incidental to the methodology but turns out to be load-bearing for the mechanism. §7.4 establishes that delaying onset by 50 decode steps drops the Phase 2A termination effect from 9/10 to 3/10; delaying by 200 steps eliminates it entirely. The "basin" interpretation we initially adopted (steering pushes the residual into a discrete state-attractor) is therefore incomplete. The full account is given in §7.4 and the Implications section (§10).
+
 ---
 
 ## 5. Dose-response: a phase transition, not a smooth slope
@@ -221,11 +227,55 @@ To control for the possibility that the rescue is an artifact of MAX_NEW_TOK=102
 
 ### 7.1 The one breakdown case
 
-The single non-rescue in cross-repo (matplotlib-22865) produces a different failure mode: probe@+50 terminates generation at 161 tokens via EOS (not `</think>`). The model emits a short truncated output without engaging the proper thinking-end protocol. This is consistent with the partial-collapse regime observed at α=+100 on GSM8K (§4.3, 5/14 collapses) — the probe direction occasionally pushes the model past the termination basin into a degenerate state rather than landing cleanly in it. At α=+50 on cross-repo SWE-bench the breakdown rate is 1/20 (5%); on GSM8K it was 0/14. We flag this as a known edge mode and reflect it in §10 deployment guidance (a deployed `anti_overthinking` mode should detect EOS-without-`</think>` and treat it as a degenerate rescue requiring fallback).
+The single non-rescue in cross-repo (matplotlib-22865) produces a different failure mode: probe@+50 terminates generation at 161 tokens via EOS (not `</think>`). The model emits a short truncated output without engaging the proper thinking-end protocol. This is consistent with the partial-collapse regime observed at α=+100 on GSM8K (§4.3, 5/14 collapses) — the probe direction occasionally pushes the model past the termination basin into a degenerate state rather than landing cleanly in it. At α=+50 on cross-repo SWE-bench the breakdown rate is 1/20 (5%); on GSM8K it was 0/14.
 
-### 7.2 Universality interpretation
+### 7.2 What WOULD have been a SDK feature: closed-loop intervention (Design E, falsified)
 
-The cross-domain transfer of a GSM8K-math-trained probe to SWE-bench code-debugging — replicating across six repositories without retraining and with consistent compression to ~30% of the cap — is the strongest evidence we have that the subjective-time direction captures a feature of *reasoning per se*, not a domain-specific artifact. The probe operates on a representational substrate that generalizes across the math-vs-code distinction; the termination basin appears to be a universal feature of the model's reasoning machinery.
+The natural design for an inference-time anti-overthinking SDK is closed-loop: use the same probe as both sensor (predicting the current "thinking fraction" from the residual at each token) and actuator (injecting α=+50 steering once a threshold is crossed). This would preserve depth on prompts that genuinely need exploration (no steering until the model is "near done") and only commit to termination when needed.
+
+We implemented this as Design E, using the unnormalized Ridge coefficients + intercept to compute the predicted fraction at each generated token, and triggering persistent α=+50 steering once the prediction crossed a threshold (sweeping {0.65, 0.70, 0.85}, with `min_decode_steps=50` to avoid triggering on prefill noise).
+
+**Result: 1-2/10 termination across all three thresholds.**
+
+Per-prompt diagnostics reveal what happened:
+- At threshold 0.85, the trigger never fires on any of the 10 prompts. Maximum predicted fraction during overthinking ranges 0.63–0.82; the model's residual during stuck thinking never approaches the "fraction=1.0" probe direction the basin interpretation predicted.
+- At threshold 0.65, the trigger fires on 8/10 prompts (committing at mean decode step ≈ 444), but only 1/10 actually terminates. The other 7/10 continue to MAX_NEW_TOK=1024 with α=+50 active for 400-700 tokens after commit.
+- At threshold 0.70: same pattern — fires on 6/10 (mean commit ≈ 692), terminates 1/10.
+
+The two cases that DID terminate were ones where the trigger fired very early (sphinx-7889 committed @ step 99; scikit-12585 committed @ step 253). When commit happens at step 400+, no closed-loop variant ever produces termination.
+
+### 7.3 Plateau detection also fails (Design F)
+
+A natural alternative to absolute-threshold triggering is plateau detection: if the predicted fraction stops changing meaningfully over a window of recent tokens, the model is "stuck" and we trigger termination. We implemented this as Design F with rolling window 100 and 50, plateau threshold δ=0.02.
+
+**Result: 0/10 termination at either configuration.** The trigger never fires because the predicted fraction oscillates more than 0.02 in any reasonable window during overthinking — the residual is dynamic at the per-token level even when the model is making no semantic progress. Plateau detection at the residual level is not a viable overthinking signal in this regime.
+
+### 7.4 Onset-timing experiment isolates the mechanism
+
+To distinguish whether the closed-loop failure was a property of the sensor (threshold triggers in the wrong place) or the steering itself (late application is fundamentally weaker), we ran a sensor-free deterministic experiment: static α=+50 with a delayed onset at decode step ∈ {50, 200, 400} on the same 10 cross-repo SWE-bench prompts.
+
+**Table 6.** Onset-timing experiment, N=10 cross-repo SWE-bench. The "from token 1" row is the Phase 2A canonical static protocol; subsequent rows progressively delay the steering onset.
+
+| Steering onset | Termination | Mean length when term |
+|---|---|---|
+| **from token 1** (Phase 2A canonical) | **9/10** | 269 |
+| from decode step 50 | 3/10 | 719 |
+| from decode step 200 | **0/10** | — |
+| from decode step 400 | **0/10** | — |
+
+The curve is monotonic and steep. By decode step 200 — well within typical pre-termination thinking lengths — the same direction at the same α has no detectable effect. **The causal mechanism is trajectory-dependent**: it operates by progressively shaping the K/V cache as it is built up, not by pushing the current-token residual into a discrete basin. Once the K/V cache has accumulated 200+ unsteered tokens, the attention mechanism's weighted average over the full cache is dominated by unsteered context; perturbations to new-token residuals do not propagate backward into cached state.
+
+This explains the closed-loop failure mechanistically. Closed-loop triggers fire mid-generation, by which point the unsteered K/V cache has already accumulated to a state that dominates downstream attention. Even if the sensor were perfect, the actuator cannot reach into the past to retroactively steer the cache. The intervention only works when applied from a clean cache — that is, from the first generated token.
+
+### 7.5 Refined interpretation: termination "basin" as cache-mediated bias
+
+The §4 basin interpretation is not wrong but is incomplete. The corrected mechanism: continuous steering from generation start adds a small bias (α × probe direction) to the residual at every L31 forward pass. This biased residual is what gets cached as K/V at each new token position. The attention layers in subsequent generation steps attend over this *biased* cache, producing logits that are slightly more "termination-favoring" at every token. After hundreds of accumulated tokens of small bias, the cumulative effect on the model's distribution over next tokens favors `</think>` emission strongly enough to consistently produce termination.
+
+This is a *trajectory-shaping* mechanism, not a *state-attractor* mechanism. The "basin" language was a useful first-pass description but mis-locates the active component: the basin is in the K/V cache, not in the single-token residual. This distinction has direct practical consequences for SDK design (§10).
+
+### 7.6 Universality interpretation
+
+With the trajectory-shaping mechanism in place, the cross-domain transfer of a GSM8K-math-trained probe to SWE-bench code-debugging — replicating across six repositories without retraining and with consistent compression to ~30% of the cap — points to a feature of *reasoning per se*. The K/V-cache bias from the same direction works on both math and code reasoning, suggesting the underlying mechanism (whatever the residual at L31 represents about "near-end thinking") is shared infrastructure across reasoning domains, not a domain-specific artifact.
 
 ### 7.1 Quality of post-rescue thinking
 
@@ -261,58 +311,81 @@ The forward-hook steering methodology used here is standard (Turner et al. 2023;
 
 ## 9. Limitations
 
-1. **Single model**. All results on Qwen3.6-27B. The subjective-time direction may not exist at the same layer or with the same magnitude in other reasoning models (DeepSeek-R1, o1, future Claude reasoning variants). Replication on at least one other open-weights reasoning model is necessary before claiming "universal feature in reasoning LLMs".
+1. **Single model**. All results on Qwen3.6-27B. The subjective-time direction, the trajectory-shaping mechanism, and the KV-cache lock-in finding may not generalize identically to other reasoning models (DeepSeek-R1, o1, future Claude reasoning variants). Replication on ≥1 other open-weights reasoning model is necessary before claiming a universal property of reasoning LLMs.
 
-2. **Quality evaluation N is small** (N=15 GSM8K). The 24% compression at zero accuracy loss finding is directionally clean but not statistically robust. Scaling to N≥100 across GSM8K plus at least one cross-domain benchmark (MATH, StrategyQA) is the immediate follow-up.
+2. **Scope of the KV-cache hypothesis**. The trajectory-dependence finding is established for one specific direction (subjective-time at L31). Whether it generalizes to *all* probe-steering interventions in transformer reasoning models is an open question. The hypothesis predicts that any layer-L steering applied late should fail similarly, but only direct measurement on additional probes can confirm.
 
-3. **SWE-bench coverage**. We test N=20 problems across 6 repositories. Pattern is consistent across all 6 (5/5 cross-repo show probe > random) but per-repo N is small (n=2 outside astropy). Scaling to ≥10 problems per repo across the full SWE-bench Verified taxonomy is necessary before claiming "universal across SWE-bench reasoning distribution".
+3. **Quality evaluation N is small** (N=15 GSM8K). The 24% compression at zero accuracy loss finding is directionally clean but not statistically robust. Scaling to N≥100 across GSM8K plus at least one cross-domain benchmark (MATH, StrategyQA) is the immediate follow-up.
 
-4. **No patch-correctness evaluation**. SWE-bench rescue is measured by terminate-rate and thinking-length only. Whether the post-rescue thinking content correctly diagnoses bugs and proposes correct fixes requires docker-based patch evaluation against test suites, which we have not run.
+4. **SWE-bench coverage**. We test N=20 problems across 6 repositories. Pattern is consistent across all 6 (5/5 cross-repo show probe > random) but per-repo N is small (n=2 outside astropy). Scaling to ≥10 problems per repo across the full SWE-bench Verified taxonomy is necessary before claiming "universal across SWE-bench reasoning distribution".
 
-5. **No multi-turn agent rollout**. SWE-bench in practice runs as a 20+ turn agent loop with tool calls. We test only the first-turn thinking phase. Whether the probe-guided rescue holds across full agent rollouts (and whether it improves end-to-end task success) requires the full SWE-bench harness, which is a separate ~6h experiment.
+5. **No patch-correctness evaluation**. SWE-bench rescue is measured by terminate-rate and thinking-length only. Whether the post-rescue thinking content correctly diagnoses bugs and proposes correct fixes requires docker-based patch evaluation against test suites, which we have not run. Visual inspection of N=3 cases (django, sphinx, matplotlib) suggests probe-rescued outputs are structurally complete but shallower than baseline trajectories — a tradeoff that needs proper quantification.
 
-6. **Greedy decoding only**. All generations use `do_sample=False, temperature=0`. Behavior under sampling (temperature > 0, top-p) is untested. The basin interpretation predicts the effect should be robust to sampling within reasonable temperatures, but this requires verification.
+6. **No multi-turn agent rollout**. SWE-bench in practice runs as a 20+ turn agent loop with tool calls. We test only the first-turn thinking phase. Whether the probe-guided rescue holds across full agent rollouts (and whether it improves end-to-end task success) requires the full SWE-bench harness, which is a separate ~6h experiment.
 
-7. **Single layer L31**. Phase 2A causal validation runs only at L31. The v1 probe at L11 (R²=0.84) and L55 (R²=0.82) might lever differently. A cross-layer α-sweep is a natural follow-up.
+7. **Greedy decoding only**. All generations use `do_sample=False, temperature=0`. Behavior under sampling (temperature > 0, top-p) is untested. The trajectory-shaping interpretation predicts the K/V-cache mechanism should remain dominant under sampling within reasonable temperatures, but this requires verification.
 
-8. **Content-confound in v1 probe**. The R²=0.86 is partially driven by content distinctiveness at the end of thinking (§3.2). A normalized-residual variant of the probe would isolate the position-pure component. We do not implement this here; the causal validation in §4 does not depend on whether the signal is content-mediated or position-pure.
+8. **Single layer L31 in Phase 2A and Phase 2B**. The v1 probe at L11 (R²=0.84) and L55 (R²=0.82) might lever differently. A cross-layer α-sweep, plus a cross-layer onset-timing study, is a natural follow-up — and would establish whether the KV-cache lock-in mechanism is layer-specific or universal.
+
+9. **Content-confound in v1 probe**. The R²=0.86 is partially driven by content distinctiveness at the end of thinking (§3.2). A normalized-residual variant of the probe would isolate the position-pure component. We do not implement this here; the causal validation in §§4 and 7 does not depend on whether the signal is content-mediated or position-pure.
+
+10. **Closed-loop design space not exhausted**. We tested two adaptive designs (threshold-trigger Design E + plateau-detector Design F). More complex designs — multi-stage commits with progressively stronger α, learned commit timing, layer-multiplexed steering — could in principle work. We have shown that the obvious single-direction single-trigger versions fail; we have not shown that no closed-loop variant can succeed.
 
 ---
 
 ## 10. Implications and SDK
 
-### 10.1 Mechanistic interpretation
+### 10.1 Mechanistic interpretation, revised
 
-The subjective-time direction at L31 of Qwen3.6-27B encodes a feature aligned with the model's natural termination basin. Steering +α through this direction accelerates the model into the basin, producing clean `</think>` emission. The asymmetric response (+α functional, −α equivalent to noise) is consistent with the saturation-direction principle and suggests the basin is a discrete attractor, not a continuous gradient. The dose-response phase transition (§5) further supports this structural interpretation.
+The §4 "basin" interpretation, in light of the §7.4 onset-timing data, becomes: the subjective-time direction at L31 of Qwen3.6-27B encodes a feature that, when used as a continuous steering signal applied throughout generation, biases the K/V-cache buildup toward an attention regime in which `</think>` emission is statistically favored. This is *not* a discrete state-attractor that the current-token residual can be pushed into; it is a trajectory-shaping bias that takes effect cumulatively across hundreds of cached attention computations.
 
-This finding refines the broader probe-causality taxonomy. Probes are causal when their direction aligns with a decision basin the model is structurally biased toward; epiphenomenal when they detect representational structure orthogonal to the model's natural dynamics. The methodology diagnostic set developed in prior work (random-feature baseline, shuffled-source baseline, control-token normalization, structural-rigidity α-sweep) now extends with the asymmetric-α-sweep + terminate-rate metric introduced here.
+This refines the broader probe-causality taxonomy. Probes that lever behavior fall into at least three classes (rather than the prior binary causal-vs-epiphenomenal):
+
+1. **Detection-only / epiphenomenal**: high probe accuracy, no behavioral effect under any steering protocol (Caio 2026a Forms 1 & 2; Caio 2026b PSAE).
+2. **State-attractor causal**: high probe accuracy + steering effect at the token-level instantaneously. (We do not have a clear example in our corpus; this category may be empirically rare.)
+3. **Trajectory-shaping causal** (this paper): high probe accuracy + steering effect ONLY when applied continuously from generation start. K/V-cache state is the active intermediary.
+
+Standard reporting practice for probe-steering interventions should therefore include the onset-timing experiment as a diagnostic to distinguish classes 2 and 3. We propose this as a methodology contribution alongside the existing diagnostics (random-feature baseline, shuffled-source baseline, control-token normalization, structural-rigidity α-sweep, whitespace-stripped flip metric).
 
 ### 10.2 Practical SDK feature
 
-The `agent-probe-guard` SDK (Caio 2026e, PyPI v0.3.0) currently ships probe-based detection for hallucination and reasoning-faithfulness on Qwen3.6-27B in detect-only mode. The Phase 2A causal validation here justifies adding an `anti_overthinking` intervention mode in the next release:
+The `agent-probe-guard` SDK (Caio 2026e, PyPI v0.3.0) currently ships probe-based detection in detect-only mode. The Phase 2A + 2B findings here justify adding a preventive intervention mode — but the design space is now constrained:
 
 ```python
 guard = AgentProbeGuard(
     model="Qwen/Qwen3.6-27B",
-    mode="anti_overthinking",
+    mode="preventive_compute_enforcement",   # NOT adaptive_anti_overthinking
     subjective_time_layer=31,
     steering_alpha=50,
+    onset="generation_start",                # MUST be from token 1 (closed-loop falsified)
 )
 ```
 
-The expected behavior is 24% compute reduction on natural-baseline-terminate prompts, and ~100% rescue rate on overthinking-cap failures (cross-domain validated). End-to-end task accuracy is preserved at the tested scale; deployment-scale validation (N≥1000 across benchmarks) is the necessary precondition for production use.
+The behavior is **preventive compute enforcement**: as soon as the model begins generating its `<think>` section, persistent α=+50 steering is applied to every L31 forward pass. On naturally-terminating prompts (e.g., GSM8K), this produces ≈24% thinking-token compression at preserved end-to-end accuracy. On overthinking-cap-prone prompts (e.g., SWE-bench), it produces clean termination at ≈30% of the natural budget.
 
-### 10.3 Anthropic-direction alignment
+What this mode is **not**: an adaptive detection-then-intervene system. Closed-loop and plateau-based designs were tested and falsified in §7.2-7.3. A system that lets the model think freely until it "looks stuck" and then commits to termination — the intuitive design — does not work for this mechanism. Future SDK versions could explore more complex closed-loop variants (limitation 10), but the v0.2 release will ship only the validated `preventive_compute_enforcement` mode with explicit documentation that the trigger must be at generation start.
 
-This work continues the methodology-rigor agenda explicit in the OpenInterpretability corpus: it documents a structural condition under which probes are causal, contrasting against six prior epiphenomenal/honest-negative cases in the same model family. The combination of a positive causal result with explicit structural conditions and matched honest-negative controls is intended as a concrete contribution to the broader interpretability community's effort to make probe-based interventions trustworthy.
+### 10.3 Implications for the broader steering literature
+
+If the KV-cache lock-in mechanism documented here generalizes to other probe-steering interventions in transformer reasoning models (an open question; see limitation 2), it has direct implications for activation-steering work writ large:
+
+- **Single-shot residual perturbation experiments** (the standard "apply steering, generate one continuation" protocol) measure *trajectory-shaping* effects, not pure *state-attractor* effects. The two are conflated in current literature.
+- **Late-onset interventions** in agent settings (e.g., applying steering only after observing N tool calls) may be systematically weaker than they appear in offline single-shot evaluation, due to the KV cache already accumulating before the trigger fires.
+- **The natural way to deploy probe interventions** is preventive: from the start of the relevant generation segment, not as a mid-stream commit. This argues against the architectural pattern of "monitor a long-running agent and intervene when probe fires" and in favor of "frame the agent's task and apply steering from the start of each agent turn".
+
+These implications are speculative pending cross-probe replication. We flag them as testable predictions of the trajectory-shaping interpretation.
 
 ---
 
 ## 11. Conclusion
 
-We identify, validate, and apply a causally functional subjective-time direction in Qwen3.6-27B residual streams. The probe achieves R²=0.86 with three clean baselines (§3); the direction causally controls thinking-phase termination at α=+50 with Fisher p=0.0092 versus a matched random direction (§4); the dose-response curve exhibits a phase-transition consistent with a discrete attractor basin (§5); the intervention preserves end-to-end task accuracy at 24% mean compute reduction (§6); and the direction transfers without retraining from GSM8K math reasoning to SWE-bench code-debugging, where it rescues 100% of overthinking-cap failures (§7). The methodology contributions (asymmetric-α-sweep + terminate-rate metric, cross-domain transfer protocol) extend the probe-causality taxonomy with a structural recipe for when probes are causal: alignment with a discrete decision basin the model is structurally biased toward.
+We identify a causally functional subjective-time direction in Qwen3.6-27B residual streams. The probe achieves R²=0.86 with three clean baselines (§3); the direction causally controls thinking-phase termination at α=+50 with Fisher p=0.0092 vs matched random on GSM8K (§4); the dose-response curve exhibits a phase-transition near α=+50 (§5); the intervention preserves end-to-end task accuracy at 24% mean compute reduction on GSM8K (§6); and the direction transfers without retraining to SWE-bench Verified code-debugging across six repositories, where it produces clean termination in 19/20 (95%) cases at mean 299 thinking-tokens vs unbounded baselines that fail even at MAX_NEW_TOK=2048 (§7, §7.1).
 
-This is the first positive causal probe in the OpenInterpretability methodology corpus, complementing five prior epiphenomenal/honest-negative cases and grounding the broader claim that probe-causality is tractable and predictable. The practical intervention — probe-guided anti-overthinking — is a candidate feature for the `agent-probe-guard` SDK and an immediate path from mechanistic understanding to deployment-ready interpretability tooling.
+But the mechanism is not what the basin metaphor suggests. Two closed-loop interventions — Design E (threshold-trigger) and Design F (plateau-detector) — that should work if the probe direction were a state-attractor instead produce 0–2/10 termination across all configurations tested (§7.2, §7.3). A sensor-free onset-timing experiment isolates the cause: static steering applied from token 1 produces 9/10 termination; delayed to decode step 50, the rate drops to 3/10; delayed to step 200, the effect vanishes entirely (§7.4). The "termination basin" is mediated through the K/V cache accumulated across the full generation trajectory, not through any single-token residual perturbation. We call this *trajectory-shaping* probe causation, and document it as a third category in the probe-causality taxonomy (§10.1) alongside the existing detection-only and (hypothetical) state-attractor categories.
+
+The methodology contributions are: the asymmetric-α-sweep + terminate-rate metric (§4), the cross-domain transfer protocol via no-retrain steering application (§7), and the onset-timing diagnostic (§7.4) for distinguishing state-attractor from trajectory-shaping causal probes. The practical implication for the `agent-probe-guard` SDK is that `anti_overthinking` mode must apply steering from generation start, not as a post-hoc trigger; it is a deterministic compute-budget enforcer, not an adaptive detect-and-intervene system (§10.2). The broader implication for activation steering — speculative pending cross-probe replication — is that single-shot residual perturbation experiments routinely conflate trajectory-shaping and state-attractor effects, and late-onset interventions in agent settings may be systematically weaker than offline measurement suggests (§10.3).
+
+This is the first positive causal probe in the OpenInterpretability methodology corpus, complementing six prior epiphenomenal/honest-negative cases. It is also — with Designs E and F as documented honest negatives — the first paper in the corpus to combine a positive empirical claim with explicit falsification of the natural-but-incorrect adaptive design. We see both as essential to making probe-based interventions trustworthy.
 
 ---
 
@@ -320,10 +393,12 @@ This is the first positive causal probe in the OpenInterpretability methodology 
 
 - v1 notebook: [`nb_subjective_time_probe_v1.ipynb`](https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/nb_subjective_time_probe_v1.ipynb)
 - Phase 2A notebook: [`nb_subjective_time_phase2a_steering.ipynb`](https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/nb_subjective_time_phase2a_steering.ipynb)
-- Cached residuals + features (43 MB, reusable): [HF dataset openinterp-psae-v15-marginal-fit-pathology](https://huggingface.co/datasets/caiovicentino1/openinterp-psae-v15-marginal-fit-pathology) (PSAE v1.5 cache, reused for subjective-time probe)
-- Phase 2A results + scatter + alpha-sweep figures: Drive `openinterp_runs/subjective_time_phase2a/`
-- SAEs: [`caiovicentino1/qwen36-27b-sae-papergrade`](https://huggingface.co/caiovicentino1/qwen36-27b-sae-papergrade) (Apache-2.0)
-- Methodology rules canonicalized in memory: feedback files for Phase 6c, shuffled-source baseline, control-token normalization, structural-rigidity α-sweep, whitespace-stripped flip metric, asymmetric-α-sweep (this paper).
+- Phase 2B notebook: [`nb_subjective_time_phase2b_steering_designs.ipynb`](https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/nb_subjective_time_phase2b_steering_designs.ipynb) — bundles all 6 follow-up experiments (Caveat #1 cross-repo, Caveat #2 budget extension, α-sweep B, Design E closed-loop, Design F plateau, onset-timing diagnostic)
+- Phase 2B reproduction guide: [`REPRODUCTION_subjective_time_phase2b.md`](https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/REPRODUCTION_subjective_time_phase2b.md) — execution order, output schema, decision tree
+- Cached residuals + features (43 MB, reusable): [HF dataset openinterp-psae-v15-marginal-fit-pathology](https://huggingface.co/datasets/caiovicentino1/openinterp-psae-v15-marginal-fit-pathology)
+- Phase 2A + 2B results JSONs: Drive `openinterp_runs/subjective_time_phase2a/caveat1_cross_repo/`
+- SAEs (reference only; not used here): [`caiovicentino1/qwen36-27b-sae-papergrade`](https://huggingface.co/caiovicentino1/qwen36-27b-sae-papergrade) (Apache-2.0)
+- Methodology rules canonicalized in memory: feedback files for Phase 6c, shuffled-source baseline, control-token normalization, structural-rigidity α-sweep, whitespace-stripped flip metric, asymmetric-α-sweep (Phase 2A), **onset-timing diagnostic (this paper, Phase 2B)**.
 
 ## Acknowledgments
 
@@ -335,4 +410,4 @@ This is the first positive causal probe in the OpenInterpretability methodology 
 
 ---
 
-*Last updated 2026-05-16. v1 paper draft. Limitations §9 items 3 (cross-repo SWE-bench) and 4 (patch correctness) are immediate follow-up experiments; items 1 (cross-model), 2 (N≥100), 7 (cross-layer Phase 2A) are scope for paper expansion to main-conference length.*
+*Last updated 2026-05-16. v2 paper draft. Title and Sections 1, 4.5, 7.2-7.6, 9, 10, 11 substantially revised based on Phase 2B onset-timing experiment that falsified the discrete-basin / state-attractor interpretation and replaced it with the trajectory-shaping / KV-cache-mediated interpretation. Limitations §9 items 5-6 (patch correctness, multi-turn rollout) are immediate follow-up experiments; items 1-2 (cross-model, KV-cache scope across other probes), 7-8 (sampling, cross-layer) are scope for main-conference expansion. Item 10 (richer closed-loop variants) is the most interesting unexplored design space and could itself be a follow-up paper.*
