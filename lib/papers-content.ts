@@ -16,6 +16,48 @@ export interface PaperMeta {
 
 export const papers: PaperMeta[] = [
   {
+    slug: "probe-guided-anti-overthinking",
+    title: "Trajectory-Shaping Probe Steering in Qwen3.6-27B Reasoning",
+    subtitle:
+      "Causal, Cross-Domain, and KV-Cache-Bound — a Subjective-Time Direction with Operational Constraints",
+    authors: "Caio Vicentino",
+    venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft v2.1)",
+    status: "draft",
+    date: "2026-05-16",
+    abstract:
+      "We identify a causally functional subjective-time direction in the residual stream of Qwen3.6-27B (open-weights, 27B parameters, hybrid Gated-Delta-Net plus standard attention), validate it across math (GSM8K) and code (SWE-bench Verified) reasoning, and characterize a fundamental operational constraint on its causal effect: the steering intervention works only when applied continuously from generation start. A Ridge regression probe trained on residuals at L11/L31/L55 predicts thinking-phase completion with R²=0.82-0.86 (Spearman ρ ≥ 0.90); three baselines (random-feature, shuffled-target, constant-mean) cleanly fail. Forward-hook steering at L31 with α=+50 from token 1 shortens GSM8K thinking-length in 9/14 prompts vs 2/14 for matched random (Fisher p=0.0092). Cross-domain: 19/20 (95%) probe-clean-termination on SWE-bench Verified across 6 repositories vs 6/20 (30%) random (Fisher p<0.001), at mean 299 thinking-tokens vs unbounded baselines (0/10 terminate even at MAX_NEW_TOK=2048). The mechanism is trajectory-dependent: delayed steering — even at decode step 50 — drops termination from 9/10 to 3/10; by step 200, the rescue effect vanishes entirely (0/10). Two closed-loop variants (probe-as-sensor with threshold trigger + plateau detector) achieve only 1-2/10 termination, confirming that the 'termination basin' is mediated through KV-cache state buildup rather than instantaneous residual perturbation. Phase 2C cross-layer test further establishes that the direction is causal ONLY at L31 — L11 (R²=0.84) and L55 (R²=0.82) are inert despite equivalent probe accuracy. This refines the probe-causality taxonomy with a third category beyond 'causal' / 'epiphenomenal': operationally-constrained causal — directions that lever behavior only under specific application protocols (temporal: from token 1; spatial: specific layer only).",
+    artifacts: [
+      { label: "Phase 2A steering notebook", href: "https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/nb_subjective_time_phase2a_steering.ipynb" },
+      { label: "Phase 2B design exploration notebook", href: "https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/nb_subjective_time_phase2b_steering_designs.ipynb" },
+      { label: "Phase 2C cross-layer notebook", href: "https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/nb_subjective_time_phase2c_cross_layer_kv_cache.ipynb" },
+      { label: "Reproduction guide (Phase 2B)", href: "https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/REPRODUCTION_subjective_time_phase2b.md" },
+      { label: "Cached residuals (HF dataset, 43 MB)", href: "https://huggingface.co/datasets/caiovicentino1/openinterp-psae-v15-marginal-fit-pathology" },
+      { label: "agent-probe-guard SDK (PyPI)", href: "https://pypi.org/project/openinterp/" },
+      { label: "Companion: paper-3 marginal-fit pathology", href: "/research/papers/marginal-fit-pathology-psae" },
+      { label: "Companion: paper-6 two forms epiphenomenal", href: "/research/papers/two-forms-epiphenomenal-probes" },
+    ],
+    tags: ["probe steering", "trajectory-dependent", "KV-cache", "subjective time", "Qwen3.6-27B", "causal interpretability", "anti-overthinking", "honest negative", "closed-loop"],
+  },
+  {
+    slug: "marginal-fit-pathology-psae",
+    title: "The Marginal-Fit Pathology in Predictive SAE Feature Trajectory Probes",
+    subtitle:
+      "An Honest-Negative on Predicting End-of-Thinking SAE Features in Qwen3.6-27B",
+    authors: "Caio Vicentino",
+    venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft)",
+    status: "draft",
+    date: "2026-05-16",
+    abstract:
+      "We train linear probes to predict end-of-thinking sparse-autoencoder (SAE) features in Qwen3.6-27B from residual activations at earlier thinking-phase fractions, across three layers (L11, L31, L55). Naive evaluation reports recall@1024 = 0.83-0.87 at L11/L31 and 0.67-0.72 at L55. We then run a shuffled-source baseline (X_train shuffled, y_train kept, identical recipe) and observe that the baseline reproduces the real recall within ±0.03 at all 12 (layer × source-fraction) sites, with Cohen's d < 0.15. A trivial constant baseline that predicts the top-M most-globally-common features ignoring input strictly exceeds the trained probe (1.000 at L11/L31, 0.991 at L55). The probe is not learning per-prompt predictive structure — it is fitting the marginal distribution of end-of-thinking SAE features and approximating an input-independent constant rule. We name this the marginal-fit pathology, identify five structural conditions that produce it (sparse top-k target + concentrated marginal + N_train << d_target + lazy loss + recall-style metric), contribute the shuffled-source baseline as a Phase 6c-class hard rule for sparse-target probe-prediction work, and reframe predictive-probe agendas — including JEPA-shaped LLM experiments — toward differential metrics (REAL − SHUFFLED) from day one rather than absolute recall.",
+    artifacts: [
+      { label: "Baseline notebook", href: "https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/nb_predictive_sae_v15_baseline.ipynb" },
+      { label: "Cached residuals + features (HF dataset, 43 MB)", href: "https://huggingface.co/datasets/caiovicentino1/openinterp-psae-v15-marginal-fit-pathology" },
+      { label: "Qwen3.6-27B paper-grade SAEs (Apache-2.0)", href: "https://huggingface.co/caiovicentino1/qwen36-27b-sae-papergrade" },
+      { label: "Companion: paper-6 two forms epiphenomenal", href: "/research/papers/two-forms-epiphenomenal-probes" },
+    ],
+    tags: ["sparse autoencoders", "predictive probes", "honest negative", "marginal-fit pathology", "shuffled-source baseline", "Qwen3.6-27B", "methodology", "JEPA"],
+  },
+  {
     slug: "nla-two-tier-verbalization",
     title: "Reconstruction Without Recall",
     subtitle:
