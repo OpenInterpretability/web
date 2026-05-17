@@ -1,21 +1,8 @@
-<div align="center">
+# `web` — Next.js site at [openinterp.org](https://openinterp.org)
 
-# OpenInterpretability · `web`
+Trace Theater, Circuit Canvas, InterpScore, /train, /research. Next.js 16 + TypeScript + Tailwind.
 
-### The Next.js site at [openinterp.org](https://openinterp.org)
-
-**Watch language models think.** Trace every feature. Every circuit. Every second of reasoning.
-
-[![Live site](https://img.shields.io/badge/live-openinterp.org-8b5cf6)](https://openinterp.org)
-[![Vercel](https://img.shields.io/badge/deploy-Vercel-black)](https://vercel.com)
-[![Next.js 16](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org)
-[![License Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)](./LICENSE)
-[![Discussions](https://img.shields.io/github/discussions/OpenInterpretability/web)](https://github.com/OpenInterpretability/web/discussions)
-[![Good first issues](https://img.shields.io/github/issues/OpenInterpretability/web/good%20first%20issue)](https://github.com/OpenInterpretability/web/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
-
-</div>
-
----
+Apache-2.0 (code) · CC-BY 4.0 (docs)
 
 ## What this repo is
 
@@ -150,7 +137,7 @@ web/
 
 > Full rules in [CONTRIBUTING.md](./CONTRIBUTING.md). These are the 3 most common PR patterns.
 
-### 🎬 Add a Trace Theater scenario
+### Add a Trace Theater scenario
 
 File: [`lib/trace-scenarios.ts`](./lib/trace-scenarios.ts). Append one object to the `extraScenarios` array:
 
@@ -182,7 +169,7 @@ File: [`lib/trace-scenarios.ts`](./lib/trace-scenarios.ts). Append one object to
 
 PR title: `Add Trace scenario: <your label>`. Include a screenshot of it running locally.
 
-### 📊 Submit an SAE to the InterpScore leaderboard
+### Submit an SAE to the InterpScore leaderboard
 
 1. Run [`18_interpscore_eval.ipynb`](https://github.com/OpenInterpretability/notebooks/blob/main/notebooks/18_interpscore_eval.ipynb) on your SAE
 2. It writes `interpscore.json` to your HF SAE repo
@@ -191,7 +178,7 @@ PR title: `Add Trace scenario: <your label>`. Include a screenshot of it running
 
 The formula file + 5 seed entries are the source of truth; ranking re-sorts automatically.
 
-### 📖 Add a paper to `/research`
+### Add a paper to `/research`
 
 File: [`lib/papers.ts`](./lib/papers.ts). Append a `Paper` object to the right `PaperGroup.papers` array:
 
@@ -250,17 +237,13 @@ CI runs `npx tsc --noEmit` + `npm run build` on every PR. Merging to `main` auto
 
 ## Community
 
-- 💬 [Discussions](https://github.com/OpenInterpretability/web/discussions) — design questions, "which repo should this live in"
-- 🟢 [Good-first-issues](https://github.com/OpenInterpretability/web/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) — start here
-- 📖 [Contributor guide](./CONTRIBUTING.md) — workflow & scope
-- 🤝 [Code of Conduct](https://github.com/OpenInterpretability/.github/blob/main/CODE_OF_CONDUCT.md) — Contributor Covenant 2.1
-- ✉️ hi@openinterp.org — safety reports, partnership inquiries
-- 🐦 [@openinterp](https://x.com/openinterp) — announcements
+- [Discussions](https://github.com/OpenInterpretability/web/discussions) — design questions, "which repo should this live in"
+- [Good-first-issues](https://github.com/OpenInterpretability/web/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+- [Contributor guide](./CONTRIBUTING.md)
+- [Code of Conduct](https://github.com/OpenInterpretability/.github/blob/main/CODE_OF_CONDUCT.md) — Contributor Covenant 2.1
+- hi@openinterp.org — safety reports, partnership inquiries
+- [@openinterp on X](https://x.com/openinterp)
 
 ---
 
-## License
-
-**Apache 2.0** for code. **CC-BY 4.0** for docs and long-form copy.
-
-Built by [Caio Vicentino](https://huggingface.co/caiovicentino1) + contributors · 2026 · [openinterp.org](https://openinterp.org)
+Apache-2.0 (code) · CC-BY 4.0 (docs) · [openinterp.org](https://openinterp.org)
