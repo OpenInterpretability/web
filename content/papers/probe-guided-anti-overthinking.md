@@ -325,7 +325,7 @@ The forward-hook steering methodology used here is standard (Turner et al. 2023;
 
 7. **Greedy decoding only**. All generations use `do_sample=False, temperature=0`. Behavior under sampling (temperature > 0, top-p) is untested. The trajectory-shaping interpretation predicts the K/V-cache mechanism should remain dominant under sampling within reasonable temperatures, but this requires verification.
 
-8. **Single layer L31 in Phase 2A and Phase 2B**. The v1 probe at L11 (R²=0.84) and L55 (R²=0.82) might lever differently. A cross-layer α-sweep, plus a cross-layer onset-timing study, is a natural follow-up — and would establish whether the KV-cache lock-in mechanism is layer-specific or universal.
+8. **L31-specificity (resolved by Phase 2C)**. We initially suspected the L31-specific scope might reflect untested layers rather than a layer-specific phenomenon. Phase 2C addressed this: the v1 probe at L11 (R²=0.84) and L55 (R²=0.82), tested with calibrated α magnitudes per layer (L11: 5, 10, 25, 50; L55: 50, 100, 200, 500), produces *no controlled termination*. L11 at α=+25 produced one ragged collapse case (1/10, with `</think>` forced after 15 tokens mid-thought and a long degraded answer afterward — visual inspection); L55 produced no termination at any α up to +500. The subjective-time direction is therefore causally functional **only at L31**, despite similar probe R² at all three layers. **R² is not predictive of causal authority** — a clean second operational constraint (spatial) alongside the temporal constraint from §7.4.
 
 9. **Content-confound in v1 probe**. The R²=0.86 is partially driven by content distinctiveness at the end of thinking (§3.2). A normalized-residual variant of the probe would isolate the position-pure component. We do not implement this here; the causal validation in §§4 and 7 does not depend on whether the signal is content-mediated or position-pure.
 
@@ -343,9 +343,9 @@ This refines the broader probe-causality taxonomy. Probes that lever behavior fa
 
 1. **Detection-only / epiphenomenal**: high probe accuracy, no behavioral effect under any steering protocol (Caio 2026a Forms 1 & 2; Caio 2026b PSAE).
 2. **State-attractor causal**: high probe accuracy + steering effect at the token-level instantaneously. (We do not have a clear example in our corpus; this category may be empirically rare.)
-3. **Trajectory-shaping causal** (this paper): high probe accuracy + steering effect ONLY when applied continuously from generation start. K/V-cache state is the active intermediary.
+3. **Trajectory-shaping causal** (this paper): high probe accuracy + steering effect ONLY when applied continuously from generation start. K/V-cache state is the active intermediary. Phase 2C (§9 limitation 8) further establishes that within this category, the steering may also be layer-specific: the v1 probe at L11 and L55 has equivalent R² to L31 but is non-causal under cross-layer α calibration. This is consistent with the broader view that the "operationally-constrained causal" category has multiple constraints — temporal (apply from token 1), spatial (apply at the specific layer where the direction is operationally aligned with the decision being intervened upon).
 
-Standard reporting practice for probe-steering interventions should therefore include the onset-timing experiment as a diagnostic to distinguish classes 2 and 3. We propose this as a methodology contribution alongside the existing diagnostics (random-feature baseline, shuffled-source baseline, control-token normalization, structural-rigidity α-sweep, whitespace-stripped flip metric).
+Standard reporting practice for probe-steering interventions should therefore include the onset-timing experiment as a diagnostic to distinguish classes 2 and 3, and a cross-layer α-calibration to verify that probe R² is not being conflated with causal authority. We propose this as a methodology contribution alongside the existing diagnostics (random-feature baseline, shuffled-source baseline, control-token normalization, structural-rigidity α-sweep, whitespace-stripped flip metric).
 
 ### 10.2 Practical SDK feature
 
@@ -355,9 +355,9 @@ The `agent-probe-guard` SDK (Caio 2026e, PyPI v0.3.0) currently ships probe-base
 guard = AgentProbeGuard(
     model="Qwen/Qwen3.6-27B",
     mode="preventive_compute_enforcement",   # NOT adaptive_anti_overthinking
-    subjective_time_layer=31,
+    subjective_time_layer=31,                # hard-coded — L11/L55 inert (Phase 2C, §9.8)
     steering_alpha=50,
-    onset="generation_start",                # MUST be from token 1 (closed-loop falsified)
+    onset="generation_start",                # MUST be from token 1 (closed-loop falsified, §7.4)
 )
 ```
 
