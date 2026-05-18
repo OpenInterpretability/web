@@ -384,6 +384,7 @@ export default function ResearchPage() {
         <pre className="mt-4 mono text-xs bg-ink-950 text-ink-50 rounded-lg p-4 overflow-x-auto">
 {`@software{openinterpretability2026mechreward,
   author = {Vicentino, Caio and contributors},
+  orcid  = {0009-0003-4331-6259},
   title  = {mechreward: Mechanistic interpretability as reward signal for RL},
   year   = {2026},
   url    = {https://github.com/OpenInterpretability/mechreward},

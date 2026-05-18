@@ -6,6 +6,7 @@ export interface PaperMeta {
   title: string;
   subtitle?: string;
   authors: string;
+  orcid?: string; // ORCID iD bare (e.g. "0009-0003-4331-6259")
   venue: string;
   status: "draft" | "in-review" | "submitted" | "published";
   date: string; // ISO yyyy-mm-dd
@@ -14,13 +15,45 @@ export interface PaperMeta {
   tags?: string[];
 }
 
+export const CAIO_ORCID = "0009-0003-4331-6259";
+
 export const papers: PaperMeta[] = [
+  {
+    slug: "conditionally-causal-probes",
+    title:
+      "Conditionally-Causal Probes: Five Operational Constraints on Linear-Probe Causality in Qwen3.6-27B",
+    subtitle:
+      "An eleven-site empirical map, a unifying operational-constraints framework, and a pre-publication diagnostic battery — derived from four prior honest negatives",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "TMLR (Survey Certification) → ICLR 2027 main (draft v1)",
+    status: "draft",
+    date: "2026-05-16",
+    abstract:
+      "Linear probes on transformer residual streams routinely achieve high predictive AUROC, yet whether a probe direction also levers downstream behavior under intervention is rarely measured systematically. We report a twelve-site causal-authority map of probes in Qwen3.6-27B (reasoning-tuned, 27B parameters), comprising eleven probes evaluated under a unified α-sweep + control-token + onset-timing protocol plus one predictive case study, and identify five distinct empirical causal regimes: causal trajectory-shaping, pushup-asymmetric, pushdown-asymmetric, structurally-locked, and epiphenomenal-via-softmax-temperature. We propose that probe causality is operationally constrained by a five-axis configuration — layer (spatial), trajectory (temporal), magnitude (α), direction (saturation alignment), and decision locus (architectural) — and demonstrate each constraint with a within-paper falsifying experiment that holds the other four fixed. We then consolidate the methodology that surfaced these constraints into a six-item pre-publication diagnostic battery: random-feature baseline, shuffled-source baseline, control-token normalization, structural-rigidity α-sweep, whitespace-stripped flip metric, and onset-timing sweep. Each diagnostic is mapped to a concrete failure mode we shipped or nearly shipped in our own work: over-parameterization at N<100, marginal-fit pathology in sparse top-k prediction, softmax-temperature artifacts that look causal, amplitude-null masquerading as structural-null, tokenization-inflated flip rates, and trajectory-versus-state confusion. Together the diagnostics cost under one GPU-hour per probe. We release the protocol, capture batches, per-probe verdicts, and an open-source SDK that implements the diagnostics, and argue that the field's growing reliance on probe-based monitoring, reward shaping, and alignment auditing should treat probe causality as a conditional property to be measured per deployment configuration, not a global per-probe attribute.",
+    artifacts: [
+      { label: "Verification data — 69 raw JSONs backing every claim (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/openinterp-paper-mega-conditionally-causal" },
+      { label: "verify_paper_mega_claims.py — re-derive 19 claims, 19/19 PASS (GitHub)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/scripts/verify_paper_mega_claims.py" },
+      { label: "paper_mega_figures.py — regenerate 3 figures (GitHub)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/scripts/paper_mega_figures.py" },
+      { label: "Paper-3 (PSAE marginal-fit, D2 motivating case)", href: "/research/papers/marginal-fit-pathology-psae" },
+      { label: "Paper-5 (saturation-direction, C4 foundation)", href: "/research/papers/saturation-direction-probe-levers" },
+      { label: "Paper-6 (two-forms epiphenomenal, C5 + D3 + D4)", href: "/research/papers/two-forms-epiphenomenal-probes" },
+      { label: "Paper-7 (NLA two-tier, cross-model corroboration)", href: "/research/papers/nla-two-tier-verbalization" },
+      { label: "Paper-8 (trajectory-shaping, C1 + C2 + D6)", href: "/research/papers/probe-guided-anti-overthinking" },
+      { label: "agent-probe-guard SDK (PyPI)", href: "https://pypi.org/project/openinterp/" },
+      { label: "SWE-bench harness (GitHub)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness" },
+      { label: "Qwen3.6-27B paper-grade SAEs (HF)", href: "https://huggingface.co/caiovicentino1/qwen36-27b-sae-papergrade" },
+      { label: "PSAE marginal-fit data (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/openinterp-psae-v15-marginal-fit-pathology" },
+    ],
+    tags: ["meta-paper", "probe causality taxonomy", "operational constraints", "pre-publication diagnostics", "Qwen3.6-27B", "honest negatives", "saturation direction", "trajectory-shaping", "template-lock", "marginal-fit pathology", "softmax-temperature artifact", "mechanistic interpretability methodology"],
+  },
   {
     slug: "probe-guided-anti-overthinking",
     title: "Trajectory-Shaping Probe Steering in Qwen3.6-27B Reasoning",
     subtitle:
       "Causal, Cross-Domain, and KV-Cache-Bound — a Subjective-Time Direction with Operational Constraints",
     authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
     venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft v2.1)",
     status: "draft",
     date: "2026-05-16",
@@ -44,6 +77,7 @@ export const papers: PaperMeta[] = [
     subtitle:
       "An Honest-Negative on Predicting End-of-Thinking SAE Features in Qwen3.6-27B",
     authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
     venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft)",
     status: "draft",
     date: "2026-05-16",
@@ -63,6 +97,7 @@ export const papers: PaperMeta[] = [
     subtitle:
       "Two-Tier Verbalization in Natural Language Autoencoders — Three-Model Differential Scaling on Qwen2.5-7B, Gemma-3-12B, and Gemma-3-27B",
     authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
     venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft)",
     status: "draft",
     date: "2026-05-09",
@@ -90,6 +125,7 @@ export const papers: PaperMeta[] = [
     subtitle:
       "Template-locked reasoning decisions and the structural ceiling on text-only CoT monitoring in Qwen3.6-27B",
     authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
     venue: "Position paper, May 2026",
     status: "draft",
     date: "2026-05-09",
@@ -109,6 +145,7 @@ export const papers: PaperMeta[] = [
     subtitle:
       "A Five-Class Taxonomy of Probe Causality in Qwen3.6-27B",
     authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
     venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft)",
     status: "draft",
     date: "2026-05-09",
@@ -131,6 +168,7 @@ export const papers: PaperMeta[] = [
     subtitle:
       "When Decoder Universality Overstates Causal Equivalence in Gemma-2-2B",
     authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
     venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft)",
     status: "draft",
     date: "2026-05-08",
@@ -150,6 +188,7 @@ export const papers: PaperMeta[] = [
     subtitle:
       "Orthogonal Learning Beyond Task-Specific Detectors in Qwen3.6-27B",
     authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
     venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft)",
     status: "draft",
     date: "2026-05-08",
@@ -171,6 +210,7 @@ export const papers: PaperMeta[] = [
     subtitle:
       "Mid-Reasoning Capability and Chain-of-Thought Emission in Qwen3.6-27B",
     authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
     venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft)",
     status: "draft",
     date: "2026-05-08",
@@ -189,6 +229,7 @@ export const papers: PaperMeta[] = [
     title: "Pre-flight Probe Eval v6 — Phase 8 Template-Lock Verdict",
     subtitle: "Closing the L55 thinking-emission causality experiment",
     authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
     venue: "Internal eval document (companion to NeurIPS MI 2026 draft)",
     status: "published",
     date: "2026-05-08",

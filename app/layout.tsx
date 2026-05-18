@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     'feature steering',
     'open source',
   ],
-  authors: [{ name: 'Caio Vicentino', url: site.huggingface }],
+  authors: [{ name: 'Caio Vicentino', url: 'https://orcid.org/0009-0003-4331-6259' }],
   creator: 'Caio Vicentino + OpenInterpretability',
   publisher: 'OpenInterpretability',
   openGraph: {

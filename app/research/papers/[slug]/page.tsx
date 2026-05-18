@@ -89,6 +89,19 @@ export default async function PaperPage({ params }: PageProps) {
         <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-900/60 dark:text-ink-50/60">
           <span className="inline-flex items-center gap-1.5">
             <User className="h-3.5 w-3.5" /> {paper.authors}
+            {paper.orcid ? (
+              <a
+                href={`https://orcid.org/${paper.orcid}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`ORCID iD ${paper.orcid}`}
+                title={`ORCID iD ${paper.orcid}`}
+                className="ml-1 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold text-[#A6CE39] hover:bg-[#A6CE39]/10"
+              >
+                <span aria-hidden className="inline-block h-2 w-2 rounded-full bg-[#A6CE39]" />
+                ORCID
+              </a>
+            ) : null}
           </span>
           <span className="inline-flex items-center gap-1.5">
             <Calendar className="h-3.5 w-3.5" /> {paper.date}
