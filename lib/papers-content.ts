@@ -19,6 +19,28 @@ export const CAIO_ORCID = "0009-0003-4331-6259";
 
 export const papers: PaperMeta[] = [
   {
+    slug: "kappa-t-coherence-buildup",
+    title: "Explore-Consolidate Dynamics in Cross-Probe Coherence",
+    subtitle:
+      "U-Shape Trajectories of κ_t Separate Successful and Failed LLM Agent Runs on SWE-bench Pro / Qwen3.6-27B",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft v2) → ICLR 2027 main",
+    status: "draft",
+    date: "2026-05-18",
+    abstract:
+      "We propose cross-probe coherence κ_t — the mean absolute pairwise correlation across N concurrent per-turn behavioral probes within a moving window of agent turns — as a meta-signal for LLM agent monitoring. On 99 SWE-bench Pro trajectories from Qwen3.6-27B we report two distinct findings. (1) Per-trace mean κ̄ separates success from failure at AUROC 0.677 (Mann-Whitney p=0.0009). (2) κ_t exhibits a U-shape over each trajectory: it decreases through an early exploration phase and increases through a late consolidation phase, and the amplitude of this U-shape is markedly larger in successful traces (early-half slope −0.0078/turn vs −0.0007/turn, p=0.0002; late-half slope +0.0149/turn vs +0.0025/turn, p=0.00004). A pre-registered robustness control (C1) found the monolithic per-trace slope is substantially explained by trace-length confound (p=0.56 after length regression), motivating the length-normalized early-half/late-half decomposition. Within-trace turn-order shuffle nulls (C2) confirm the U-shape is genuinely temporal (p<0.0001). The pattern is the inverse of cardiac uncoupling: in ICU literature, cross-vital decorrelation anticipates physiological decompensation; in LLM agents, cross-probe trajectories oscillate during successful reasoning (explore→consolidate) and remain flat during failure. We document the methodological discipline — pre-registered gates that caught both five prior single-probe walk-backs in the 36 hours before this finding and this paper's own headline-confound — that gives the rescued temporal claim its credibility.",
+    artifacts: [
+      { label: "Reproducibility data (HF dataset — all result JSONs)", href: "https://huggingface.co/datasets/caiovicentino1/openinterp-kappa-t-coherence-buildup" },
+      { label: "run_kappa_t_v2.py / v3.py / controls.py / c6_length_controlled.py (GitHub)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/tree/main/scripts" },
+      { label: "Paper PDF (Zenodo, DOI 10.5281/zenodo.20278983)", href: "https://zenodo.org/record/20278983" },
+      { label: "SWE-bench harness (Phase 6 capture pipeline)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness" },
+      { label: "Companion: paper-MEGA conditionally-causal probes", href: "/research/papers/conditionally-causal-probes" },
+      { label: "agent-probe-guard SDK (PyPI)", href: "https://pypi.org/project/openinterp/" },
+    ],
+    tags: ["cross-probe correlation", "meta-signal", "LLM agent monitoring", "SWE-bench Pro", "Qwen3.6-27B", "U-shape", "explore-consolidate", "pre-registration", "walk-back-and-rescue", "honest methodology", "temporal dynamics"],
+  },
+  {
     slug: "conditionally-causal-probes",
     title:
       "Conditionally-Causal Probes: Five Operational Constraints on Linear-Probe Causality in Qwen3.6-27B",
