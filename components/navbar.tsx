@@ -20,6 +20,7 @@ const primaryNav = [
 
 const secondaryNav = [
   { href: '/interpscore', label: 'InterpScore' },
+  { href: '/research', label: 'Research' },
   { href: '/blog', label: 'Blog' },
   { href: '/docs', label: 'Docs' },
 ]
@@ -29,7 +30,6 @@ const tertiaryNav = [
   { href: '/contribute', label: 'Contribute' },
   { href: '/manifesto', label: 'Manifesto' },
   { href: '/roadmap', label: 'Roadmap' },
-  { href: '/research', label: 'Research' },
 ]
 
 export function Navbar() {
