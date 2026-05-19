@@ -113,23 +113,29 @@ export default async function PaperPage({ params }: PageProps) {
 
         {paper.artifacts && paper.artifacts.length > 0 ? (
           <div className="mt-7 flex flex-wrap gap-2">
-            {paper.artifacts.map((a) => {
-              const isExternal = a.href.startsWith('http')
-              const Tag: any = isExternal ? 'a' : Link
-              const props: any = isExternal
-                ? { href: a.href, target: '_blank', rel: 'noopener noreferrer' }
-                : { href: a.href }
-              return (
-                <Tag
-                  key={a.href}
-                  {...props}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 px-3 py-1.5 text-xs font-medium hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
-                >
-                  {isExternal ? <ExternalLink className="h-3 w-3" /> : <FileText className="h-3 w-3" />}
-                  {a.label}
-                </Tag>
-              )
-            })}
+            {[...paper.artifacts]
+              .sort((a, b) => {
+                const aPdf = /\.pdf|zenodo/i.test(a.href + a.label) ? 0 : 1
+                const bPdf = /\.pdf|zenodo/i.test(b.href + b.label) ? 0 : 1
+                return aPdf - bPdf
+              })
+              .map((a) => {
+                const isExternal = a.href.startsWith('http')
+                const isPdf = /\.pdf|zenodo/i.test(a.href + a.label)
+                const Tag: any = isExternal ? 'a' : Link
+                const props: any = isExternal
+                  ? { href: a.href, target: '_blank', rel: 'noopener noreferrer' }
+                  : { href: a.href }
+                const cls = isPdf
+                  ? 'inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-md ring-1 ring-brand-700/50 hover:bg-brand-700 transition-colors'
+                  : 'inline-flex items-center gap-1.5 rounded-lg border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 px-3 py-1.5 text-xs font-medium hover:bg-white/80 dark:hover:bg-white/10 transition-colors'
+                return (
+                  <Tag key={a.href} {...props} className={cls}>
+                    {isPdf ? <FileText className="h-4 w-4" /> : isExternal ? <ExternalLink className="h-3 w-3" /> : <FileText className="h-3 w-3" />}
+                    {a.label}
+                  </Tag>
+                )
+              })}
           </div>
         ) : null}
       </header>

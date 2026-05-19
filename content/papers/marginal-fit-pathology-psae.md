@@ -142,6 +142,8 @@ same recall@M metric on the same test split:
 
 ## 3. Results
 
+![Figure 0 — REAL recall@M across all 12 sites without baselines; the headline numbers that originally looked paper-grade.](/images/papers/marginal-fit-pathology-psae/recall_multilayer.png)
+
 ### 3.1 Headline recall numbers
 
 **Table 1.** Recall@M (mean) across the 12 (layer × source-fraction) sites.
@@ -165,9 +167,9 @@ controls run 2026-05-16.
 
 ### 3.2 Δ(REAL − B1) is at noise floor
 
-Figure 1 (companion notebook artifact `recall_multilayer_with_b1.png`) overlays
-REAL, B0, and B1 across all 12 (layer × source-fraction) sites. The visual
-story is that REAL and B1 curves are indistinguishable across the entire
+![Figure 1 — Recall@M across all 12 (layer × source-fraction) sites: REAL (trained probe), B0 (no-training control), and B1 (shuffled-source control). REAL and B1 curves are visually indistinguishable across the entire M ∈ {128, 256, 512, 1024, 2048, 4096} range, while B0 sits one to two orders of magnitude below.](/images/papers/marginal-fit-pathology-psae/recall_multilayer_with_baselines.png)
+
+The visual story is that REAL and B1 curves are indistinguishable across the entire
 M ∈ {128, 256, 512, 1024, 2048, 4096} range, while B0 sits one to two orders
 of magnitude below.
 

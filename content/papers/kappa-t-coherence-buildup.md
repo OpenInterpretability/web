@@ -77,6 +77,10 @@ We train 5 per-turn probes on the SWE-bench Pro Phase 6 capture set: 99 traces �
 
 Pairwise probe-score correlations (Pearson, computed on out-of-fold scores): the strongest off-diagonal is B↔D at −0.83 (bash tool calls fail at elevated rate); A↔D at +0.33 (the `finish` tool trivially succeeds); C and E are essentially orthogonal to others (|corr| ≤ 0.07). Effective independent axes are approximately 3–4.
 
+![Figure 3 — Per-probe AUROC at L43 paired residual on the 5-probe stack.](/images/papers/kappa-t/fig3_probe_aurocs.png)
+
+![Figure 4 — Pairwise Pearson correlations across the 5 probes (out-of-fold scores).](/images/papers/kappa-t/fig4_probe_correlations.png)
+
 ### 2.3 Pre-registered gates and controls
 
 **Original four gates** (pre-registered before the v2 finding emerged, tied to project notes timestamped 2026-05-18 11:00 UTC; the same protocol governed the five walked-back siblings):
@@ -127,7 +131,11 @@ Per-trace mean κ̄ across the 99 traces:
 
 Mann-Whitney U on κ̄ across classes: **p = 0.0009**. AUROC of (−κ̄) as a failure predictor: 0.677; shuffled-label baseline AUROC: 0.501; gap +0.176. G1 (>0.65), G2 (>0.10), and G3 (<0.05) all pass.
 
+![Figure 5 — Per-trace mean κ̄ distribution by outcome class (violin); successful traces (left) skew higher than failed (right). Pre-registered headline.](/images/papers/kappa-t/fig5_mean_kappa_violin.png)
+
 ### 3.2 κ_t trajectories show a U-shape (post-control headline)
+
+![Figure 1 — κ_t trajectories overlaid by outcome class; successful traces (blue) show pronounced U-shape, failed traces (orange) stay flat.](/images/papers/kappa-t/fig1_kappa_t_trajectories.png)
 
 Per-trace plots of κ_t over turns reveal a robust pattern: κ_t typically *decreases* through the first half of a trajectory and *increases* through the second half. We decompose each trace's slope into an early half (first ⌊n_turns/2⌋ turns) and a late half (remainder), and test whether either half differs by outcome class:
 
@@ -143,6 +151,10 @@ Both halves significantly differentiate outcomes, but **in opposite directions**
 - In the late half, κ_t *increases faster* in successful traces (more pronounced consolidation phase).
 
 Successful traces have a high-amplitude U-shape; failed traces have a flat trajectory. This is the substantive finding of the paper.
+
+![Figure 2 — Distribution of per-trace early-half and late-half slopes by outcome.](/images/papers/kappa-t/fig2_slope_distributions.png)
+
+![Figure 8 — Length-normalized early-half / late-half slope decomposition. The rescued finding: class effect is strongly significant in both halves, in opposite directions.](/images/papers/kappa-t/fig8_early_late_half.png)
 
 ### 3.3 EARLY κ_t (G4 absolute-value) is marginal
 
@@ -164,6 +176,8 @@ We re-ran the κ̄ pipeline with an expanded probe set: 5 original axes plus 4 a
 | Failure monolithic slope | +0.0003 | +0.0002 | similar |
 
 The trace-level mean discrimination strengthens. The deprecated monolithic-slope statistic weakens (in addition to being later found length-confounded). The early/late half decomposition was not yet computed at the time of the v3 run.
+
+![Figure 6 — v2 (5 axes) versus v3 (9 axes) internal replication: κ̄ AUROC, shuffled-baseline gap, and Mann-Whitney p all strengthen with the expanded probe set.](/images/papers/kappa-t/fig6_v2_vs_v3_replication.png)
 
 ---
 
@@ -237,6 +251,8 @@ This length asymmetry is precisely what makes C1 the critical control. Without t
 We do not draw conclusions from C5. The early/late half decomposition (§3.2) is the substantively cleaner control because it normalizes length per-trace rather than restricting to a constant-length stratum.
 
 ### 4.6 Summary
+
+![Figure 7 — Summary of all five robustness controls: C1 fails (length confound, motivating the U-shape rescue), C2 passes (within-trace shuffle), C3 marginal, C4 informational, C5 underpowered.](/images/papers/kappa-t/fig7_controls_summary.png)
 
 | Control | Verdict | What it told us |
 |---|---|---|
