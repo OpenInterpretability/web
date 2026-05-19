@@ -259,6 +259,30 @@ export const papers: PaperMeta[] = [
       "Phase 8 single-shot bidirectional steering with bf16 amplitude diagnostic delivers a structural-rigidity null that converges with Phase 7 on the higher-order claim: probes detect; mid-layer steering doesn't lever. Two epiphenomenal mechanisms documented (softmax-temp + template-lock), three methodology contributions consolidated (random-K baseline, control-token normalization, structural-rigidity α-sweep). Includes Phase 8 redux confirming structural lock isn't dilution.",
     tags: ["intervention experiments", "steering", "Qwen3.6-27B", "verdict"],
   },
+  {
+    slug: "six-diagnostics-six-walkbacks",
+    title: "Six Diagnostics, Six Walk-Backs",
+    subtitle:
+      "An Operational Checklist for Causal Claims in Mechanistic Interpretability",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "NeurIPS 2026 Mechanistic Interpretability Workshop (draft v0.1)",
+    status: "draft",
+    date: "2026-05-19",
+    abstract:
+      "Mechanistic interpretability papers routinely make causal claims — that a linear probe is a causal lever, that a circuit mediates a behavior, that an SAE feature implements a concept — but rarely state the identification assumptions that make these claims falsifiable. A recent position paper (Bohnet et al., 2026) proposed a disclosure norm: state whether a claim is causal, name the identification strategy, enumerate assumptions, and demonstrate how conclusions shift if assumptions fail. We operationalize this norm as six diagnostics, each runnable in under one GPU-hour per probe, and demonstrate each on a published-or-near-published causal claim from our own prior work where the diagnostic would have falsified the claim if not run. One of the six — trace-length-controlled slope decomposition — has not previously been published as standalone methodology. We position the resulting checklist as the minimum-viable operational layer beneath theoretical frameworks for causal abstraction (Geiger et al., 2024) and causal scrubbing (Anthropic), and ship an open-source Python module, a Colab demonstration on a toy probe, and an integration with the ProbeBench leaderboard.",
+    artifacts: [
+      { label: "Colab demo notebook (6 toy diagnostics, ~3 min CPU)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/notebooks/nb_six_diagnostics_demo.ipynb" },
+      { label: "Paper PDF (this repo)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/paper/six_diagnostics_six_walkbacks.pdf" },
+      { label: "Paper-MEGA (sibling: 12-site conditionally-causal map)", href: "/research/papers/conditionally-causal-probes" },
+      { label: "κ_t paper (D6 case study source)", href: "/research/papers/kappa-t-coherence-buildup" },
+      { label: "Two Forms Epiphenomenal Probes (D3 + D4 case study source)", href: "/research/papers/two-forms-epiphenomenal-probes" },
+      { label: "Marginal-Fit Pathology PSAE (D2 case study source)", href: "/research/papers/marginal-fit-pathology-psae" },
+      { label: "agent-probe-guard SDK (PyPI)", href: "https://pypi.org/project/openinterp/" },
+      { label: "Position paper operationalized: Bohnet et al. 2026", href: "https://arxiv.org/abs/2605.08012" },
+    ],
+    tags: ["methodology checklist", "causal claims", "identification assumptions", "pre-registration", "walk-back-and-rescue", "random-feature baseline", "shuffled-source baseline", "control-token normalization", "structural-rigidity α-sweep", "whitespace-stripped flip", "trace-length-controlled slope", "operational disclosure", "Qwen3.6-27B", "mechanistic interpretability methodology"],
+  },
 ];
 
 export function getPaper(slug: string): PaperMeta | undefined {
