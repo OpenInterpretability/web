@@ -263,56 +263,55 @@ export const roadmap = [
 ]
 
 export const heroNew = {
-  eyebrow: 'Six Diagnostics protocol · 11 studies · 6 walk-backs · Apache-2.0',
-  watchLine: 'When should we believe',
-  thinkLine: 'a mech-interp claim?',
-  subBold: "We've spent 13 months on one model. Six of our own claims walked back.",
+  eyebrow: 'openinterp-mcp v0.1.0 beta · Atlas with 11 entries · ProbeBench',
+  watchLine: 'Probes that ship.',
+  thinkLine: 'Standards that survive.',
+  subBold: 'The reproducibility and runtime layer for mechanistic interpretability.',
   subText:
-    'From those walk-backs, a protocol. From 11 studies, a registry. From the registry, schemas the community can use. The reproducibility layer for mechanistic interpretability.',
+    'Every probe inspectable. Every methodology re-runnable. Every claim citable. MCP server + agent-callable Colab backend + public Atlas with sha256-hashed manifests and Zenodo DOIs. Apache-2.0 · privacy-first · agentic by design.',
 }
 
-// Three-pillar reframing (Protocol / Registry / Standard) — capstone repackage 2026-05-23.
-// Materializes the "epistemic infrastructure for AI interpretability" positioning.
+// Three-pillar reframing (Detect / Standardize / Deploy) — replaces 4-pillar stack.
 // Original 4 pillars retained above for /observatory, /laboratory, /watchtower, /academy
 // page routing; this new structure is the homepage primary frame.
 export const threePillars = [
   {
-    id: 'protocol',
-    name: 'Six Diagnostics',
-    tagline: 'A six-step decision tree for testing whether a probe, SAE feature, or steering result is causal — or epiphenomenal.',
+    id: 'detect',
+    name: 'Detect',
+    tagline: 'Production-grade probes for hallucination, deception, and reasoning faithfulness.',
     products: [
-      { name: 'Saturation-direction', status: 'live', detail: 'principled cause of "all directions steer the same way"' },
-      { name: 'Env-coupling', status: 'live', detail: 'why probes drop from 86% to 30% in production' },
-      { name: 'Template-lock', status: 'live', detail: 'when the decision is in input tokens, not residual' },
-      { name: 'Marginal-fit + capacity + epiphenomenal-by-prior', status: 'live', detail: 'three more failure modes the diagnostics catch' },
+      { name: 'FabricationGuard', status: 'live', detail: '0.88 AUROC cross-task · ~1ms · PyPI v0.2.0' },
+      { name: 'ReasonGuard', status: 'live', detail: 'narrow-scope: 0.888 within-domain · honest negative cross-domain' },
+      { name: 'DeceptionGuard', status: 'planned', detail: 'Apollo methodology, Q3 2026' },
+      { name: 'CoTGuard v2', status: 'planned', detail: 'causal-mediation methodology, Q3 2026' },
     ],
-    href: '/research',
+    href: '/probebench',
     gradient: 'from-brand-500/20 to-accent-500/20',
   },
   {
-    id: 'registry',
-    name: 'Failed-Replication Registry',
-    tagline: "A public record of mech-interp claims that didn't survive their own diagnostics. Six first entries are ours.",
+    id: 'standardize',
+    name: 'Standardize',
+    tagline: 'ProbeBench — the anti-Goodhart leaderboard for activation probes.',
     products: [
-      { name: 'Path E null', status: 'live', detail: 'κ_t shape clustering — 0.014 gap WORSE than shuffled-time' },
-      { name: 'PSAE v1.5 falsified', status: 'live', detail: 'recall@1024=0.85 from marginal-fit, not predictive structure' },
-      { name: 'agent-probe-guard probes', status: 'live', detail: "detect-only; steering doesn't lever — confirmed epiphenomenal" },
-      { name: 'Phase 8 template-lock', status: 'live', detail: 'L55 CoT-Integrity probe AUROC 0.91 — zero behavioral change' },
+      { name: 'ProbeBench v0.0.1', status: 'live', detail: '8 categories · 7-axis ProbeScore · 5 reference probes' },
+      { name: 'Anti-Goodhart norms', status: 'live', detail: 'random-K controls · fresh-probe AUROC · 3-way splits' },
+      { name: 'InterpScore', status: 'live', detail: 'composite metric for SAE evaluation (vs SAEBench)' },
+      { name: 'Cross-substrate registry', status: 'planned', detail: 'register Qwen-Scope, Gemma Scope SAEs as upstream' },
     ],
-    href: '/atlas',
+    href: '/probebench',
     gradient: 'from-cyan-500/20 to-emerald-500/20',
   },
   {
-    id: 'standard',
-    name: 'OpenInterp Eval Standard',
-    tagline: 'JSON schemas for probe cards, causal reports, intervention traces. The format the Registry uses. Apache-2.0.',
+    id: 'deploy',
+    name: 'Deploy',
+    tagline: 'MCP server, vLLM/SGLang plugins, agent integrations, regulated-industry adapters.',
     products: [
-      { name: 'probe_card.json', status: 'planned', detail: 'documents probe assumptions + env coupling + capacity sweep' },
-      { name: 'causal_report.json', status: 'planned', detail: 'standardized output of the Six Diagnostics protocol' },
-      { name: 'intervention_trace.json', status: 'planned', detail: 'reproducible steering experiment record' },
-      { name: 'interp_card.json', status: 'planned', detail: 'feature-level interpretation with autointerp provenance' },
+      { name: 'openinterp-mcp v0.1.0', status: 'live', detail: '8 typed tools · Colab backend · Claude Code / Cursor / Cline · privacy-first' },
+      { name: 'openinterp SDK', status: 'live', detail: '`pip install openinterp` v0.3.0 · agent-probe-guard + FabricationGuard' },
+      { name: 'HuggingFace Spaces', status: 'live', detail: 'FabricationGuard ZeroGPU demo + ProbeBench leaderboard' },
+      { name: 'vLLM plugin', status: 'planned', detail: 'inference-time probe scoring · Q3 2026' },
     ],
-    href: 'https://github.com/OpenInterpretability/registry',
+    href: '/mcp',
     gradient: 'from-pink-500/20 to-orange-500/20',
   },
 ] as const
