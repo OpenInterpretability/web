@@ -1,9 +1,9 @@
 export const site = {
   name: 'OpenInterpretability',
   shortName: 'OpenInterp',
-  tagline: 'Watch language models think.',
+  tagline: 'When should we believe a mech-interp claim?',
   description:
-    'Open-source mechanistic interpretability — production probes (FabricationGuard, agent-probe-guard), MCP server that lets Claude Code / Cursor / Cline run interp on your Colab, ProbeBench leaderboard with anti-Goodhart norms, SAE training from 30-min free Colab to paper-grade. Apache-2.0.',
+    'OpenInterp answers: when should we believe a mechanistic interpretability claim? A protocol (Six Diagnostics), a benchmark (Failed-Replication Registry), and JSON schemas for the community. Built from 13 months of work on Qwen3.6-27B — 11 studies, 6 walk-backs. Apache-2.0.',
   url: 'https://openinterp.org',
   github: 'https://github.com/OpenInterpretability',
   huggingface: 'https://huggingface.co/caiovicentino1',

@@ -34,33 +34,36 @@ export default function HomePage() {
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/start"
+              href="/research"
               className="group inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:shadow-xl hover:shadow-brand-600/40 transition-all"
             >
-              <Terminal className="h-3.5 w-3.5" />
-              Try openinterp-mcp
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Read the Six Diagnostics
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
-              href="/products/agent-probe-guard"
+              href="/atlas"
               className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
             >
-              <ShieldCheck className="h-3.5 w-3.5" />
-              agent-probe-guard
+              <Library className="h-3.5 w-3.5" />
+              Failed-Replication Registry
             </Link>
             <Link
-              href="/probebench"
+              href="/start"
               className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
             >
-              <Trophy className="h-3.5 w-3.5" />
-              ProbeBench
+              <Terminal className="h-3.5 w-3.5" />
+              Try openinterp-mcp
             </Link>
-            <Link
-              href="/research"
+            <a
+              href="https://github.com/OpenInterpretability/registry"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg border border-transparent px-4 py-3 text-sm font-semibold text-ink-900/70 dark:text-ink-50/70 hover:text-ink-900 dark:hover:text-ink-50 transition-colors"
             >
-              Read papers
-            </Link>
+              <Github className="h-3.5 w-3.5" />
+              Eval Standard schemas →
+            </a>
           </div>
 
           {/* Install pills */}
@@ -148,11 +151,11 @@ export default function HomePage() {
             What we ship
           </span>
           <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-balance">
-            Detect. Standardize. Deploy.
+            A protocol. A registry. A standard.
           </h2>
           <p className="mt-4 text-lg text-ink-900/70 dark:text-ink-50/70 text-balance leading-relaxed">
-            Production probes. Goodhart-resistant standards. Inference-time integrations.
-            Built on top of the SAE infrastructure that frontier labs already shipped.
+            Built from 11 studies on Qwen3.6-27B. Six walked back.
+            From those walk-backs, the protocol that catches it next time.
           </p>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
