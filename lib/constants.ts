@@ -3,7 +3,7 @@ export const site = {
   shortName: 'OpenInterp',
   tagline: 'When should we believe a mech-interp claim?',
   description:
-    'OpenInterp answers: when should we believe a mechanistic interpretability claim? A protocol (Six Diagnostics), a benchmark (Failed-Replication Registry), and JSON schemas for the community. Built from 13 months of work on Qwen3.6-27B — 11 studies, 6 walk-backs. Apache-2.0.',
+    'OpenInterp answers: when should we believe a mechanistic interpretability claim? A protocol (Six Diagnostics), a benchmark (Failed-Replication Registry), and JSON schemas for the community. Built from 11 studies on Qwen3.6-27B — six walked back. Apache-2.0.',
   url: 'https://openinterp.org',
   github: 'https://github.com/OpenInterpretability',
   huggingface: 'https://huggingface.co/caiovicentino1',

@@ -14,7 +14,7 @@ import {
 export const metadata = {
   title: 'AgentGuard — Six Diagnostics for autonomous crypto agents · OpenInterp',
   description:
-    'Six Diagnostics applied to LLM agents managing capital on-chain. Manual audits available now ($5K, 1–2 days). Hosted SaaS Q3 2026 — early-access waitlist open. Built by the OpenInterp team (11 studies, 6 walk-backs, FabricationGuard, agent-probe-guard SDK).',
+    'Six Diagnostics applied to LLM agents managing capital on-chain. Manual audits available now ($5K, 1–2 days). Hosted SaaS Q3 2026 — early-access waitlist open. Built by the OpenInterp team (11 studies on Qwen3.6-27B, six walked back, FabricationGuard, agent-probe-guard SDK).',
 }
 
 const AUDIT_EMAIL = 'caio@openinterp.org'
@@ -80,7 +80,7 @@ export default function AgentGuardPage() {
             need to survive their own diagnostics — or they're shipping a false sense of safety.
           </p>
           <p className="mx-auto mt-4 max-w-3xl text-base text-ink-900/60 dark:text-ink-50/60 text-balance leading-relaxed">
-            We built the protocol on 13 months of work on Qwen3.6-27B — 11 studies, 6 walked back.
+            We built the protocol from 11 studies on Qwen3.6-27B — six walked back.
             We now audit yours.
           </p>
 
@@ -123,7 +123,7 @@ export default function AgentGuardPage() {
               Your safety stack is shipping at least one of these.
             </h2>
             <p className="mt-3 text-base text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
-              We caught all four in our own work over 13 months on one model.
+              We caught all four in our own work on one model.
               Six of our claims walked back. The protocol is what survived.
             </p>
             <div className="mt-6 grid gap-3 md:grid-cols-2">
@@ -263,7 +263,7 @@ export default function AgentGuardPage() {
           <p className="text-base text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
             The OpenInterp team —{' '}
             <Link href="/research" className="text-brand-600 dark:text-brand-400 hover:underline">11 studies</Link>{' '}
-            on Qwen3.6-27B over 13 months,{' '}
+            on Qwen3.6-27B since launching OpenInterp in April 2026,{' '}
             <a href={`${REGISTRY_URL}/tree/main/failed-replications`} target="_blank" rel="noopener noreferrer" className="text-brand-600 dark:text-brand-400 hover:underline">6 honest-negative walk-backs</a>,{' '}
             shipping artifacts:{' '}
             <Link href="/products/fabricationguard" className="text-brand-600 dark:text-brand-400 hover:underline">FabricationGuard</Link>,{' '}

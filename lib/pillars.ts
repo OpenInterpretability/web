@@ -266,7 +266,7 @@ export const heroNew = {
   eyebrow: 'Six Diagnostics protocol · 11 studies · 6 walk-backs · Apache-2.0',
   watchLine: 'When should we believe',
   thinkLine: 'a mech-interp claim?',
-  subBold: "We've spent 13 months on one model. Six of our own claims walked back.",
+  subBold: "We've shipped 11 studies on one model. Six of our own claims walked back.",
   subText:
     'From those walk-backs, a protocol. From 11 studies, a registry. From the registry, schemas the community can use. The reproducibility layer for mechanistic interpretability.',
 }
