@@ -19,6 +19,16 @@ export interface BlogPostMeta {
 
 export const blogPosts: BlogPostMeta[] = [
   {
+    slug: 'tool-entropy-crypto-agent-failure-mode',
+    title: 'Tool-Entropy Collapse: A Detectable Failure Mode for Crypto AI Agents',
+    summary:
+      'Three named crypto-agent exploits in May 2026 totaling ~$245M+ share a specific failure mode we call WANDERING: the agent loops on tool calls instead of finalizing. We detect it with a probe-free signal — Shannon entropy of the last 10 tool-call names — that reproduces cross-architecture (Qwen3.6-27B, Llama-70b, GPT-5) and ships today as the first monitoring eval in the Inspect AI register.',
+    date: '2026-05-27',
+    authors: ['Caio Vicentino', 'OpenInterpretability'],
+    tags: ['agent-safety', 'tool-entropy', 'WANDERING', 'crypto-agents', 'SWE-bench', 'cross-architecture', 'Inspect AI'],
+    readingMinutes: 12,
+  },
+  {
     slug: 'qwen36-27b-hallucination-replication',
     title: 'Entity-recognition features in Qwen3.6-27B — a replication, and a methodology lesson',
     summary:
