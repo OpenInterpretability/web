@@ -341,7 +341,7 @@ inspect eval src/tool_entropy_collapse/tool_entropy_collapse.py \\
 
         <ul className="list-disc pl-5 space-y-2">
           <li>
-            Paper (Tool-Entropy Collapse, v0.8):{' '}
+            Paper (Tool-Entropy Collapse, v1):{' '}
             <ExtLink href="https://zenodo.org/records/20368601">
               Zenodo 10.5281/zenodo.20368601
             </ExtLink>
