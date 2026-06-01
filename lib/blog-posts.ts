@@ -19,6 +19,16 @@ export interface BlogPostMeta {
 
 export const blogPosts: BlogPostMeta[] = [
   {
+    slug: 'a-detector-is-not-a-fix',
+    title: 'A detector is not a fix: detecting agent WANDERING is easy, steering it back is not',
+    summary:
+      'Across three papers we learned to detect when a coding agent gives up mid-task (tool-entropy collapse, cross-architecture), to localize its mechanistic fingerprint (an L11 edge-layer drift, found by stability selection), and then — the humbling part — we tried to use that locus to rescue the agent and failed three times. Injecting the SUCCESS direction at the very layer that detects WANDERING best does not rescue it (paired McNemar p=0.73); it destabilizes the model into malformed tool calls (0→60% as the dose rises). A monitor is not a lever, even at the strongest locus. Includes the walk-back where a wrong baseline made the null look like a p=0.02 positive.',
+    date: '2026-05-30',
+    authors: ['Caio Vicentino', 'OpenInterpretability'],
+    tags: ['agents', 'WANDERING', 'SWE-bench Pro', 'steering', 'causal', 'null-result', 'Qwen3.6-27B', 'agent-safety', 'methodology'],
+    readingMinutes: 14,
+  },
+  {
     slug: 'tool-entropy-crypto-agent-failure-mode',
     title: 'Tool-Entropy Collapse: A Detectable Failure Mode for Crypto AI Agents',
     summary:

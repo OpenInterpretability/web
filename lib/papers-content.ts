@@ -293,6 +293,69 @@ export const papers: PaperMeta[] = [
     ],
     tags: ["methodology checklist", "causal claims", "identification assumptions", "pre-registration", "walk-back-and-rescue", "random-feature baseline", "shuffled-source baseline", "control-token normalization", "structural-rigidity α-sweep", "whitespace-stripped flip", "trace-length-controlled slope", "operational disclosure", "Qwen3.6-27B", "mechanistic interpretability methodology"],
   },
+  {
+    slug: "wandering-l11-right-locus",
+    title:
+      "Causal Localization of Agent WANDERING to Edge-Layer L11: The Right Locus Is Still Not a Rescue Lever",
+    subtitle:
+      "Three causal nulls and a dose-dependent destabilization at WANDERING's strongest detector locus",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.20490278",
+    status: "published",
+    date: "2026-06-01",
+    abstract:
+      "We report three causal tests of the Tool-Entropy WANDERING mechanism hypothesis (mid-layer verdict consolidated, edge-layer alignment fails) on Qwen3.6-27B SWE-bench Pro trajectories, and all three are null on rescuing WANDERING. A forced-finish counterfactual rules out silent success (Fisher p=0.71); always-on L55 SUCCESS-donor steering is behaviorally inert (p=1.00); and re-targeting the injection to L11 — the edge layer the companion classification paper flags as WANDERING's strongest discriminator — across a norm-matched magnitude sweep does not rescue either (paired McNemar p=0.73). The one robust effect is the opposite of a rescue: at high magnitude the L11 hook destabilizes the model into invalid tool calls (0/20 → 12/20). We also surface a load-bearing methodological finding: WANDERING is not run-stable at temperature 1.0 (the same instances flip finish 7/20 with no intervention), so every intervention test must be paired and the unpaired 0/20 baseline manufactures a false positive.",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.20490278" },
+      { label: "Code — SWE-bench harness (GitHub, Apache-2.0)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness" },
+      { label: "Arc PDFs mirror (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/wandering-arc-papers" },
+      { label: "Companion — Tool-Entropy Collapse (#1)", href: "https://doi.org/10.5281/zenodo.20368601" },
+    ],
+    tags: ["agent WANDERING", "causal localization", "activation steering", "honest negatives", "Qwen3.6-27B", "SWE-bench Pro", "run-instability"],
+  },
+  {
+    slug: "multichannel-wandering-signatures",
+    title:
+      "Multi-Channel Mechanistic Signatures of Agent WANDERING: Classification, Causal Localization, and Behavior-Legible Response to Intervention",
+    subtitle:
+      "60 multi-channel features, a mid-to-edge mechanism, and a residual-blind / behavior-legible response signal",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.20490284",
+    status: "published",
+    date: "2026-06-01",
+    abstract:
+      "WANDERING — an LLM agent stays internally confident it has solved a task yet never emits a termination action and exhausts its turn budget — is a 34% blind spot in probe-based agent monitoring. We characterize it mechanistically on N=99 Qwen3.6-27B SWE-bench Pro trajectories: 60 multi-channel features (text, tool-use, per-layer residual, temporal) classify SUCCESS/LOCKED/WANDERING at macro-F1 0.636 (z=5.88, p=0.001), after a transparent walk-back from a leaky 0.987 baseline. Stability selection independently recovers a mid-to-edge mechanism (LOCKED→L43, WANDERING→L11), and an LLM-judge bridge to a human taxonomy co-locates ≈60% of both LOCKED and WANDERING into one category, matching a mechanistically weak boundary (p=0.035). Finally, the residual signature does not predict which agents flip to finish under a companion L11 injection run (LOO-AUC 0.619), but tool-entropy collapse depth does (AUC 0.768): response to intervention is residual-blind but behavior-legible.",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.20490284" },
+      { label: "Code + 60-feature matrix + labels (GitHub, Apache-2.0)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness" },
+      { label: "Trajectories + residuals (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/swebench-pro-qwen36-27b-phase6" },
+      { label: "Arc PDFs mirror (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/wandering-arc-papers" },
+    ],
+    tags: ["agent WANDERING", "multi-channel classification", "stability selection", "human-taxonomy bridge", "tool-entropy", "Qwen3.6-27B", "SWE-bench Pro"],
+  },
+  {
+    slug: "modality-matters-behavioral-interruption",
+    title:
+      "Modality Matters: A Transient Behavioral Interruption Rescues Agent WANDERING Where Residual Steering Does Not",
+    subtitle:
+      "The predictive signal is residual; the causal lever is behavioral — the first positive of the WANDERING arc",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.20490286",
+    status: "published",
+    date: "2026-06-01",
+    abstract:
+      "A multi-turn coding agent fails in a distinctive way we call WANDERING: it keeps acting but never emits the finish action, exhausting its turn budget. A companion line of work detects WANDERING from a residual-stream signature and a tool-entropy signal, but three pre-registered residual interventions (SUCCESS-direction injection at L55 and at L11) all fail to rescue it. We ask whether the missing lever is not the locus but the modality. On the same 20 WANDERING Qwen3.6-27B SWE-bench Pro trajectories, gated by the same live tool-entropy collapse detector, a transient behavioral interruption — one fresh user turn at the collapse point — roughly doubles finalization (30%→70%, paired McNemar p=0.021), while residual L11 injection stays inert (p=0.63). The lever is the interruption itself, not its content: a content-neutral message rescues as well as a re-plan (p=1.0). SWE-bench Pro Docker evaluation suggests the interruption also raises task solve-rate (~23%→50%, cross-session). For long-horizon agents the predictive signal lives in the residual stream but the causal lever lives in behavior.",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.20490286" },
+      { label: "Code — behavioral loop + 4-arm experiment (GitHub, Apache-2.0)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness" },
+      { label: "Arc PDFs mirror (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/wandering-arc-papers" },
+      { label: "Companion — The Right Locus null (#2)", href: "https://doi.org/10.5281/zenodo.20490278" },
+    ],
+    tags: ["agent WANDERING", "behavioral intervention", "course-correction", "detection-intervention asymmetry", "tool-entropy", "Qwen3.6-27B", "SWE-bench Pro"],
+  },
 ];
 
 export function getPaper(slug: string): PaperMeta | undefined {
