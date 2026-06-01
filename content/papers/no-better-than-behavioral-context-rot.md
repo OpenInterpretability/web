@@ -20,7 +20,7 @@ The WANDERING arc detects a long-horizon agent failure — an agent that keeps a
 
 - Early-window velocity at L31 reaches **AUROC 0.695** — statistically **indistinguishable** from the fair early behavioral baseline `tool_entropy_first10` (**0.688**; paired bootstrap Δ=+0.008, 95% CI **[−0.170, +0.211]**, straddles zero).
 - It loses to the deployed late detector `tool_entropy_last10` (**0.888**) and to trajectory length (**1.000**, postdictive).
-- As a sharp alarm calibrated to **≤5% false-positive** on successes, velocity catches only **1–3 of 20** WANDERING trajectories and **never fires earlier** than the deployed detector — no lead-time advantage.
+- As a sharp alarm calibrated to **≤5% false-positive** on successes, velocity catches only **1–3 of 20** WANDERING trajectories — **far fewer** than the deployed detector, with too few overlapping detections to even measure a lead-time advantage.
 
 ## Why it matters
 
