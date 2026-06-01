@@ -356,6 +356,27 @@ export const papers: PaperMeta[] = [
     ],
     tags: ["agent WANDERING", "behavioral intervention", "course-correction", "detection-intervention asymmetry", "tool-entropy", "Qwen3.6-27B", "SWE-bench Pro"],
   },
+  {
+    slug: "no-better-than-behavioral-context-rot",
+    title:
+      "No Better Than Behavioral: A Residual Velocity-Freezing Fingerprint Predicts Agent WANDERING No Better Than the Cheap Tool-Entropy Detector",
+    subtitle:
+      "A pre-registered negative — companion note to the WANDERING arc: context rot leaves a real residual trace that is operationally redundant",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Companion note to the WANDERING arc · CC-BY-4.0",
+    status: "published",
+    date: "2026-06-01",
+    abstract:
+      "Does the residual stream carry an earlier or better detector of long-horizon agent WANDERING than the cheap probe-free tool-entropy signal — does the geometry rot before the behavior does? We pre-register and test this on the same 99 Qwen3.6-27B SWE-bench Pro trajectories. Stage 1 (raw residual geometry, no SAE) finds a real but weak fingerprint, representational velocity-freezing: trajectories that will WANDER settle toward an attractor sooner (smaller per-turn state change early), directionally consistent across all five layers (4/5 raw p<0.05, length-controlled), with one mid-network layer clearing a pre-registered trend-and-divergence conjunction (p=0.015) — but nothing survives multiple-comparison correction. Stage 2 (the decisive predictive test) shows the fingerprint adds nothing: early velocity at L31 reaches AUROC 0.695, statistically indistinguishable from the fair early behavioral baseline (tool_entropy_first10, 0.688; paired bootstrap Δ=+0.008, 95% CI [−0.170,+0.211]) and clearly below the deployed late detector (0.888); as a sharp alarm at ≤5% false-positive it catches only 1–3 of 20 WANDERING and never fires earlier than the deployed detector. The residual fingerprint of context rot is real but downstream-redundant — strengthening the arc: for this failure mode, watching the cheap behavior is as good as or better than reading the residual stream.",
+    artifacts: [
+      { label: "Note PDF (GitHub, CC-BY-4.0)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/blob/main/paper/context_rot/no_better_than_behavioral.pdf" },
+      { label: "Pre-registration + Stage 1/2 results + code (GitHub)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/tree/main/paper/context_rot" },
+      { label: "Arc PDFs mirror (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/wandering-arc-papers" },
+      { label: "Companion — Modality Matters (#4)", href: "https://doi.org/10.5281/zenodo.20490286" },
+    ],
+    tags: ["agent WANDERING", "context rot", "honest negatives", "pre-registration", "residual geometry", "tool-entropy", "Qwen3.6-27B", "SWE-bench Pro"],
+  },
 ];
 
 export function getPaper(slug: string): PaperMeta | undefined {
