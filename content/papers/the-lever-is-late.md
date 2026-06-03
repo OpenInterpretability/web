@@ -26,7 +26,7 @@ On 99 Qwen3.6-27B SWE-bench Pro trajectories, reconstructed faithfully at the de
 
 ## The tool
 
-The method ships as **[`decision-locator`](https://github.com/OpenInterpretability/openinterp-swebench-harness/tree/main/tools/decision_locator)** — a small, model-agnostic tool that, for any tool-calling decision on any open-weight model, (1) locates the layer where the decision becomes readable, (2) sweeps activation patching to find where it is writable, and (3) steers a real generation by patching the commitment layer. CPU smoke test included.
+The method ships as **[`decision-locator`](https://github.com/OpenInterpretability/decision-locator)** — a small, pip-installable, model-agnostic tool that, for any tool-calling decision on any open-weight model, (1) locates the layer where the decision becomes readable, (2) sweeps activation patching to find where it is writable, and (3) steers a real generation by patching the commitment layer. `pip install git+https://github.com/OpenInterpretability/decision-locator`, then `decision-locator demo --model gpt2`. CPU self-test + Colab included.
 
 ## Honest scope
 
