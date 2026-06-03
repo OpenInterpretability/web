@@ -377,6 +377,27 @@ export const papers: PaperMeta[] = [
     ],
     tags: ["agent WANDERING", "context rot", "honest negatives", "pre-registration", "residual geometry", "tool-entropy", "Qwen3.6-27B", "SWE-bench Pro"],
   },
+  {
+    slug: "verdict-circuit-not-the-lever",
+    title:
+      "The Verdict Is Not the Lever: An Interpretable Task-Completion Feature Predicts but Does Not Cause Long-Horizon Agent Termination",
+    subtitle:
+      "The mechanistic capstone of the WANDERING arc — detection ≠ control at the level of one named SAE feature",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.20532769 · capstone of the WANDERING arc",
+    status: "published",
+    date: "2026-06-03",
+    abstract:
+      "A long-horizon coding agent fails by WANDERING — acting indefinitely without emitting the finish action. Does it internally represent a 'task is done' verdict, and is that representation the causal lever for termination? Using a full-stack sparse autoencoder on Qwen3.6-27B over 99 SWE-bench Pro trajectories: (i) an SAE feature at layer 23 (#22358), selected anti-circularly from SUCCESS only, is present at the WANDERING final turn but not LOCKED (AUROC 0.81, length-controlled, partial-r 0.55); (ii) it interprets in-domain as a 'subtask completed and verified' feature (completion-language enrichment 50% vs 6%); (iii) it predicts the actual finish action (AUROC 0.91); yet (iv) clamping it to the SUCCESS level at the WANDERING decision point produces no change in P(finish) (Δ = −0.001, indistinguishable from a random-feature clamp at +0.002), and ablating it in SUCCESS does not significantly reduce finishing (−0.008, n.s.). The agent represents 'I'm done' as a clean, interpretable, predictive feature — but that representation is not what makes it stop. This extends the detection-vs-control asymmetry to the level of a single named feature and sharpens the arc's residual nulls one level deeper; the only known WANDERING rescue remains a behavioral interruption. Every stage is CPU-only except the causal test.",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.20532769" },
+      { label: "Pre-registrations + all-stage results + code (GitHub)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/tree/main/paper/verdict_circuit" },
+      { label: "Transcripts + labels + fidelity residuals (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/swebench-phase6-verdict-circuit" },
+      { label: "Arc PDFs mirror (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/wandering-arc-papers" },
+    ],
+    tags: ["agent WANDERING", "sparse autoencoder", "detection-intervention asymmetry", "activation patching", "knowledge-action gap", "honest negatives", "Qwen3.6-27B", "SWE-bench Pro"],
+  },
 ];
 
 export function getPaper(slug: string): PaperMeta | undefined {
