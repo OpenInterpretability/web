@@ -294,6 +294,27 @@ export const papers: PaperMeta[] = [
     tags: ["methodology checklist", "causal claims", "identification assumptions", "pre-registration", "walk-back-and-rescue", "random-feature baseline", "shuffled-source baseline", "control-token normalization", "structural-rigidity α-sweep", "whitespace-stripped flip", "trace-length-controlled slope", "operational disclosure", "Qwen3.6-27B", "mechanistic interpretability methodology"],
   },
   {
+    slug: "tool-entropy-collapse",
+    title:
+      "Tool-Entropy Collapse: A Cross-Architecture Signature of Agent WANDERING Failure",
+    subtitle:
+      "Paper #1, the foundation of the WANDERING arc — a probe-free, cross-architecture detector of agents that never stop",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.20368601 · the foundation of the WANDERING arc",
+    status: "published",
+    date: "2026-05-24",
+    abstract:
+      "A long-horizon coding agent fails in a distinctive way we call WANDERING: it stays internally confident it has solved the task yet never emits a termination action, exhausting its turn budget — a ~34% blind spot for probe-based agent monitoring. We test six detector designs across three signal channels on Qwen3.6-27B SWE-bench Pro trajectories and find that tool-use entropy collapse — the agent cycling the same tool calls in its final turns — is the load-bearing, probe-free signal, supporting three deployment tiers: forensic (35% recall / 0% false-positive), advisory (cross-layer, 80% recall with ~15-turn lead), and autonomous (tool-entropy, 70% recall / 5% false-positive). The signature is cross-architecture within SWE-bench — Llama-70B (collapse ratio 0.41, p<1e-15) and a GPT-5 router (0.71, p=8.9e-35) match Qwen — but a cross-task test on METR MALT is null (ratio 1.007, p=0.81), so we scope the claim to multi-turn code-execution agent tasks with rich action spaces. Mechanistically (§13), the mid-layer 'task is done' verdict is consolidated while the edge layers (L11/L55) fail to translate it into the finish action, producing the final-turn tool loop. This is the foundation of the WANDERING arc — every downstream result (the residual nulls, the behavioral rescue, the verdict feature, and the late lever) builds on this detector.",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.20368601" },
+      { label: "Code + harness (GitHub)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness" },
+      { label: "As an Inspect eval (UK AISI inspect_evals submission)", href: "https://github.com/OpenInterpretability/inspect-tool-entropy-collapse" },
+      { label: "Arc PDFs mirror (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/wandering-arc-papers" },
+    ],
+    tags: ["agent WANDERING", "tool-entropy", "cross-architecture", "agent monitoring", "detection", "Qwen3.6-27B", "Llama-70B", "GPT-5", "SWE-bench Pro"],
+  },
+  {
     slug: "wandering-l11-right-locus",
     title:
       "Causal Localization of Agent WANDERING to Edge-Layer L11: The Right Locus Is Still Not a Rescue Lever",
