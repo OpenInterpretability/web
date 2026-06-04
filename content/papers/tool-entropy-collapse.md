@@ -2,9 +2,9 @@
 ### A cross-architecture signature of agent WANDERING failure
 
 **Caio Vicentino · OpenInterpretability · Published 2026-05-24.**
-**Zenodo · CC-BY-4.0 · [DOI 10.5281/zenodo.20368601](https://doi.org/10.5281/zenodo.20368601) · the foundation of the WANDERING arc.**
+**Zenodo · CC-BY-4.0 · [DOI 10.5281/zenodo.20368600](https://doi.org/10.5281/zenodo.20368600) · the foundation of the WANDERING arc.**
 
-> Paper #1, the paper that names WANDERING and gives the arc its detector. The full PDF (all six detectors, the three tiers, the cross-architecture and cross-task tests) is the **[Zenodo record](https://doi.org/10.5281/zenodo.20368601)** — this page is the on-site summary.
+> Paper #1, the paper that names WANDERING and gives the arc its detector. The full PDF (all six detectors, the three tiers, the cross-architecture and cross-task tests) is the **[Zenodo record](https://doi.org/10.5281/zenodo.20368600)** — this page is the on-site summary.
 
 ---
 
