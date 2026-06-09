@@ -7,6 +7,26 @@ import { PillarCard } from '@/components/pillar-card'
 export default function HomePage() {
   return (
     <>
+      {/* ===== Announcement banner: openinterp-lab on the Google Colab CLI ===== */}
+      <a
+        href="https://github.com/OpenInterpretability/openinterp-lab"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group block border-b border-brand-500/20 bg-gradient-to-r from-brand-600/15 via-accent-500/10 to-brand-600/15 px-4 py-2.5 text-center text-sm backdrop-blur-sm hover:from-brand-600/25 hover:to-brand-600/25 transition-colors"
+      >
+        <span className="chip mr-2 bg-brand-500/20 text-brand-700 dark:text-brand-300 ring-brand-500/30 text-[11px] font-semibold uppercase tracking-wide">
+          New · Jun 2026
+        </span>
+        <span className="font-semibold text-ink-900 dark:text-white">openinterp-lab</span>
+        <span className="text-ink-900/70 dark:text-ink-50/70">
+          {' '}— an agent-operable mech-interp lab on the new Google Colab CLI. Replicate our papers with one command:
+        </span>
+        <code className="mx-1.5 rounded bg-black/[0.06] dark:bg-white/10 px-1.5 py-0.5 font-mono text-[13px] text-ink-900 dark:text-ink-50">
+          oilab replicate lever-is-late
+        </code>
+        <span className="font-medium text-brand-600 dark:text-brand-400 group-hover:underline">GitHub →</span>
+      </a>
+
       {/* ===== Hero ===== */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-grid dark:bg-grid-dark opacity-30" aria-hidden="true" />
@@ -82,6 +102,18 @@ export default function HomePage() {
                 v0.3.0 live
               </span>
             </div>
+            <a
+              href="https://github.com/OpenInterpretability/openinterp-lab"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-sm card px-5 py-3.5 flex items-center gap-3 shadow-md hover:ring-brand-500/40 transition-shadow"
+            >
+              <span className="text-brand-500 select-none">$</span>
+              <code className="flex-1 text-left text-ink-900 dark:text-ink-50">oilab replicate tool-entropy</code>
+              <span className="chip bg-brand-500/15 text-brand-700 dark:text-brand-300 ring-brand-500/30">
+                agent lab · new
+              </span>
+            </a>
           </div>
 
           {/* Product Hunt badge */}
