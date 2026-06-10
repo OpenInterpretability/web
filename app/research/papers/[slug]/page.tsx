@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { readFile } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -15,6 +16,32 @@ export async function generateStaticParams() {
   return papers.map((p) => ({ slug: p.slug }))
 }
 
+const SITE = 'https://openinterp.org'
+
+// Build the Google Scholar (Highwire Press) citation_* meta tags so Scholar's crawler
+// indexes each paper — the canonical way to get non-arXiv papers into Scholar / Semantic Scholar.
+function scholarTags(paper: ReturnType<typeof getPaper>, slug: string): Record<string, string | string[]> {
+  if (!paper) return {}
+  const tags: Record<string, string | string[]> = {}
+  tags['citation_title'] = paper.title
+  tags['citation_author'] = paper.authors.split(/,| and /).map((a) => a.trim()).filter(Boolean)
+  tags['citation_publication_date'] = paper.date.replace(/-/g, '/') // YYYY/MM/DD
+  tags['citation_online_date'] = paper.date.replace(/-/g, '/')
+  tags['citation_abstract_html_url'] = `${SITE}/research/papers/${slug}`
+  tags['citation_technical_report_institution'] = 'OpenInterpretability'
+  tags['citation_publisher'] = 'OpenInterpretability'
+  // direct same-domain PDF (gold standard for Scholar); falls back to nothing if absent
+  if (existsSync(join(process.cwd(), 'public', 'papers', `${slug}.pdf`))) {
+    tags['citation_pdf_url'] = `${SITE}/papers/${slug}.pdf`
+  }
+  // DOI parsed from the Zenodo artifact if present
+  const blob = (paper.artifacts || []).map((a) => a.href + ' ' + a.label).join(' ')
+  const m = blob.match(/10\.5281\/zenodo\.(\d{6,})/) || blob.match(/zenodo\.(?:org\/record\/|org\/records\/|)(\d{6,})/)
+  if (m) tags['citation_doi'] = `10.5281/zenodo.${m[1]}`
+  if (paper.tags?.length) tags['citation_keywords'] = paper.tags.join('; ')
+  return tags
+}
+
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params
   const paper = getPaper(slug)
@@ -22,6 +49,8 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: `${paper.title} — OpenInterp`,
     description: paper.abstract.slice(0, 200),
+    alternates: { canonical: `${SITE}/research/papers/${slug}` },
+    other: scholarTags(paper, slug),
   }
 }
 
