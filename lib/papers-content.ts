@@ -441,6 +441,28 @@ export const papers: PaperMeta[] = [
     ],
     tags: ["agent WANDERING", "activation patching", "logit lens", "knowledge-action gap", "agent termination", "steering", "first positive", "Qwen3.6-27B", "SWE-bench Pro"],
   },
+  {
+    slug: "lever-generalizes-brakes",
+    title:
+      "The Lever Generalizes — and It Brakes: A Late, Bidirectional Action-Commitment Lever Across Agent Decisions and Architectures",
+    subtitle:
+      "The circuit-breaker capstone — the late lever generalizes finish→edit, brakes a real commit (96%), and replicates across two model families",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.20634838 · prepared for BlackboxNLP 2026 (EMNLP)",
+    status: "published",
+    date: "2026-06-10",
+    abstract:
+      "Paper #6 showed control of a coding agent's finish decision lives not at the mid-layer verdict but in a late, task-matched action-commitment block ~30 layers downstream. This paper asks whether that late lever is specific to termination, and whether it can BRAKE an action — the mechanism a safety circuit-breaker needs. On Qwen3.6-27B over 99 SWE-bench Pro trajectories, using a second decision (commit a file edit vs continue reversible exploration), with n=60 deterministic decision points per condition and generation-confirmed outcomes: (1) GENERALIZATION — injecting a task-matched edit-donor into the late block makes a stuck-in-exploration agent emit a real edit call (0.23→0.77 at L59; position control 0.08, cross-task 0.48). (2) THE BRAKE — injecting an explore-donor at a commit decision collapses the real edit rate 0.48→0.02 (96% suppression) at L55, with a same-class control intact (0.55) and the opposite donor boosting to 0.92. (3) The mechanism is MONOTONIC and BIDIRECTIONAL: exact paired McNemar on all 14 per-point conditions yields seven contrasts surviving Holm–Bonferroni (worst p=7.6e-5), with elicit c=0 (the edit-donor only turns commits on) and brake b=0 (the explore-donor only turns them off) — the lever moves exactly in the donor's direction with ~zero off-direction noise. (4) CROSS-ARCHITECTURE: the late-commitment geometry and donor-specific writability replicate across two model families and two scales (Mistral-7B and the scale-matched Mistral-Small-24B, where the mid-inert/late-write dissociation is cleanest, fidelity 0.955 vs 0.007). The brake re-routes to reversible exploration (+0.17 bash above its no-brake floor) and the lift survives a full valid-tool-call re-parse. We frame the bidirectional late lever as a mechanistic circuit-breaker. Honest scope: an existence proof, not a universal law; demonstrated on a semi-irreversible (undoable) edit — a genuinely irreversible action (send_transaction) is the named next step.",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.20634838" },
+      { label: "decision-locator tool (model-agnostic, pip-installable)", href: "https://github.com/OpenInterpretability/decision-locator" },
+      { label: "Pre-registrations + per-point data + exact-stats + pre-mint eval (GitHub)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/tree/main/paper/circuit_breaker" },
+      { label: "Decision-point state + residuals + strengthener data (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/swebench-phase6-verdict-circuit" },
+      { label: "Arc PDFs mirror (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/wandering-arc-papers" },
+    ],
+    tags: ["mechanistic circuit-breaker", "irreversible actions", "agent safety", "activation patching", "bidirectional steering", "cross-architecture", "knowledge-action gap", "Qwen3.6-27B", "Mistral", "SWE-bench Pro"],
+  },
 ];
 
 export function getPaper(slug: string): PaperMeta | undefined {
