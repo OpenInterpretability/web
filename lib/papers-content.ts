@@ -484,6 +484,27 @@ export const papers: PaperMeta[] = [
     ],
     tags: ["mechanistic circuit-breaker", "irreversible actions", "agent safety", "AI control", "corrigibility", "activation patching", "redirect-to-safe", "cross-architecture", "crypto agents", "Qwen3.6-27B", "Llama-3.1", "Mistral"],
   },
+  {
+    slug: "authorization-direction",
+    title:
+      "The Authorization Direction: A Late-Layer Direction that Detects and Controls an Agent's Commitment to Unauthorized Irreversible Actions, Across Architectures",
+    subtitle:
+      "One late-layer direction both decodes whether an irreversible action is task-authorized and, steered, controls the commit — on two architecture families. Detect and control coincide.",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.20683623",
+    status: "published",
+    date: "2026-06-13",
+    abstract:
+      "A safety circuit-breaker for a tool-using agent must, at the moment the agent is about to emit an irreversible action, answer two questions: is the action authorized by the trusted task, and can we stop it if not. We show both live in a single linear direction at a late layer. (1) DETECTION: a linear probe separates authorized from unauthorized irreversible-action commits at AUROC ~1.0 on Qwen3.6-27B; the capacity confound is ruled out four ways (one-dimensional difference-of-means, regularization sweep, PCA to 32 dims, commit-state matching), a random direction is at chance at the clean late locus, and the direction is domain-general (train on five actions, detect the held-out sixth at 1.0) and origin-robust (train on injection, detect held-out model-internal at 0.89). (2) CONTROL: steering along d = mean(authorized) - mean(unauthorized) monotonically moves the commit (emit range 0.67 vs 0.03 for a random direction) — the SAME direction detects and controls. (3) ACROSS ARCHITECTURES: the full result replicates on gpt-oss-20b (a different-family MoE): detection AUROC 1.0, cross-action transfer 1.0, steering range 0.65 vs -0.25. (4) A BEHAVIORAL FINDING: both models obey explicit prohibition (commit 0.00) but self-commit irreversible actions from a benign task — the residual risk is unprompted over-eagerness, not defiance, the model-origin failure no input-provenance or text filter can see. This sharpens the arc's detect != control refrain: at the late action-commitment locus they coincide, contrasting the mid-layer verdict feature that predicts but does not cause. Honest scope: AUROC=1.0 is a ceiling whose capacity origin is ruled out but whose surface-lexical component is not fully isolated; actions are simulated; the method is white-box. Pre-registrations, per-run data, figures, the model-agnostic runner, and an adversarial evaluation that recomputes every number (35/35) are released.",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.20683623" },
+      { label: "Pre-regs + per-run ledgers + 35/35 eval + figures (GitHub: agentguard)", href: "https://github.com/OpenInterpretability/agentguard/tree/main/paper" },
+      { label: "AgentGuard — the defense-in-depth firewall this detector closes the gap for", href: "https://openinterp.org/agentguard" },
+      { label: "Antecedent: #8 Mechanistic Circuit-Breakers (the actuator)", href: "https://doi.org/10.5281/zenodo.20679287" },
+    ],
+    tags: ["authorization", "agent safety", "AI control", "linear probe", "activation steering", "detect vs control", "irreversible actions", "cross-architecture", "Qwen3.6-27B", "gpt-oss", "corrigibility", "mechanistic interpretability"],
+  },
 ];
 
 export function getPaper(slug: string): PaperMeta | undefined {
