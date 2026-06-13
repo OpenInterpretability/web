@@ -463,6 +463,27 @@ export const papers: PaperMeta[] = [
     ],
     tags: ["mechanistic circuit-breaker", "irreversible actions", "agent safety", "activation patching", "bidirectional steering", "cross-architecture", "knowledge-action gap", "Qwen3.6-27B", "Mistral", "SWE-bench Pro"],
   },
+  {
+    slug: "circuit-breakers-irreversible-actions",
+    title:
+      "Mechanistic Circuit-Breakers Generalize Across Irreversible Agent Actions and Architectures",
+    subtitle:
+      "The safety capstone — the late brake works on a genuinely irreversible send_transaction, generalizes across six irreversible actions and three architectures, and redirects to safety",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.20679287",
+    status: "published",
+    date: "2026-06-13",
+    abstract:
+      "AI agents now take irreversible actions — sending crypto, deleting files, dropping database tables, deploying to production, sending email. Paper #7 showed that a single late-layer activation patch can BRAKE a coding agent's committal action, collapsing a real file edit (0.48→0.02), but an edit is reversible; the named open question was whether the brake works on a genuinely irreversible action. We answer it, and generalize it twice. On a simulated wallet agent (Qwen3.6-27B, no real funds, n=24), injecting a task-matched safe-action donor at a late layer collapses a committed send_transaction (0.998→0.00 emission, exact McNemar b=24,c=0, p≈1.2e-7) and — the safety-critical property — the agent redirects 100% to a safe read-only action (get_balance), never to another transfer. The brake is direction-specific: a same-class donor does not suppress, and a random donor destroys the output into incoherence rather than producing a safe redirect. It is a LAW ACROSS ACTIONS: on six diverse irreversible-action domains (crypto transfer and ERC-20 approval, file deletion, table drop, production deploy, email send), the brake yields 100% generation-confirmed suppression AND 100% redirect-to-safe wherever the agent will commit the action. It is a LAW ACROSS ARCHITECTURES: the same battery replicates on Llama-3.1-8B and Mistral-Small-24B (17 of 18 model×action cells valid, the brake working in all 17; the one invalid cell is a model that refuses to commit a production deploy at all). The brake locus is a depth-relative late property (~80–98% of depth), model- and action-specific — the hardest actions are only fully braked at the final layer. Honest scope: actions are simulated and the intervention is a white-box, inference-time activation patch, so this establishes that the brake MECHANISM generalizes to irreversible actions and architectures — not a deployable defense (a single white-box direction is not robust to an adaptive adversary, and a last-layer brake leaves almost no margin). Code, per-action data, and an adversarial pre-publication evaluation (88/88 numeric checks recomputed from the public ledgers) are released.",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.20679287" },
+      { label: "Paper + pre-mint eval (88/88, recomputes every number) — GitHub", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/tree/main/paper/circuit_breaker" },
+      { label: "Per-action ledgers + wallet/devops/db/email scenarios (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/swebench-phase6-verdict-circuit" },
+      { label: "Antecedent: #7 The Lever Generalizes — and It Brakes", href: "https://doi.org/10.5281/zenodo.20634838" },
+    ],
+    tags: ["mechanistic circuit-breaker", "irreversible actions", "agent safety", "AI control", "corrigibility", "activation patching", "redirect-to-safe", "cross-architecture", "crypto agents", "Qwen3.6-27B", "Llama-3.1", "Mistral"],
+  },
 ];
 
 export function getPaper(slug: string): PaperMeta | undefined {
