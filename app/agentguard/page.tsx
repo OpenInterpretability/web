@@ -190,8 +190,11 @@ export default function AgentGuardPage() {
           (open) weights and is not robust to a <em>white-box activation-space</em> adversary
           (obfuscated-activations attacks) — the threat model is a prompt/environment adversary
           against a model the defender controls. The brake&apos;s suppress/redirect efficacy is
-          published real data; the model-origin detection AUROC on fresh scenarios is the next
-          live-GPU validation. Benchmark actions are simulated. Full ledger in{' '}
+          published real data; the model-origin detection signal is now <strong>measured in a pilot</strong>{' '}
+          (Qwen3.6-27B, n=40): a late-layer probe (cleanest at L59, where a random direction is at
+          chance) separates authorized from unauthorized commits — including model-origin — and the
+          direction generalizes across attack origin (train injection → test model-origin). AUROC=1.0
+          is a pilot ceiling; scale + harder negatives next. Benchmark actions are simulated. Full ledger in{' '}
           <a href={`${GH}/blob/main/SCOPE.md`} className="text-brand-600 dark:text-brand-400 underline">SCOPE.md</a>.
         </p>
       </section>
