@@ -1,13 +1,15 @@
 import Link from 'next/link'
-import { ArrowRight, Github, Zap, ShieldCheck, GitBranch, Cpu, Atom, Package, Play, Trophy, Terminal, Layers, Library, Hash } from 'lucide-react'
-import { headline, moat, saes, benchmarks, priorWork, stages, site } from '@/lib/constants'
-import { pillars, threePillars, threeMoats, roadmap, heroNew } from '@/lib/pillars'
-import { PillarCard } from '@/components/pillar-card'
+import {
+  ArrowRight, Github, Terminal, ShieldCheck, BookOpen, FlaskConical,
+  GitBranch, ExternalLink, Library, GraduationCap, Cpu,
+} from 'lucide-react'
+import { heroNew } from '@/lib/pillars'
+import { arc, findings, discipline, secondLine, researchTools, credibility } from '@/lib/arc'
 
 export default function HomePage() {
   return (
     <>
-      {/* ===== Announcement banner: openinterp-lab on the Google Colab CLI ===== */}
+      {/* ===== Announcement banner: openinterp-lab on the Colab CLI ===== */}
       <a
         href="https://github.com/OpenInterpretability/openinterp-lab"
         target="_blank"
@@ -15,12 +17,9 @@ export default function HomePage() {
         className="group block border-b border-brand-500/20 bg-gradient-to-r from-brand-600/15 via-accent-500/10 to-brand-600/15 px-4 py-2.5 text-center text-sm backdrop-blur-sm hover:from-brand-600/25 hover:to-brand-600/25 transition-colors"
       >
         <span className="chip mr-2 bg-brand-500/20 text-brand-700 dark:text-brand-300 ring-brand-500/30 text-[11px] font-semibold uppercase tracking-wide">
-          New · Jun 2026
+          Reproduce
         </span>
-        <span className="font-semibold text-ink-900 dark:text-white">openinterp-lab</span>
-        <span className="text-ink-900/70 dark:text-ink-50/70">
-          {' '}— an agent-operable mech-interp lab on the new Google Colab CLI. Replicate our papers with one command:
-        </span>
+        <span className="text-ink-900/70 dark:text-ink-50/70">Replicate any paper in the arc with one command:</span>
         <code className="mx-1.5 rounded bg-black/[0.06] dark:bg-white/10 px-1.5 py-0.5 font-mono text-[13px] text-ink-900 dark:text-ink-50">
           oilab replicate lever-is-late
         </code>
@@ -34,7 +33,7 @@ export default function HomePage() {
           className="absolute left-1/2 top-20 -z-10 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-brand-600/20 blur-[120px]"
           aria-hidden="true"
         />
-        <div className="relative mx-auto max-w-5xl px-6 pt-20 pb-24 text-center">
+        <div className="relative mx-auto max-w-5xl px-6 pt-20 pb-20 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-3.5 py-1.5 text-xs font-medium text-brand-700 dark:text-brand-300 backdrop-blur-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-500 animate-pulse-slow" />
             {heroNew.eyebrow}
@@ -57,916 +56,235 @@ export default function HomePage() {
               href="/research"
               className="group inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:shadow-xl hover:shadow-brand-600/40 transition-all"
             >
-              <ShieldCheck className="h-3.5 w-3.5" />
-              Read the Six Diagnostics
+              <BookOpen className="h-3.5 w-3.5" />
+              Read the research arc
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
-            <Link
-              href="/atlas"
+            <a
+              href="https://zenodo.org/record/20685264"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
             >
               <Library className="h-3.5 w-3.5" />
-              Failed-Replication Registry
-            </Link>
-            <Link
-              href="/start"
-              className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
-            >
-              <Terminal className="h-3.5 w-3.5" />
-              Try openinterp-mcp
-            </Link>
+              10 papers · permanent DOIs
+            </a>
             <a
-              href="https://github.com/OpenInterpretability/registry"
+              href="https://github.com/OpenInterpretability"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg border border-transparent px-4 py-3 text-sm font-semibold text-ink-900/70 dark:text-ink-50/70 hover:text-ink-900 dark:hover:text-ink-50 transition-colors"
             >
               <Github className="h-3.5 w-3.5" />
-              Eval Standard schemas →
-            </a>
-          </div>
-
-          {/* Install pills */}
-          <div className="mt-12 mx-auto max-w-md space-y-2.5">
-            <div className="font-mono text-sm card px-5 py-3.5 flex items-center gap-3 shadow-md">
-              <span className="text-brand-500 select-none">$</span>
-              <code className="flex-1 text-left text-ink-900 dark:text-ink-50">pip install &quot;openinterp-mcp[server]&quot;</code>
-              <span className="chip bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30">
-                v0.1.0 new
-              </span>
-            </div>
-            <div className="font-mono text-sm card px-5 py-3.5 flex items-center gap-3 shadow-md">
-              <span className="text-brand-500 select-none">$</span>
-              <code className="flex-1 text-left text-ink-900 dark:text-ink-50">pip install openinterp</code>
-              <span className="chip bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30">
-                v0.3.0 live
-              </span>
-            </div>
-            <a
-              href="https://github.com/OpenInterpretability/openinterp-lab"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono text-sm card px-5 py-3.5 flex items-center gap-3 shadow-md hover:ring-brand-500/40 transition-shadow"
-            >
-              <span className="text-brand-500 select-none">$</span>
-              <code className="flex-1 text-left text-ink-900 dark:text-ink-50">oilab replicate tool-entropy</code>
-              <span className="chip bg-brand-500/15 text-brand-700 dark:text-brand-300 ring-brand-500/30">
-                agent lab · new
-              </span>
-            </a>
-          </div>
-
-          {/* Product Hunt badge */}
-          <div className="mt-10 flex justify-center">
-            <a
-              href="https://www.producthunt.com/products/openinterpretability?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-openinterpretability"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1146555&theme=light&t=1778728126905"
-                alt="OpenInterpretability - Open-source toolkit to audit what your LLM knows | Product Hunt"
-                width={250}
-                height={54}
-              />
+              Code & data →
             </a>
           </div>
         </div>
       </section>
 
-      {/* ===== Concrete proof strip ===== */}
-      <section className="mx-auto max-w-7xl px-6 -mt-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Metric label="⚡ 8 typed tools" value="openinterp-mcp" detail="bring-your-own-agent · privacy-first · PyPI v0.1.0" />
-          <Metric label="🛡️ 0.85 / 0.85" value="agent-probe-guard" detail="capability + thinking · ~50ms · v0.3.0 · detect-only" />
-          <Metric label="🎯 0.88 AUROC" value="FabricationGuard" detail="cross-task hallucination · ~1ms · PyPI v0.2.0" />
-          <Metric label="📊 5 probes" value="ProbeBench" detail="anti-Goodhart leaderboard · 7-axis ProbeScore · v0.0.1" />
+      {/* ===== Findings strip (the memorable results) ===== */}
+      <section className="mx-auto max-w-7xl px-6 -mt-2">
+        <div className="grid gap-4 md:grid-cols-3">
+          {findings.map((f) => (
+            <div key={f.headline} className="card p-6 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-accent-500/5" aria-hidden="true" />
+              <div className="relative">
+                <p className="gradient-text text-xl font-semibold tracking-tight">{f.headline}</p>
+                <p className="mt-2 text-sm text-ink-900/65 dark:text-ink-50/65 leading-relaxed">{f.detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== THE ARC (headline spine) ===== */}
+      <section className="mx-auto max-w-5xl px-6 mt-24">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-brand-600 dark:text-brand-400 mb-3">
+            The WANDERING arc
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-balance">
+            One question, followed honestly for ten papers.
+          </h2>
+          <p className="mt-4 text-lg text-ink-900/70 dark:text-ink-50/70 text-balance leading-relaxed">
+            Why do capable LLM agents loop forever and never finish — and can their internals tell us, or change it?
+            Each step links to its permanent record.
+          </p>
+        </div>
+
+        <ol className="relative border-l border-black/10 dark:border-white/10 ml-3 space-y-7">
+          {arc.map((b) => (
+            <li key={b.n} className="relative pl-8">
+              <span className="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full bg-brand-500 ring-4 ring-white dark:ring-ink-950" aria-hidden="true" />
+              <a href={b.url} target="_blank" rel="noopener noreferrer" className="group block card p-5 hover:ring-brand-500/40 transition-shadow">
+                <div className="flex items-baseline gap-3">
+                  <span className="font-mono text-xs text-ink-900/40 dark:text-ink-50/40">{b.n}</span>
+                  <h3 className="text-lg font-semibold tracking-tight group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                    {b.title}
+                  </h3>
+                </div>
+                <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">{b.finding}</p>
+                <div className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] text-ink-900/45 dark:text-ink-50/45 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                  <ExternalLink className="h-3 w-3" /> {b.doi}
+                </div>
+              </a>
+            </li>
+          ))}
+        </ol>
+
+        <div className="mt-10 text-center">
+          <Link href="/research" className="inline-flex items-center gap-2 text-sm font-semibold text-brand-700 dark:text-brand-300 hover:gap-3 transition-all">
+            Full reading list, methods & all papers <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
+
+      {/* ===== Discipline — why trust it ===== */}
+      <section className="mx-auto max-w-7xl px-6 mt-24">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50 mb-3">
+            Why trust the claims
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
+            The discipline, not the marketing.
+          </h2>
+        </div>
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {discipline.map((d, i) => (
+            <div key={d.title} className="card p-6">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 text-brand-600 dark:text-brand-400">
+                {[<FlaskConical key="a" className="h-4 w-4" />, <ShieldCheck key="b" className="h-4 w-4" />, <GitBranch key="c" className="h-4 w-4" />, <Cpu key="d" className="h-4 w-4" />][i]}
+              </div>
+              <h3 className="mt-4 font-semibold tracking-tight">{d.title}</h3>
+              <p className="mt-2 text-sm text-ink-900/65 dark:text-ink-50/65 leading-relaxed">{d.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== Who / credibility ===== */}
+      <section className="mx-auto max-w-5xl px-6 mt-24">
+        <div className="card p-8 sm:p-10 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-500/8 via-transparent to-accent-500/8" aria-hidden="true" />
+          <div className="relative flex flex-col sm:flex-row sm:items-center gap-6 sm:justify-between">
+            <div>
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-500/15 text-brand-600 dark:text-brand-400">
+                <GraduationCap className="h-5 w-5" />
+              </div>
+              <h2 className="mt-4 text-2xl font-semibold tracking-tight">{credibility.name}</h2>
+              <p className="text-sm text-ink-900/65 dark:text-ink-50/65">{credibility.role}</p>
+              <ul className="mt-4 space-y-1.5">
+                {credibility.notes.map((n) => (
+                  <li key={n} className="flex items-start gap-2 text-sm text-ink-900/70 dark:text-ink-50/70">
+                    <span className="mt-1.5 h-1 w-1 rounded-full bg-brand-500 shrink-0" /> {n}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex flex-row sm:flex-col gap-2 shrink-0">
+              <a href={credibility.orcidUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/60 dark:hover:bg-white/10 transition-colors">
+                <ExternalLink className="h-3.5 w-3.5" /> ORCID
+              </a>
+              <a href={credibility.scholar} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/60 dark:hover:bg-white/10 transition-colors">
+                <GraduationCap className="h-3.5 w-3.5" /> Scholar
+              </a>
+              <Link href="/contribute" className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/60 dark:hover:bg-white/10 transition-colors">
+                Collaborate
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Second research line (training & efficiency) ===== */}
+      <section className="mx-auto max-w-7xl px-6 mt-24">
+        <div className="max-w-3xl mb-8">
+          <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50 mb-2">
+            A second line
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-balance">
+            Training & efficiency, in service of the same model.
+          </h2>
+          <p className="mt-3 text-base text-ink-900/60 dark:text-ink-50/60 leading-relaxed text-balance">
+            The interpretability above runs on infrastructure we build and study in its own right.
+          </p>
+        </div>
+        <div className="grid gap-5 md:grid-cols-3">
+          {secondLine.map((s) => (
+            <div key={s.name} className="card p-5">
+              <h3 className="font-semibold tracking-tight">{s.name}</h3>
+              <p className="mt-2 text-sm text-ink-900/65 dark:text-ink-50/65 leading-relaxed">{s.detail}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== Tools that fell out of the research (demoted) ===== */}
+      <section className="mx-auto max-w-7xl px-6 mt-24">
+        <div className="max-w-3xl mb-8">
+          <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50 mb-2">
+            Open tooling
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-balance">
+            Tools that came out of the research.
+          </h2>
+          <p className="mt-3 text-base text-ink-900/60 dark:text-ink-50/60 leading-relaxed text-balance">
+            Released so others can reproduce and extend the work — not products, just the apparatus. Apache-2.0.
+          </p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {researchTools.map((t) => (
+            <a key={t.name} href={t.href} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-3 card p-5 hover:ring-brand-500/40 transition-shadow">
+              <Terminal className="mt-0.5 h-4 w-4 text-brand-600 dark:text-brand-400 shrink-0" />
+              <span className="text-sm">
+                <span className="font-semibold group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{t.name}</span>
+                <span className="text-ink-900/60 dark:text-ink-50/60"> — {t.detail}</span>
+              </span>
+            </a>
+          ))}
         </div>
       </section>
 
       {/* ===== Built on (lineage / humility) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-16">
+      <section className="mx-auto max-w-7xl px-6 mt-24">
         <div className="text-center max-w-3xl mx-auto mb-6">
           <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50 mb-2">
             Built on
           </span>
           <p className="text-base text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
-            We extend frontier-lab interpretability infrastructure with a methodology + product layer.
-            Apache 2.0 throughout. Anti-Goodhart by construction.
+            We extend frontier-lab interpretability infrastructure with an agent-trajectory + honest-negatives layer.
             {' '}<Link href="/built-on" className="text-brand-600 dark:text-brand-400 hover:underline font-medium">See full lineage →</Link>
           </p>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
-          <span className="chip bg-black/[0.03] dark:bg-white/[0.04] text-ink-900/70 dark:text-ink-50/70 ring-black/10 dark:ring-white/10">
-            Anthropic Persona Vectors (Aug 2025)
-          </span>
-          <span className="chip bg-black/[0.03] dark:bg-white/[0.04] text-ink-900/70 dark:text-ink-50/70 ring-black/10 dark:ring-white/10">
-            Anthropic Tracing Thoughts (Mar 2025)
-          </span>
-          <span className="chip bg-black/[0.03] dark:bg-white/[0.04] text-ink-900/70 dark:text-ink-50/70 ring-black/10 dark:ring-white/10">
-            DeepMind Gemma Scope (2024)
-          </span>
-          <span className="chip bg-black/[0.03] dark:bg-white/[0.04] text-ink-900/70 dark:text-ink-50/70 ring-black/10 dark:ring-white/10">
-            Alibaba Qwen-Scope (Apr 2026)
-          </span>
-          <span className="chip bg-black/[0.03] dark:bg-white/[0.04] text-ink-900/70 dark:text-ink-50/70 ring-black/10 dark:ring-white/10">
-            Goodfire RLFR (2025)
-          </span>
-        </div>
-      </section>
-
-      {/* ===== Three pillars (NEW · primary frame: Detect · Standardize · Deploy) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-brand-600 dark:text-brand-400 mb-3">
-            What we ship
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-balance">
-            A protocol. A registry. A standard.
-          </h2>
-          <p className="mt-4 text-lg text-ink-900/70 dark:text-ink-50/70 text-balance leading-relaxed">
-            Built from 11 studies on Qwen3.6-27B. Six walked back.
-            From those walk-backs, the protocol that catches it next time.
-          </p>
-        </div>
-        <div className="grid gap-5 md:grid-cols-3">
-          {threePillars.map((p) => (
-            <Link
-              key={p.id}
-              href={p.href}
-              className={`card p-6 relative overflow-hidden group hover:scale-[1.01] transition-transform`}
-            >
-              <div className={`absolute inset-0 bg-gradient-to-br ${p.gradient} opacity-50 group-hover:opacity-70 transition-opacity`} aria-hidden="true" />
-              <div className="relative">
-                <h3 className="text-2xl font-semibold tracking-tight">{p.name}</h3>
-                <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">{p.tagline}</p>
-                <ul className="mt-5 space-y-2.5">
-                  {p.products.map((prod) => (
-                    <li key={prod.name} className="flex items-start gap-2 text-sm">
-                      <span
-                        className={`mt-1 h-1.5 w-1.5 rounded-full shrink-0 ${
-                          prod.status === 'live'
-                            ? 'bg-emerald-500'
-                            : prod.status === 'planned'
-                            ? 'bg-amber-500/60'
-                            : 'bg-ink-400'
-                        }`}
-                      />
-                      <span>
-                        <span className="font-medium">{prod.name}</span>
-                        <span className="text-ink-900/55 dark:text-ink-50/55"> — {prod.detail}</span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-5 inline-flex items-center gap-1 text-xs font-semibold text-brand-700 dark:text-brand-300 group-hover:gap-2 transition-all">
-                  Explore {p.name.toLowerCase()} <ArrowRight className="h-3 w-3" />
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== The four pillars (LEGACY · kept for /observatory + /laboratory + /watchtower + /academy routing) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50 mb-3">
-            Tools we maintain
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-balance text-ink-900/85 dark:text-ink-50/85">
-            Observe. Edit. Monitor. Teach.
-          </h2>
-          <p className="mt-3 text-base text-ink-900/60 dark:text-ink-50/60 text-balance leading-relaxed">
-            Four supporting environments around the core probe + standard + deploy stack.
-          </p>
-        </div>
-        <div className="grid gap-5 md:grid-cols-2">
-          {pillars.map((p) => (
-            <PillarCard key={p.id} pillar={p} />
-          ))}
-        </div>
-      </section>
-
-      {/* ===== openinterp-mcp teaser (NEWEST FLAGSHIP) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <div className="card p-8 sm:p-10 relative overflow-hidden">
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-brand-500/10 via-transparent to-emerald-500/10"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-emerald-500/10 blur-3xl"
-            aria-hidden="true"
-          />
-          <div className="relative grid gap-8 lg:grid-cols-[1.1fr_1fr] items-center">
-            <div>
-              <span className="chip bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30 ring-inset inline-flex items-center gap-1.5">
-                <Terminal className="h-3 w-3" />
-                NEW · PyPI v0.1.0
-              </span>
-              <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
-                Bring-your-own-agent interp infrastructure.
-              </h2>
-              <p className="mt-4 text-base text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
-                <strong className="text-ink-900 dark:text-ink-50">openinterp-mcp</strong> is an MCP server that lets any agent —
-                Claude Code, Cursor, Cline, OpenHands, Aider — run probe-causality experiments on{' '}
-                <em>your</em> Colab session. 8 typed tools. Methodology built-in (3 mandatory
-                baselines, 5-class verdict). We never see your model, data, or keys.
-              </p>
-              <div className="mt-5 grid grid-cols-2 gap-2 text-xs text-ink-900/60 dark:text-ink-50/60">
-                <div className="flex items-start gap-1.5">
-                  <ShieldCheck className="mt-0.5 h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>Privacy-first · zero hosted inference</span>
-                </div>
-                <div className="flex items-start gap-1.5">
-                  <Layers className="mt-0.5 h-3.5 w-3.5 text-brand-600 dark:text-brand-400 shrink-0" />
-                  <span>Claude-Code-as-judge replication</span>
-                </div>
-                <div className="flex items-start gap-1.5">
-                  <Cpu className="mt-0.5 h-3.5 w-3.5 text-sky-600 dark:text-sky-400 shrink-0" />
-                  <span>Colab + vast.ai + runpod compatible</span>
-                </div>
-                <div className="flex items-start gap-1.5">
-                  <Package className="mt-0.5 h-3.5 w-3.5 text-orange-600 dark:text-orange-400 shrink-0" />
-                  <span>Atlas + Zenodo DOIs for results</span>
-                </div>
-              </div>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  href="/start"
-                  className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
-                >
-                  <Terminal className="h-3.5 w-3.5" /> First result in 10 minutes
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-                <Link
-                  href="/mcp"
-                  className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                >
-                  Architecture + 8 primitives
-                </Link>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="card p-4 bg-ink-950/95 font-mono text-[11px] leading-relaxed text-emerald-200 overflow-x-auto">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-300/60 mb-3">
-                  Your agent · talking to your Colab
-                </div>
-                <div className="space-y-1.5">
-                  <div>
-                    <span className="text-emerald-400">/colab-attach</span>{' '}
-                    <span className="text-emerald-200/80">https://abc123.ngrok-free.app</span>
-                  </div>
-                  <div className="text-emerald-200/50">› connected · qwen3.6-27b · 3 probes loaded</div>
-                  <div className="pt-2">
-                    <span className="text-emerald-400">capture_acts</span>
-                    <span className="text-emerald-200/80">(L20, end_question)</span>
-                  </div>
-                  <div className="text-emerald-200/50">› capture_id=cap_8f3a · n=20 tokens</div>
-                  <div className="pt-2">
-                    <span className="text-emerald-400">causality_protocol</span>
-                    <span className="text-emerald-200/80">(saturation-dir-L20, α=[5,50,200])</span>
-                  </div>
-                  <div className="text-emerald-200/50">› running 3 baselines · 4 α-sweeps · 30s</div>
-                  <div className="pt-2 text-amber-300">
-                    verdict: <span className="font-semibold">epiphenomenal-softmax</span>
-                  </div>
-                  <div className="text-emerald-200/50">Δrel = −0.046 · structural-rigidity confirmed</div>
-                  <div className="pt-2">
-                    <span className="text-emerald-400">publish</span>
-                    <span className="text-emerald-200/80">(title=&quot;L20 sat-dir epiphenomenal&quot;)</span>
-                  </div>
-                  <div className="text-emerald-200/50">› HF dataset · Zenodo DOI · atlas PR opened</div>
-                </div>
-              </div>
-              <div className="mt-3 flex items-center gap-2 text-[10px] text-ink-900/50 dark:text-ink-50/50 font-mono">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse-slow" />
-                Zero state on our infra · everything on your hardware
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== Trace Theater teaser (NEW) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <div className="card p-8 sm:p-10 relative overflow-hidden">
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-brand-500/10 via-transparent to-orange-500/10"
-            aria-hidden="true"
-          />
-          <div className="relative grid gap-8 lg:grid-cols-[1.1fr_1fr] items-center">
-            <div>
-              <span className="chip bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30 ring-inset">
-                FLAGSHIP · LIVE Q1 2026
-              </span>
-              <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
-                Scrub a prompt through Qwen3.6-27B. Watch features ignite.
-              </h2>
-              <p className="mt-4 text-base text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
-                Trace Theater is the Observatory flagship. Real SAE feature IDs extracted from
-                our multi-layer Qwen3.6-27B SAE. Token-by-token playback, heatmap, intervention
-                slider with live counterfactuals. Try it in 2 minutes — zero login.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  href="/observatory/trace"
-                  className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
-                >
-                  <Play className="h-3.5 w-3.5 fill-current" /> Open Trace Theater
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-                <Link
-                  href="/observatory"
-                  className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                >
-                  See all Observatory tools
-                </Link>
-              </div>
-            </div>
-            <div className="relative">
-              {/* Mini heatmap preview */}
-              <div className="card p-4 bg-black/[0.03] dark:bg-white/[0.03]">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50 mb-3">
-                  Preview · L31 heatmap · 10 features × 23 tokens
-                </div>
-                <div className="space-y-[3px]">
-                  {[
-                    [0.8, 0.75, 0.3, 0.62, 0.55, 0.58, 0.2, 0.4, 0.35, 0.15, 0.38, 0.15, 0.42, 0.38, 0.18, 0.48, 0.52, 0.61, 0.18, 0.71, 0.58, 0.45, 0.2],
-                    [0.22, 0.35, 0.18, 0.91, 0.88, 0.95, 0.08, 0.28, 0.85, 0.1, 0.92, 0.1, 0.45, 0.78, 0.08, 0.22, 0.88, 0.62, 0.1, 0.28, 0.82, 0.9, 0.08],
-                    [0.92, 0.45, 0.12, 0.35, 0.22, 0.28, 0.05, 0.55, 0.3, 0.05, 0.25, 0.05, 0.28, 0.25, 0.05, 0.35, 0.28, 0.18, 0.05, 0.89, 0.52, 0.35, 0.05],
-                    [0.18, 0.25, 0.1, 0.72, 0.96, 0.9, 0.08, 0.22, 0.93, 0.08, 0.88, 0.08, 0.35, 0.68, 0.08, 0.18, 0.55, 0.25, 0.08, 0.22, 0.95, 0.82, 0.08],
-                    [0.35, 0.55, 0.18, 0.48, 0.52, 0.55, 0.1, 0.72, 0.68, 0.15, 0.65, 0.15, 0.58, 0.62, 0.1, 0.62, 0.75, 0.68, 0.15, 0.58, 0.78, 0.72, 0.1],
-                    [0.08, 0.12, 0.05, 0.18, 0.15, 0.18, 0.02, 0.18, 0.22, 0.05, 0.88, 0.05, 0.15, 0.18, 0.03, 0.25, 0.95, 0.92, 0.08, 0.12, 0.25, 0.18, 0.03],
-                    [0.65, 0.72, 0.25, 0.35, 0.32, 0.35, 0.12, 0.78, 0.38, 0.18, 0.35, 0.18, 0.32, 0.32, 0.12, 0.72, 0.35, 0.28, 0.18, 0.42, 0.38, 0.32, 0.12],
-                  ].map((row, i) => (
-                    <div key={i} className="grid gap-[2px] grid-cols-23" style={{ gridTemplateColumns: 'repeat(23, 1fr)' }}>
-                      {row.map((v, j) => (
-                        <div
-                          key={j}
-                          className="h-4 rounded-sm bg-black/[0.05] dark:bg-white/[0.04] relative"
-                        >
-                          <div
-                            className="absolute inset-0 rounded-sm bg-gradient-to-r from-orange-400 to-orange-600"
-                            style={{ opacity: v }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-3 flex items-center gap-2 text-[10px] text-ink-900/50 dark:text-ink-50/50 font-mono">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse-slow" />
-                  f2503, f3383, f1847, f4521, f2156, f3892, f152 — shown
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== ProbeBench teaser (NEW) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <div className="card p-8 sm:p-10 relative overflow-hidden">
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-accent-500/10 via-transparent to-brand-500/10"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute -top-16 -right-16 h-56 w-56 rounded-full bg-accent-500/15 blur-3xl"
-            aria-hidden="true"
-          />
-          <div className="relative grid gap-8 lg:grid-cols-[1.1fr_1fr] items-center">
-            <div>
-              <span className="chip bg-accent-500/15 text-cyan-700 dark:text-cyan-300 ring-accent-500/30 ring-inset inline-flex items-center gap-1.5">
-                <Trophy className="h-3 w-3" />
-                ProbeBench v0.0.1
-              </span>
-              <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
-                The first leaderboard for activation probes.
-              </h2>
-              <p className="mt-4 text-base text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
-                8 categories — hallucination, deception, sandbagging, eval-awareness — each with a
-                composite ProbeScore. Cross-model Pearson_CE transfer included. Apache-2.0 reproducers.
-                Open submissions.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  href="/probebench"
-                  className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
-                >
-                  <Trophy className="h-3.5 w-3.5" /> Open the leaderboard
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-                <Link
-                  href="/probebench/submit"
-                  className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                >
-                  Submit your probe
-                </Link>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { label: 'Hallucination', score: '0.882', detail: 'cross-task SimpleQA' },
-                { label: 'Deception', score: '0.96+', detail: 'Apollo re-impl' },
-                { label: 'Eval-awareness', score: 'pending', detail: 'UK AISI priority' },
-                { label: 'Reward-hacking', score: 'pending', detail: 'Anthropic 2511.18397' },
-              ].map((c) => (
-                <div key={c.label} className="card p-4 bg-black/[0.03] dark:bg-white/[0.03]">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50">
-                    {c.label}
-                  </div>
-                  <div className="mt-1.5 font-mono text-lg font-semibold tracking-tight gradient-text">
-                    {c.score}
-                  </div>
-                  <div className="mt-0.5 text-[10px] text-ink-900/50 dark:text-ink-50/50 leading-snug">
-                    {c.detail}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== Atlas teaser (NEW) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <div className="card p-8 sm:p-10 relative overflow-hidden">
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-brand-500/10"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-emerald-500/10 blur-3xl"
-            aria-hidden="true"
-          />
-          <div className="relative grid gap-8 lg:grid-cols-[1.1fr_1fr] items-center">
-            <div>
-              <span className="chip bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30 ring-inset inline-flex items-center gap-1.5">
-                <Library className="h-3 w-3" />
-                NEW · 11 entries · schema v1
-              </span>
-              <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
-                The Atlas — every public mech-interp finding, hashed and citable.
-              </h2>
-              <p className="mt-4 text-base text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
-                Read-only public registry of probes, causality verdicts, and honest-negative
-                findings. Each entry ships with a content-only sha256, an HF dataset, and an optional
-                Zenodo DOI. Published via <code className="font-mono text-sm bg-black/[0.05] dark:bg-white/[0.08] px-1.5 py-0.5 rounded">openinterp-mcp</code> &gt; <code className="font-mono text-sm bg-black/[0.05] dark:bg-white/[0.08] px-1.5 py-0.5 rounded">publish()</code>.
-              </p>
-              <div className="mt-5 grid grid-cols-2 gap-2 text-xs text-ink-900/65 dark:text-ink-50/65">
-                <div className="flex items-start gap-1.5">
-                  <ShieldCheck className="mt-0.5 h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>Honest-negatives are first-class</span>
-                </div>
-                <div className="flex items-start gap-1.5">
-                  <Hash className="mt-0.5 h-3.5 w-3.5 text-brand-600 dark:text-brand-400 shrink-0" />
-                  <span>Re-hashable manifests · verifiable</span>
-                </div>
-                <div className="flex items-start gap-1.5">
-                  <GitBranch className="mt-0.5 h-3.5 w-3.5 text-sky-600 dark:text-sky-400 shrink-0" />
-                  <span>Public GitHub-native registry</span>
-                </div>
-                <div className="flex items-start gap-1.5">
-                  <Package className="mt-0.5 h-3.5 w-3.5 text-orange-600 dark:text-orange-400 shrink-0" />
-                  <span>Zenodo DOIs auto-minted</span>
-                </div>
-              </div>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  href="/atlas"
-                  className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
-                >
-                  <Library className="h-3.5 w-3.5" /> Browse the Atlas
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-                <Link
-                  href="/start"
-                  className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                >
-                  <Terminal className="h-3.5 w-3.5" /> Publish via your agent
-                </Link>
-              </div>
-            </div>
-            <div className="space-y-2.5">
-              <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50 mb-1.5">
-                Preview · 4 of 11 entries
-              </div>
-              <Link
-                href="/atlas/03a6e70bfd"
-                className="block rounded-lg border border-black/5 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-sm p-3 hover:border-brand-500/40 transition-colors group"
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="chip bg-brand-500/15 text-brand-700 dark:text-brand-300 ring-brand-500/30 ring-inset text-[10px]">Finding</span>
-                  <span className="font-mono text-[10px] text-ink-900/45 dark:text-ink-50/45">03a6e70bfd</span>
-                </div>
-                <div className="text-sm font-medium text-ink-900 dark:text-ink-50 group-hover:text-brand-600 dark:group-hover:text-brand-400 line-clamp-1">
-                  Saturation-direction principle — 5 classes of probe causality
-                </div>
-              </Link>
-              <Link
-                href="/atlas/60b5c38463"
-                className="block rounded-lg border border-black/5 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-sm p-3 hover:border-brand-500/40 transition-colors group"
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="chip bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-amber-500/30 ring-inset text-[10px]">Adversarial</span>
-                  <span className="font-mono text-[10px] text-ink-900/45 dark:text-ink-50/45">60b5c38463</span>
-                </div>
-                <div className="text-sm font-medium text-ink-900 dark:text-ink-50 group-hover:text-brand-600 dark:group-hover:text-brand-400 line-clamp-1">
-                  Capability locus — 4/4 pre_tool/turn_end sites pushdown-asymmetric
-                </div>
-              </Link>
-              <Link
-                href="/atlas/8d5df2d5d5"
-                className="block rounded-lg border border-black/5 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-sm p-3 hover:border-brand-500/40 transition-colors group"
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="chip bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30 ring-inset text-[10px]">Probe</span>
-                  <span className="font-mono text-[10px] text-ink-900/45 dark:text-ink-50/45">8d5df2d5d5</span>
-                </div>
-                <div className="text-sm font-medium text-ink-900 dark:text-ink-50 group-hover:text-brand-600 dark:group-hover:text-brand-400 line-clamp-1">
-                  FabricationGuard v2 — L31 cross-task hallucination probe
-                </div>
-              </Link>
-              <Link
-                href="/atlas/a0c01e67c9"
-                className="block rounded-lg border border-black/5 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-sm p-3 hover:border-brand-500/40 transition-colors group"
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="chip bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-amber-500/30 ring-inset text-[10px]">Adversarial</span>
-                  <span className="font-mono text-[10px] text-ink-900/45 dark:text-ink-50/45">a0c01e67c9</span>
-                </div>
-                <div className="text-sm font-medium text-ink-900 dark:text-ink-50 group-hover:text-brand-600 dark:group-hover:text-brand-400 line-clamp-1">
-                  L55 CoT-Integrity probe is template-locked epiphenomenal
-                </div>
-              </Link>
-              <div className="text-[10px] text-ink-900/45 dark:text-ink-50/45 font-mono pl-1 pt-1">
-                + 7 more — probe-result · atlas-entry · adversarial-finding
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== Six moats (PRESERVED) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
-          Six things that don&apos;t exist anywhere else.
-        </h2>
-        <p className="mt-3 text-ink-900/70 dark:text-ink-50/70 max-w-3xl text-balance">
-          Every card below corresponds to a public artifact: a trained SAE, a validated feature pack,
-          a protocol, or an ablation result. No vaporware.
-        </p>
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {moat.map((m, i) => (
-            <article key={i} className="card p-6 hover:border-brand-500/30 transition-colors">
-              <div className="flex items-center gap-2 text-brand-700 dark:text-brand-300">
-                {getIcon(i)}
-                <span className="text-xs font-medium uppercase tracking-wider">0{i + 1}</span>
-              </div>
-              <h3 className="mt-3 text-lg font-semibold tracking-tight">{m.title}</h3>
-              <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
-                {m.body}
-              </p>
-              <div className="mt-4 font-mono text-xs text-ink-900/50 dark:text-ink-50/50">
-                {m.meta}
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== SAE registry glance (PRESERVED) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <h2 className="text-3xl font-semibold tracking-tight">Trained SAEs</h2>
-            <p className="mt-2 text-ink-900/70 dark:text-ink-50/70 max-w-2xl">
-              First TopK residual-stream SAEs on architectures previously unreachable.
-            </p>
-          </div>
-          <Link href="/models" className="text-sm text-brand-600 hover:text-brand-700 inline-flex items-center gap-1">
-            View all <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-
-        <div className="grid gap-4">
-          {saes.map((s) => (
-            <Link
-              key={s.model}
-              href={`https://huggingface.co/${s.repo}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group card p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-brand-500/40 hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer"
-            >
-              <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="font-semibold group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{s.model}</h3>
-                  <span className={`chip ring-inset ${
-                    s.status === 'Released'
-                      ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-500/20'
-                      : 'bg-amber-500/10 text-amber-700 dark:text-amber-300 ring-amber-500/20'
-                  }`}>{s.status}</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-ink-900/30 dark:text-ink-50/30 group-hover:text-brand-600 dark:group-hover:text-brand-400 group-hover:translate-x-0.5 transition-all" />
-                </div>
-                <p className="mt-1 text-sm text-ink-900/70 dark:text-ink-50/70">
-                  {s.architecture} · {s.layer} · {s.expansion} expansion · {s.tokens} training tokens
-                </p>
-                <p className="mt-2 text-xs text-ink-900/50 dark:text-ink-50/50 italic">
-                  {s.firstPublic}
-                </p>
-                <p className="mt-1 font-mono text-[11px] text-brand-600 dark:text-brand-400 opacity-60 group-hover:opacity-100 transition-opacity">
-                  huggingface.co/{s.repo}
-                </p>
-              </div>
-              <div className="grid grid-cols-3 gap-3 md:grid-cols-3 text-sm text-center md:text-right">
-                <Stat label="var_exp" value={s.varExp.toFixed(3)} />
-                <Stat label="d_sae" value={s.dSae.toLocaleString()} />
-                <Stat label="G1 ρ" value={s.g1Rho != null ? s.g1Rho.toFixed(3) : '—'} />
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== Prior work (PRESERVED) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <h2 className="text-3xl font-semibold tracking-tight">Where we fit.</h2>
-        <p className="mt-2 text-ink-900/70 dark:text-ink-50/70 max-w-3xl">
-          Honest comparison against the four closest prior works. All numbers are from the
-          published papers; we don&apos;t soften or spin.
-        </p>
-        <div className="mt-8 grid gap-4">
-          {priorWork.map((p) => (
-            <article key={p.name} className="card p-6">
-              <div className="flex flex-wrap items-baseline justify-between gap-3">
-                <h3 className="font-semibold">{p.name}</h3>
-                <Link
-                  href={p.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-mono text-xs text-brand-600 hover:text-brand-700"
-                >
-                  arxiv:{p.arxiv}
-                </Link>
-              </div>
-              <p className="mt-2 text-sm">{p.method}</p>
-              <p className="mt-1 text-sm text-ink-900/60 dark:text-ink-50/60">
-                <strong>Their result:</strong> {p.result}
-              </p>
-              <p className="mt-1 text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
-                <strong>How we differ:</strong> {p.vsUs}
-              </p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== Stage Gates (PRESERVED) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <h2 className="text-3xl font-semibold tracking-tight">The Stage Gate protocol.</h2>
-        <p className="mt-2 text-ink-900/70 dark:text-ink-50/70 max-w-3xl">
-          Don&apos;t spend GPU hours on RL until you&apos;ve verified the signal predicts the outcome.
-          Every validated pack in the catalog has passed all three gates.
-        </p>
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {stages.map((s) => (
-            <article key={s.id} className="card p-6">
-              <div className="flex items-center gap-3">
-                <div className="rounded-md bg-brand-600/10 text-brand-700 dark:text-brand-300 font-mono text-sm font-semibold px-2 py-0.5">
-                  {s.id}
-                </div>
-                <h3 className="font-semibold">{s.name.replace(/^Stage Gate \d+ — /, '')}</h3>
-              </div>
-              <p className="mt-3 text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
-                {s.purpose}
-              </p>
-              <dl className="mt-4 space-y-2 text-xs">
-                <Row dt="Threshold" dd={s.threshold} />
-                <Row dt="Budget" dd={s.budget} />
-                <Row dt="Artifacts" dd={s.artifacts} />
-              </dl>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== Benchmarks (PRESERVED) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <h2 className="text-3xl font-semibold tracking-tight">Validated benchmarks.</h2>
-        <div className="mt-8 grid gap-5 md:grid-cols-2">
-          <article className="card p-6">
-            <h3 className="font-semibold">{benchmarks.qwen35_g3.title}</h3>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              <BigNumber label="Baseline" value={`${benchmarks.qwen35_g3.baseline}%`} />
-              <BigNumber label="Trained (R1)" value={`${benchmarks.qwen35_g3.r1}%`} accent />
-              <BigNumber label="Δ" value={`+${benchmarks.qwen35_g3.deltaPp} pp`} />
-            </div>
-            <p className="mt-4 text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
-              {benchmarks.qwen35_g3.notes}
-            </p>
-          </article>
-          <article className="card p-6">
-            <h3 className="font-semibold">{benchmarks.qwen36_g1.title}</h3>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              <BigNumber label="Spearman ρ" value={benchmarks.qwen36_g1.rho.toFixed(3)} accent />
-              <BigNumber label="Pearson r" value={benchmarks.qwen36_g1.pearson.toFixed(3)} />
-              <BigNumber label="n" value={String(benchmarks.qwen36_g1.nHeldOut)} />
-            </div>
-            <p className="mt-4 text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
-              {benchmarks.qwen36_g1.notes}
-            </p>
-          </article>
-        </div>
-      </section>
-
-      {/* ===== Three structural bets (NEW) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-brand-600 dark:text-brand-400 mb-3">
-            Three long-term bets
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-balance">
-            Where we think we can compound.
-          </h2>
-          <p className="mt-4 text-lg text-ink-900/70 dark:text-ink-50/70 text-balance leading-relaxed">
-            Six shipped artifacts above are the current work. Below are three structural bets we think get more valuable over time — built in public, open to being wrong.
-          </p>
-        </div>
-        <div className="grid gap-5 md:grid-cols-3">
-          {threeMoats.map((m, i) => (
-            <article key={i} className="card p-7 relative overflow-hidden">
-              <div
-                className="absolute top-0 right-0 h-24 w-24 bg-gradient-to-br from-brand-500/20 to-transparent rounded-full blur-2xl"
-                aria-hidden="true"
-              />
-              <div className="relative">
-                <div className="font-mono text-xs font-semibold text-brand-600 dark:text-brand-400">
-                  0{i + 1} · BET
-                </div>
-                <h3 className="mt-3 text-xl font-semibold tracking-tight">{m.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-ink-900/70 dark:text-ink-50/70">
-                  {m.body}
-                </p>
-                <div className="mt-4 font-mono text-xs text-ink-900/50 dark:text-ink-50/50">
-                  {m.meta}
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== Roadmap teaser (NEW) ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24">
-        <div className="flex items-end justify-between mb-8 flex-wrap gap-3">
-          <div>
-            <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-brand-600 dark:text-brand-400 mb-3">
-              12-month roadmap
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
-              Built in public, quarter by quarter.
-            </h2>
-          </div>
-          <Link
-            href="/roadmap"
-            className="text-sm text-brand-600 hover:text-brand-700 inline-flex items-center gap-1"
-          >
-            Full roadmap <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {roadmap.map((r) => (
-            <article
-              key={r.quarter}
-              className={`card p-5 ${
-                r.active ? 'border-brand-500/40 bg-gradient-to-br from-brand-500/5 to-accent-500/5' : ''
-              }`}
-            >
-              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-900/50 dark:text-ink-50/50">
-                {r.quarter}
-                {r.active && <span className="ml-1.5 text-brand-600 dark:text-brand-400">· NOW</span>}
-              </div>
-              <h3 className="mt-2 font-semibold">{r.theme}</h3>
-              <ul className="mt-3 space-y-1.5">
-                {r.items.slice(0, 3).map((item, j) => (
-                  <li key={j} className="flex gap-2 text-xs text-ink-900/60 dark:text-ink-50/60 leading-snug">
-                    <span className="font-mono text-brand-600 dark:text-brand-400">→</span>
-                    {item}
-                  </li>
-                ))}
-                {r.items.length > 3 && (
-                  <li className="text-[11px] text-ink-900/40 dark:text-ink-50/40 pl-4">
-                    + {r.items.length - 3} more
-                  </li>
-                )}
-              </ul>
-            </article>
+          {['Anthropic Persona Vectors (2025)', 'Anthropic Tracing Thoughts (2025)', 'DeepMind Gemma Scope (2024)', 'Alibaba Qwen-Scope (2026)', 'Arditi et al. Refusal Direction (2024)'].map((x) => (
+            <span key={x} className="chip bg-black/[0.03] dark:bg-white/[0.04] text-ink-900/70 dark:text-ink-50/70 ring-black/10 dark:ring-white/10">{x}</span>
           ))}
         </div>
       </section>
 
       {/* ===== Final CTA ===== */}
-      <section className="mx-auto max-w-7xl px-6 mt-24 mb-16">
-        <div className="card p-10 text-center relative overflow-hidden">
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-brand-500/5 via-transparent to-accent-500/5"
-            aria-hidden="true"
-          />
+      <section className="mx-auto max-w-5xl px-6 mt-24 mb-16">
+        <div className="card p-8 sm:p-12 text-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-600/10 via-transparent to-accent-500/10" aria-hidden="true" />
           <div className="relative">
             <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-balance">
-              {headline.h1}
+              Read it, reproduce it, or build on it.
             </h2>
-            <p className="mt-3 text-ink-900/70 dark:text-ink-50/70 max-w-2xl mx-auto text-balance leading-relaxed">
-              Trace, edit, monitor, teach. Every SAE is public. Every Stage Gate is reproducible.
-              Watchtower Enterprise funds the OSS tier. Join us — or watch from the sidelines.
+            <p className="mx-auto mt-3 max-w-2xl text-base text-ink-900/65 dark:text-ink-50/65 leading-relaxed text-balance">
+              Every claim has a permanent DOI, a public ledger, and a one-command replication. Found a flaw? That is the point — tell us.
             </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/observatory/trace"
-                className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
-              >
-                <Play className="h-3.5 w-3.5 fill-current" /> Open Trace Theater
-                <ArrowRight className="h-4 w-4" />
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+              <Link href="/research" className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
+                <BookOpen className="h-3.5 w-3.5" /> Start with the arc
               </Link>
-              <Link
-                href={site.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-              >
-                <Github className="h-4 w-4" /> Star on GitHub
-              </Link>
-              <a
-                href={`mailto:${site.contact}?subject=${encodeURIComponent('Watchtower early access')}`}
-                className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-              >
-                Watchtower early access
+              <a href="https://github.com/OpenInterpretability/openinterp-lab" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 px-6 py-3 text-sm font-semibold hover:bg-white/60 dark:hover:bg-white/10 transition-colors">
+                <Terminal className="h-3.5 w-3.5" /> oilab replicate
               </a>
-              <Link
-                href="/docs"
-                className="inline-flex items-center gap-2 rounded-lg border border-transparent px-4 py-2.5 text-sm font-semibold text-ink-900/70 dark:text-ink-50/70 hover:text-ink-900 dark:hover:text-ink-50"
-              >
-                Read the quickstart
-              </Link>
             </div>
           </div>
         </div>
       </section>
     </>
   )
-}
-
-function Metric({ label, value, detail }: { label: string; value: string; detail: string }) {
-  return (
-    <div className="card p-5">
-      <div className="text-xs uppercase tracking-wider text-ink-900/50 dark:text-ink-50/50 font-medium">
-        {label}
-      </div>
-      <div className="mt-2 text-2xl font-semibold tracking-tight gradient-text">{value}</div>
-      <div className="mt-1 text-xs text-ink-900/60 dark:text-ink-50/60 leading-snug">{detail}</div>
-    </div>
-  )
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <div className="text-xs uppercase tracking-wider text-ink-900/50 dark:text-ink-50/50">
-        {label}
-      </div>
-      <div className="mt-0.5 font-mono text-sm font-semibold">{value}</div>
-    </div>
-  )
-}
-
-function BigNumber({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
-  return (
-    <div>
-      <div className="text-xs uppercase tracking-wider text-ink-900/50 dark:text-ink-50/50">
-        {label}
-      </div>
-      <div className={`mt-1 text-2xl font-semibold tracking-tight ${accent ? 'gradient-text' : ''}`}>
-        {value}
-      </div>
-    </div>
-  )
-}
-
-function Row({ dt, dd }: { dt: string; dd: string }) {
-  return (
-    <div className="flex justify-between gap-3">
-      <dt className="text-ink-900/50 dark:text-ink-50/50 uppercase tracking-wider">{dt}</dt>
-      <dd className="font-mono text-ink-900/80 dark:text-ink-50/80 text-right">{dd}</dd>
-    </div>
-  )
-}
-
-function getIcon(i: number) {
-  const Icons = [Atom, ShieldCheck, Zap, GitBranch, Cpu, Package]
-  const Icon = Icons[i % Icons.length]
-  return <Icon className="h-4 w-4" />
 }

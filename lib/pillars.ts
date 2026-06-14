@@ -263,12 +263,13 @@ export const roadmap = [
 ]
 
 export const heroNew = {
-  eyebrow: 'Six Diagnostics protocol · 11 studies · 6 walk-backs · Apache-2.0',
+  eyebrow: 'Independent mechanistic-interpretability lab · 10 papers · 6 honest walk-backs · permanent DOIs',
   watchLine: 'When should we believe',
   thinkLine: 'a mech-interp claim?',
-  subBold: "We've shipped 11 studies on one model. Six of our own claims walked back.",
+  subBold:
+    'An independent lab studying how LLM agents fail on long-horizon tasks — and what their internals do, and don’t, reveal. Ten papers on one model. Six of our own claims walked back.',
   subText:
-    'From those walk-backs, a protocol. From 11 studies, a registry. From the registry, schemas the community can use. The reproducibility layer for mechanistic interpretability.',
+    'We publish positives and nulls with the same rigor: pre-registered, every number recomputed from public data, permanent Zenodo DOIs. This is the WANDERING arc — from “agents that never finish” to “the authorization a model feels is not the one you granted.”',
 }
 
 // Three-pillar reframing (Protocol / Registry / Standard) — capstone repackage 2026-05-23.
