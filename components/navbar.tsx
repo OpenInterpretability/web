@@ -6,30 +6,30 @@ import { Github, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { ThemeToggle } from '@/components/theme-toggle'
 
+// Research-first navigation. The lab and its papers lead; tooling is demoted.
 const primaryNav = [
-  { href: '/train', label: 'Train' },
+  { href: '/research', label: 'Research' },
+  { href: '/atlas', label: 'Registry' },     // failed-replication registry (honest negatives)
+  { href: '/manifesto', label: 'Manifesto' },
+]
+
+const secondaryNav = [
+  { href: '/blog', label: 'Notes' },
+  { href: '/contribute', label: 'Collaborate' },
+  { href: '/roadmap', label: 'Roadmap' },
+]
+
+// Open-source tooling + legacy routes — demoted to the mobile menu + footer, still reachable.
+const tertiaryNav = [
+  { href: '/products', label: 'Open-source tools' },
   { href: '/observatory', label: 'Observatory' },
   { href: '/laboratory', label: 'Laboratory' },
   { href: '/watchtower', label: 'Watchtower' },
   { href: '/academy', label: 'Academy' },
-  { href: '/products/fabricationguard', label: 'FabricationGuard', highlight: true as const },
-  { href: '/products/agent-probe-guard', label: 'agent-probe-guard', highlight: true as const },
-  { href: '/probebench', label: 'ProbeBench', highlight: true as const },
-  { href: '/atlas', label: 'Atlas', highlight: true as const },
-]
-
-const secondaryNav = [
+  { href: '/train', label: 'Train' },
+  { href: '/probebench', label: 'ProbeBench' },
   { href: '/interpscore', label: 'InterpScore' },
-  { href: '/research', label: 'Research' },
-  { href: '/blog', label: 'Blog' },
   { href: '/docs', label: 'Docs' },
-]
-
-// Tertiary lives only in mobile menu + footer to keep desktop navbar from overflowing
-const tertiaryNav = [
-  { href: '/contribute', label: 'Contribute' },
-  { href: '/manifesto', label: 'Manifesto' },
-  { href: '/roadmap', label: 'Roadmap' },
 ]
 
 export function Navbar() {
@@ -87,11 +87,11 @@ export function Navbar() {
             <Github className="h-4 w-4" />
           </Link>
           <Link
-            href="/observatory/trace"
+            href="/start"
             className="hidden sm:inline-flex items-center gap-1 rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
           >
-            <span className="hidden xl:inline">Open Trace Theater</span>
-            <span className="xl:hidden">Trace</span>
+            <span className="hidden xl:inline">Reproduce a paper</span>
+            <span className="xl:hidden">Reproduce</span>
           </Link>
           <button
             onClick={() => setOpen((o) => !o)}
@@ -109,7 +109,7 @@ export function Navbar() {
           <div className="mx-auto max-w-7xl px-6 py-4">
             <div className="grid gap-1">
               <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-1.5 pt-2">
-                Pillars
+                Research
               </div>
               {primaryNav.map((item) => (
                 <Link
@@ -124,7 +124,7 @@ export function Navbar() {
               <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-1.5 pt-4">
                 More
               </div>
-              {[...secondaryNav, ...tertiaryNav].map((item) => (
+              {secondaryNav.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -135,9 +135,10 @@ export function Navbar() {
                 </Link>
               ))}
               <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-1.5 pt-4">
-                Classic
+                Open-source tools &amp; legacy
               </div>
               {[
+                ...tertiaryNav,
                 { href: '/playground', label: 'Playground' },
                 { href: '/catalog', label: 'Catalog' },
                 { href: '/models', label: 'Models' },
