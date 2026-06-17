@@ -32,6 +32,14 @@ export const skills: Skill[] = [
 export const skillRepoUrl = (s: Skill) =>
   `https://github.com/OpenInterpretability/${s.repo}/tree/main/skills/${s.name}`
 
+// One-line installer: downloads all skills into the agent's skills dir. Writes only SKILL.md, runs no code.
+export const skillsInstall = {
+  cmd: 'curl -fsSL https://openinterp.org/install-skills.sh | sh',
+  project: 'curl -fsSL https://openinterp.org/install-skills.sh | sh -s -- --project',
+  dest: '~/.claude/skills',
+  source: 'https://github.com/OpenInterpretability/openinterp-mcp/blob/main/skills/install.sh',
+}
+
 // The four ways a researcher uses the lab.
 export const useBlocks = [
   { id: 'reproduce', title: 'Reproduce a paper', tag: 'one command',

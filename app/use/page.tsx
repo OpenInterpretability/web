@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { ArrowRight, Github, Terminal, BookOpen, FlaskConical, Boxes, ExternalLink, Cpu } from 'lucide-react'
-import { skills, skillRepoUrl, useBlocks, versions } from '@/lib/researcher'
+import { skills, skillRepoUrl, useBlocks, versions, skillsInstall } from '@/lib/researcher'
+import { CopyButton } from '@/components/copy-button'
 
 export const metadata: Metadata = {
   title: 'Use — reproduce & build on the work · OpenInterp',
@@ -100,6 +101,27 @@ export default function UsePage() {
             tool.
           </p>
         </div>
+
+        {/* One-line installer */}
+        <div className="card p-5 mb-8 bg-ink-950 dark:bg-black/40 ring-1 ring-white/10">
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <span className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-50/50">
+              Install all {skills.length} into your terminal
+            </span>
+            <CopyButton text={skillsInstall.cmd} />
+          </div>
+          <code className="block overflow-x-auto font-mono text-[13px] text-emerald-300">
+            <span className="text-ink-50/40 select-none">$ </span>{skillsInstall.cmd}
+          </code>
+          <p className="mt-3 text-xs text-ink-50/50 leading-relaxed">
+            Downloads each <code className="font-mono text-ink-50/70">SKILL.md</code> into{' '}
+            <code className="font-mono text-ink-50/70">{skillsInstall.dest}</code> — writes only markdown, runs no code.
+            Use <code className="font-mono text-ink-50/70">-s -- --project</code> for a repo-local{' '}
+            <code className="font-mono text-ink-50/70">./.claude/skills</code>, or{' '}
+            <a href={skillsInstall.source} target="_blank" rel="noopener noreferrer" className="underline hover:text-ink-50/80">inspect the script first</a>.
+          </p>
+        </div>
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {skills.map((s) => (
             <a key={s.name} href={skillRepoUrl(s)} target="_blank" rel="noopener noreferrer"
