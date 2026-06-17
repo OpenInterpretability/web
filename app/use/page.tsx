@@ -90,11 +90,12 @@ export default function UsePage() {
             The methodology, packaged
           </span>
           <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-balance">
-            Six Claude Code skills.
+            Nine Claude Code skills.
           </h2>
           <p className="mt-3 text-base text-ink-900/60 dark:text-ink-50/60 leading-relaxed text-balance">
-            Drop these into any agent and it inherits the operational knowledge — including the three causality
-            checks that separate a real result from an epiphenomenal one. Each maps to a typed
+            Drop these into any agent and it inherits the operational knowledge — including the four causality
+            checks (with the structure-matched control + naming gate) that separate a real result from a confounded
+            or epiphenomenal one. Each maps to a typed
             <code className="mx-1 rounded bg-black/[0.05] dark:bg-white/10 px-1 py-0.5 font-mono text-[12px]">openinterp-mcp</code>
             tool.
           </p>
