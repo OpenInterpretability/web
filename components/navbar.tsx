@@ -9,6 +9,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 // Research-first navigation. The lab and its papers lead; tooling is demoted.
 const primaryNav = [
   { href: '/research', label: 'Research' },
+  { href: '/use', label: 'Use' },            // hub: reproduce, mcp, skills, notebooks
   { href: '/atlas', label: 'Registry' },     // failed-replication registry (honest negatives)
   { href: '/manifesto', label: 'Manifesto' },
 ]
@@ -87,11 +88,11 @@ export function Navbar() {
             <Github className="h-4 w-4" />
           </Link>
           <Link
-            href="/start"
+            href="/use"
             className="hidden sm:inline-flex items-center gap-1 rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
           >
-            <span className="hidden xl:inline">Reproduce a paper</span>
-            <span className="xl:hidden">Reproduce</span>
+            <span className="hidden xl:inline">Use the tools</span>
+            <span className="xl:hidden">Use</span>
           </Link>
           <button
             onClick={() => setOpen((o) => !o)}
