@@ -76,6 +76,14 @@ export const arc: ArcBeat[] = [
     doi: '10.5281/zenodo.20752896',
     url: Z('20752896'),
   },
+  {
+    n: '09',
+    title: 'Located, not secured',
+    finding:
+      'The synthesis. Interpretability locates a real, causal control surface — the late action band — but does not secure it, via five orthogonal limits: detect ≠ control, felt ≠ granted, form ≠ granted, control ≠ robust control (the brake collapses under an adaptive white-box attack), and intervention is easy exactly where it is unneeded. Locating where behavior is decided is necessary but nowhere near sufficient for securing it. The implication: use interpretability to audit and monitor a fixed model, not to defend against an adversary optimizing against a known locus.',
+    doi: '10.5281/zenodo.20764858',
+    url: Z('20764858'),
+  },
 ]
 
 // The memorable results, pulled out for a strip near the top.
