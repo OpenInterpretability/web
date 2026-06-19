@@ -17,8 +17,8 @@ export const arc: ArcBeat[] = [
     title: 'WANDERING',
     finding:
       'Long-horizon agents collapse into tool-call loops and never finish. A probe-free tool-entropy-collapse signal flags it — cross-architecture, cross-task.',
-    doi: '10.5281/zenodo.20368601',
-    url: Z('20368601'),
+    doi: '10.5281/zenodo.20368807',
+    url: Z('20368807'),
   },
   {
     n: '02',
@@ -68,6 +68,14 @@ export const arc: ArcBeat[] = [
     doi: '10.5281/zenodo.20685264',
     url: Z('20685264'),
   },
+  {
+    n: '08',
+    title: 'The late channel',
+    finding:
+      'The turn from control to audit. In a 27B reasoning agent, chain-of-thought is causal for the answer — and for the agent’s action — only when it changes the outcome; otherwise it is performative. That causal content consolidates in the same late band (L51–63), confirmed by a logit-lens control. The late state is a readable, causal locus for monitoring reasoning agents.',
+    doi: '10.5281/zenodo.20752896',
+    url: Z('20752896'),
+  },
 ]
 
 // The memorable results, pulled out for a strip near the top.
@@ -83,6 +91,10 @@ export const findings = [
   {
     headline: 'Felt, not granted.',
     detail: 'An internal authorization monitor inherits the model’s judgment error: it is blind to the realistic over-reach the agent makes in good faith.',
+  },
+  {
+    headline: 'Faithful only when it matters.',
+    detail: 'A reasoning model’s chain-of-thought is causal for its answer only when it changes the outcome — and that causal content lives in one late layer band, a readable monitoring locus.',
   },
 ]
 
