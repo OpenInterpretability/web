@@ -73,16 +73,16 @@ export const arc: ArcBeat[] = [
     title: 'The late channel',
     finding:
       'The turn from control to audit. In a 27B reasoning agent, chain-of-thought is causal for the answer — and for the agent’s action — only when it changes the outcome; otherwise it is performative. That causal content consolidates in the same late band (L51–63), confirmed by a logit-lens control. The late state is a readable, causal locus for monitoring reasoning agents.',
-    doi: '10.5281/zenodo.20752896',
-    url: Z('20752896'),
+    doi: '10.5281/zenodo.20752895',
+    url: Z('20752895'),
   },
   {
     n: '09',
     title: 'Located, not secured',
     finding:
       'The synthesis. Interpretability locates a real, causal control surface — the late action band — but does not secure it, via five orthogonal limits: detect ≠ control, felt ≠ granted, form ≠ granted, control ≠ robust control (the brake collapses under an adaptive white-box attack), and intervention is easy exactly where it is unneeded. Locating where behavior is decided is necessary but nowhere near sufficient for securing it. The implication: use interpretability to audit and monitor a fixed model, not to defend against an adversary optimizing against a known locus.',
-    doi: '10.5281/zenodo.20764858',
-    url: Z('20764858'),
+    doi: '10.5281/zenodo.20764857',
+    url: Z('20764857'),
   },
 ]
 
