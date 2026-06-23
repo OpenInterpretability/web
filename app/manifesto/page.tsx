@@ -1,13 +1,12 @@
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, Quote } from 'lucide-react'
-import { threeMoats, pillars } from '@/lib/pillars'
-import { MiniPillarCard } from '@/components/pillar-card'
+import { arc, discipline } from '@/lib/arc'
 import { site } from '@/lib/constants'
 
 export const metadata = {
   title: 'Manifesto — OpenInterp',
   description:
-    'Why OpenInterp exists. The gap, the pillars, the moats, the student in Mumbai on a phone at 2:00 am.',
+    'Why OpenInterp exists. The microscope is built; we build the standards that tell a real mech-interp signal from a confound — the audit layer for interpretability claims in agentic systems.',
 }
 
 export default function ManifestoPage() {
@@ -21,7 +20,7 @@ export default function ManifestoPage() {
       </Link>
 
       <span className="chip bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-brand-500/30 ring-inset">
-        MANIFESTO · 2026
+        MANIFESTO · 2026-06
       </span>
       <h1 className="mt-4 text-5xl sm:text-6xl font-semibold tracking-tight text-balance">
         The microscope is built. Now we need the standards.
@@ -31,122 +30,126 @@ export default function ManifestoPage() {
           The thesis
         </p>
         <p className="text-lg leading-relaxed text-ink-900/85 dark:text-ink-50/85 text-balance">
-          <strong>OpenInterpretability is building the reproducibility and runtime layer for mechanistic interpretability findings in agentic systems</strong> — every probe inspectable, every methodology re-runnable, every claim citable.
+          <strong>OpenInterpretability is building the audit layer for mechanistic-interpretability
+          claims in agentic systems</strong> — the rigor that tells a real signal from a confound.
+          One question, asked honestly: <em>when should we believe a mech-interp claim?</em>
         </p>
       </div>
 
       <div className="mt-10 space-y-10 text-ink-900/80 dark:text-ink-50/80 text-lg leading-relaxed">
         <p>
           Anthropic published Persona Vectors and Tracing Thoughts. DeepMind shipped Gemma Scope.
-          Alibaba shipped Qwen-Scope. Neuronpedia built the encyclopedia. Goodfire raised
-          $150M to commercialize the substrate. The interpretability infrastructure is, finally,
-          a thing that exists.
+          Alibaba shipped Qwen-Scope. Neuronpedia built the encyclopedia. Goodfire raised $150M to
+          commercialize the substrate. The interpretability microscope is, finally, a thing that
+          exists.
         </p>
 
         <p>
-          What does <em>not</em> exist yet — at least not in shippable form — is the methodology
-          and product layer above it. The probes that take SAE features and turn them into
-          something a developer can put in front of a customer. The benchmarks that survive
-          Goodhart. The standards that distinguish a probe that learned the underlying signal from
-          a probe that learned a confound. The deployment plumbing that lets a hospital safety
-          team actually use a 27B activation probe in production.
+          What does <em>not</em> exist yet is the standard above it: the methodology that
+          distinguishes a probe that learned the underlying signal from a probe that learned a
+          confound. That gap is not academic. In our own work a covert-intent probe scored
+          AUROC <strong className="text-ink-900 dark:text-white">0.98</strong> — and collapsed to{' '}
+          <strong className="text-ink-900 dark:text-white">0.52</strong> the moment we held the
+          framing constant and cross-validated by trajectory. The number was real. The signal was
+          not. Almost every &ldquo;our interpretability tool detects X&rdquo; claim has a 0.98 hiding a
+          0.52, and the field has no shared, runnable way to catch it.
         </p>
 
         <p>
-          That is the gap OpenInterp fills. We don't train more SAEs — frontier labs already do
-          that better than we ever could. We turn their work into <strong className="text-ink-900 dark:text-white">probes
-          that ship</strong> and <strong className="text-ink-900 dark:text-white">standards that
-          survive Goodhart</strong>. Apache 2.0 throughout. Anti-Goodhart by construction.
+          That is the gap OpenInterp fills. We don&rsquo;t train more SAEs — frontier labs already do
+          that better than we ever could. We build the <strong className="text-ink-900 dark:text-white">layer
+          that decides whether to believe the microscope</strong>: an agent-trajectory capture
+          pipeline, a confound auditor, and a 15-paper arc of pre-registered findings — every probe
+          inspectable, every methodology re-runnable, every claim citable. Apache-2.0 throughout.
+          Anti-Goodhart by construction.
         </p>
 
         <h2 className="text-3xl font-semibold tracking-tight mt-14 text-ink-900 dark:text-white">
-          The five gaps
-        </h2>
-
-        <p>The gaps that no current tool fills:</p>
-
-        <div className="card p-6">
-          <dl className="space-y-5 text-base leading-normal">
-            <div>
-              <dt className="font-semibold">Narrative / trace</dt>
-              <dd className="text-ink-900/70 dark:text-ink-50/70 mt-1">
-                Features shown in isolation, never the full journey of a prompt. A model's thought
-                is a sequence, not a dictionary entry.
-              </dd>
-            </div>
-            <div>
-              <dt className="font-semibold">Comparison</dt>
-              <dd className="text-ink-900/70 dark:text-ink-50/70 mt-1">
-                "Why did model A answer X but model B answer Y?" is the question that matters in a
-                reasoning-model world. No tool diffs activations side-by-side.
-              </dd>
-            </div>
-            <div>
-              <dt className="font-semibold">Circuits as UI</dt>
-              <dd className="text-ink-900/70 dark:text-ink-50/70 mt-1">
-                Every beautiful circuit figure in the 2024–2026 literature was hand-drawn in Figma.
-                Circuits live in papers, not tools.
-              </dd>
-            </div>
-            <div>
-              <dt className="font-semibold">Onboarding</dt>
-              <dd className="text-ink-900/70 dark:text-ink-50/70 mt-1">
-                UX assumes PhD-level familiarity. Students bounce in 90 seconds. The field grows
-                slower than the problem.
-              </dd>
-            </div>
-            <div>
-              <dt className="font-semibold">Failure archaeology</dt>
-              <dd className="text-ink-900/70 dark:text-ink-50/70 mt-1">
-                "My model hallucinated, which features fired?" Today: write a notebook. Tomorrow:
-                upload a failure dataset, get a ranked feature list back automatically.
-              </dd>
-            </div>
-          </dl>
-        </div>
-
-        <h2 className="text-3xl font-semibold tracking-tight mt-14 text-ink-900 dark:text-white">
-          The four pillars
+          What the arc found
         </h2>
 
         <p>
-          OpenInterp is built as four complementary platforms — the minimum set that fills all five
-          gaps and also finances itself:
+          We studied one hard problem deeply: <strong className="text-ink-900 dark:text-white">why
+          capable LLM agents loop forever and never finish</strong>, and whether their internals can
+          tell us — or change it. Nine beats, each a permanent Zenodo DOI, each an honest one-liner:
         </p>
 
-        <div className="not-prose grid gap-3">
-          {pillars.map((p) => (
-            <MiniPillarCard key={p.id} pillar={p} />
+        <div className="not-prose card divide-y divide-ink-900/[0.06] dark:divide-ink-50/[0.08]">
+          {arc.map((b) => (
+            <a
+              key={b.n}
+              href={b.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-baseline gap-3 px-5 py-3 hover:bg-brand-500/[0.04] transition-colors"
+            >
+              <span className="font-mono text-xs text-ink-900/40 dark:text-ink-50/40 tabular-nums">
+                {b.n}
+              </span>
+              <span className="font-semibold text-sm text-ink-900 dark:text-white">{b.title}</span>
+            </a>
           ))}
         </div>
 
         <p>
-          <strong className="text-ink-900 dark:text-white">Observatory</strong> is the microscope —
-          watch the model. <strong className="text-ink-900 dark:text-white">Laboratory</strong> is
-          the workbench — edit the model.{' '}
-          <strong className="text-ink-900 dark:text-white">Watchtower</strong> is the gantry —
-          monitor the model. <strong className="text-ink-900 dark:text-white">Academy</strong> is
-          the school — teach the world to use the other three. One platform. Four ways in.
+          The arc bends one way. Interpretability <strong className="text-ink-900 dark:text-white">locates</strong> a
+          real, causal control surface — a late action band where an agent commits — but it does not{' '}
+          <strong className="text-ink-900 dark:text-white">secure</strong> it. Detection is not
+          control, even at the exact named feature. An internal authorization monitor reads the
+          authorization the model <em>feels</em>, not the one the user <em>granted</em>. The brake
+          that suppresses an irreversible action collapses under an adaptive white-box attack. Five
+          orthogonal limits, one conclusion:
+        </p>
+
+        <div className="relative my-8 border-l-4 border-brand-500 pl-6 py-2 italic text-xl leading-relaxed text-ink-900/90 dark:text-ink-50/90 text-balance">
+          <Quote className="absolute -left-3 -top-1 h-6 w-6 bg-ink-50 dark:bg-ink-950 text-brand-500" />
+          Use interpretability to <strong className="not-italic text-ink-900 dark:text-white">audit
+          and monitor</strong> a fixed model — not to defend against an adversary optimizing against
+          a known locus, and not as a shortcut to building a better model. Locating where behavior is
+          decided is necessary, and nowhere near sufficient, for securing it.
+        </div>
+
+        <p>
+          That is an unfashionable position, and it is the one the evidence supports. The honest
+          frontier read in 2026: interpretability is strong for{' '}
+          <strong className="text-ink-900 dark:text-white">understanding and auditing</strong>, and
+          weak for <strong className="text-ink-900 dark:text-white">building and defending</strong> —
+          the genuine engineering wins attributed to &ldquo;interp&rdquo; come from observable
+          attention/activation structure plus a cheap optimization step, not from circuits or SAE
+          features doing the work. We say so out loud. The lab that tells you when <em>not</em> to
+          believe a result is the one worth believing when it says you can.
         </p>
 
         <h2 className="text-3xl font-semibold tracking-tight mt-14 text-ink-900 dark:text-white">
-          Three structural bets
+          The flagship: <code className="text-2xl">oilab audit</code>
         </h2>
 
-        <div className="not-prose grid gap-4 mt-6">
-          {threeMoats.map((m, i) => (
-            <article key={i} className="card p-6">
-              <div className="flex items-center gap-2 text-brand-700 dark:text-brand-300">
-                <span className="font-mono text-xs font-semibold">0{i + 1}</span>
-              </div>
-              <h3 className="mt-2 text-lg font-semibold tracking-tight">{m.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-900/70 dark:text-ink-50/70">
-                {m.body}
+        <p>
+          The thesis, made runnable. <code>oilab audit</code> takes a probe or direction and a
+          labeled activation set, and runs a confound battery offline, on CPU, in seconds —
+          permutation null, random-direction floor, leave-one-rollout-out <em>and</em>{' '}
+          leave-one-group-out, a structure-matched control, leakage residualization,
+          distribution-shift transfer. It returns one verdict card: <code>REAL_SIGNAL</code> only if
+          the honest cross-validated number survives every applicable check; otherwise{' '}
+          <code>CONFOUNDED</code> or <code>UNDETERMINED</code>. It is the codified version of the
+          discipline that turned our own 0.98 into a 0.52 before we could publish it. The rigor a
+          frontier lab applies by hand, as one command anyone can run.
+        </p>
+
+        <h2 className="text-3xl font-semibold tracking-tight mt-14 text-ink-900 dark:text-white">
+          Why the claims are trustworthy
+        </h2>
+
+        <p>The discipline, not the marketing:</p>
+
+        <div className="not-prose grid gap-3">
+          {discipline.map((d) => (
+            <div key={d.title} className="card p-5">
+              <h3 className="font-semibold text-ink-900 dark:text-white">{d.title}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-ink-900/70 dark:text-ink-50/70">
+                {d.body}
               </p>
-              <div className="mt-3 font-mono text-xs text-ink-900/50 dark:text-ink-50/50">
-                {m.meta}
-              </div>
-            </article>
+            </div>
           ))}
         </div>
 
@@ -159,49 +162,52 @@ export default function ManifestoPage() {
         <ul className="list-none space-y-3 pl-0">
           <li className="card p-5">
             <strong className="text-ink-900 dark:text-white">
-              First public SAE on the Qwen3.6 family
+              Real agent-trajectory activation capture
             </strong>
             {' — '}
             <span className="text-ink-900/70 dark:text-ink-50/70">
-              dense (27B) and triple-hybrid MoE (35B-A3B). Verified against HuggingFace at shipping
-              time; zero competitors.
-            </span>
-          </li>
-          <li className="card p-5">
-            <strong className="text-ink-900 dark:text-white">Hybrid architecture expertise</strong>
-            {' — '}
-            <span className="text-ink-900/70 dark:text-ink-50/70">
-              first SAEs on Gated Delta Networks (Qwen3.5-4B), ensemble MoE (Gemma-4 E4B), and
-              triple-hybrid (Qwen3.6-35B-A3B). Landscape was previously uninterpretable.
+              per-token internals captured on real long-horizon coding-agent runs (SWE-bench Pro) and
+              on a ported SHADE-Arena. Almost nobody combines SAE/circuit interpretability with
+              activation capture on <em>real</em> agent trajectories — that is where the arc&rsquo;s
+              findings come from.
             </span>
           </li>
           <li className="card p-5">
             <strong className="text-ink-900 dark:text-white">
-              mechreward — features as RL rewards
+              First public SAE on the Qwen3.6 family
             </strong>
             {' — '}
             <span className="text-ink-900/70 dark:text-ink-50/70">
-              +19 pp on GSM8K (Qwen3.5-4B) in 168 effective training steps via per-token SAE-sparse
-              rewards. ρ=0.52 cross-architecture on SuperGPQA. pip install mechreward.
+              full-stack, 11 layers on the 27B reasoning model; plus first SAEs on hybrid
+              architectures (Gated Delta Networks, triple-hybrid MoE). Verified against Hugging Face
+              at shipping time.
             </span>
           </li>
           <li className="card p-5">
-            <strong className="text-ink-900 dark:text-white">Stage Gate protocol</strong>
+            <strong className="text-ink-900 dark:text-white">
+              <code>oilab audit</code> — the confound auditor
+            </strong>
             {' — '}
             <span className="text-ink-900/70 dark:text-ink-50/70">
-              correlation pre-test (G1) → three-way ablation (G2) → ceiling-breaking full RL (G3).
-              Don't burn GPU hours until the signal predicts the outcome.
+              the only runnable, offline standard for telling a real probe signal from a confound.
+              Reproduces our own airtight falsification, byte-for-byte, on CPU.
             </span>
           </li>
           <li className="card p-5">
             <strong className="text-ink-900 dark:text-white">Honest negatives</strong>
             {' — '}
             <span className="text-ink-900/70 dark:text-ink-50/70">
-              we published the feature-circuits result that failed replication. Trust comes from
-              admitting what broke.
+              six pre-registered walk-backs across the arc, including the result that detection is
+              not control and the white-box monitoring advantage we tried to prove and could not.
+              Trust comes from admitting what broke.
             </span>
           </li>
         </ul>
+
+        <p className="text-sm text-ink-900/60 dark:text-ink-50/60">
+          A second research line — full-stack SAE training, mechanistic reward modeling, and sub-4-bit
+          quantization for cheap open-weights inference — funds and feeds the agent-safety arc above.
+        </p>
 
         <h2 className="text-3xl font-semibold tracking-tight mt-14 text-ink-900 dark:text-white">
           The first-minute experience
@@ -209,19 +215,22 @@ export default function ManifestoPage() {
 
         <div className="relative my-8 border-l-4 border-brand-500 pl-6 py-2 italic text-xl leading-relaxed text-ink-900/90 dark:text-ink-50/90 text-balance">
           <Quote className="absolute -left-3 -top-1 h-6 w-6 bg-ink-50 dark:bg-ink-950 text-brand-500" />
-          A student in Mumbai, on a phone, at 2:00 am, in two minutes — discovers a hallucination
-          feature in GPT-5 that nobody has seen. Publishes a mini-paper embedded in the platform.
-          Has three DeepMind researchers commenting in real time before breakfast.
+          A researcher with a probe that scores 0.9, on a laptop, in one command — runs{' '}
+          <span className="not-italic font-mono text-base">oilab audit</span> and learns, before
+          they believe it, before they publish it, before they ship it, that the signal is a
+          confound. Or that it is real, and now provably so.
         </div>
 
         <p>
-          That is the north star. Everything — the hero animation, the mobile-first layout, the
-          zero-login Trace Theater, the shareable trace URLs, the Expedition that validates your
-          work in 15 minutes instead of 15 weeks — is optimized toward that one scene.
+          That is the north star. Everything — the replicable arc, the agent-capture pipeline, the
+          confound battery, the recompute-every-number harness — is optimized toward turning{' '}
+          <em>&ldquo;the model probably does X&rdquo;</em> into <em>&ldquo;here is the check, run it
+          yourself.&rdquo;</em>
         </p>
 
         <p className="text-lg font-semibold text-ink-900 dark:text-white">
-          Neuronpedia is a tab you consult. OpenInterp is a tab you leave open.
+          Frontier labs build the microscope. We build the standard that tells a finding from a
+          confound.
         </p>
 
         <h2 className="text-3xl font-semibold tracking-tight mt-14 text-ink-900 dark:text-white">
@@ -230,17 +239,32 @@ export default function ManifestoPage() {
 
         <div className="not-prose grid gap-3">
           <Link
-            href="/observatory/trace"
+            href="/research"
             className="card p-5 hover:border-brand-500/30 transition-colors flex items-center justify-between gap-3"
           >
             <div>
-              <div className="font-semibold">Watch the Trace Theater</div>
+              <div className="font-semibold">Read the research arc</div>
               <div className="mt-0.5 text-sm text-ink-900/60 dark:text-ink-50/60">
-                2 minutes. See the flagship experience today.
+                Nine beats, permanent DOIs, honest one-liners. The full WANDERING arc.
               </div>
             </div>
             <ArrowRight className="h-4 w-4 text-brand-600 dark:text-brand-400" />
           </Link>
+          <a
+            href="https://github.com/OpenInterpretability/openinterp-lab"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="card p-5 hover:border-brand-500/30 transition-colors flex items-center justify-between gap-3"
+          >
+            <div>
+              <div className="font-semibold">Replicate a paper in one command</div>
+              <div className="mt-0.5 text-sm text-ink-900/60 dark:text-ink-50/60">
+                openinterp-lab on the Colab CLI — and <code>oilab audit</code> to stress-test your
+                own probe.
+              </div>
+            </div>
+            <ArrowRight className="h-4 w-4 text-brand-600 dark:text-brand-400" />
+          </a>
           <a
             href={site.github}
             target="_blank"
@@ -250,19 +274,7 @@ export default function ManifestoPage() {
             <div>
               <div className="font-semibold">Contribute on GitHub</div>
               <div className="mt-0.5 text-sm text-ink-900/60 dark:text-ink-50/60">
-                All code Apache-2.0. Every SAE public. Every Stage Gate reproducible.
-              </div>
-            </div>
-            <ArrowRight className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-          </a>
-          <a
-            href={`mailto:${site.contact}?subject=${encodeURIComponent('OpenInterp partner')}`}
-            className="card p-5 hover:border-brand-500/30 transition-colors flex items-center justify-between gap-3"
-          >
-            <div>
-              <div className="font-semibold">Become a design partner</div>
-              <div className="mt-0.5 text-sm text-ink-900/60 dark:text-ink-50/60">
-                Watchtower Enterprise, Model Partner Program, Academy contributor.
+                All code Apache-2.0. Every SAE public. Every number recomputable.
               </div>
             </div>
             <ArrowRight className="h-4 w-4 text-brand-600 dark:text-brand-400" />
@@ -270,7 +282,8 @@ export default function ManifestoPage() {
         </div>
 
         <p className="mt-14 text-sm text-ink-900/50 dark:text-ink-50/50 italic">
-          Manifesto last revised 2026-04-23. Build in public. Amend in public.
+          Manifesto last revised 2026-06-23. We publish our own nulls. Build in public. Amend in
+          public.
         </p>
       </div>
     </div>
