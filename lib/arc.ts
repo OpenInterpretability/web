@@ -84,6 +84,14 @@ export const arc: ArcBeat[] = [
     doi: '10.5281/zenodo.20764857',
     url: Z('20764857'),
   },
+  {
+    n: '10',
+    title: 'The criterion cannot see what it does not measure',
+    finding:
+      'Audit the TRANSFORMATION, not just the model. A SOTA capability-guided efficiency criterion (head-level attention hybridization) is structurally blind to the agent-commitment circuit: the commit writers score exactly zero retrieval criticality and the layer’s top retrieval heads are the circuit’s opposers. Applying the selection collapses task-appropriate commitment (p = 7.6e-6) — worse than random at equal budget — while the criterion’s own benchmarks register nothing. Two named heads (0.5% of budget) restore the behavior; the criterion could never have found them.',
+    doi: '10.5281/zenodo.21175758',
+    url: Z('21175758'),
+  },
 ]
 
 // The memorable results, pulled out for a strip near the top.
