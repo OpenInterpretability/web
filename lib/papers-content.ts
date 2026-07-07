@@ -505,6 +505,85 @@ export const papers: PaperMeta[] = [
     ],
     tags: ["authorization", "agent safety", "AI control", "linear probe", "activation steering", "detect vs control", "irreversible actions", "cross-architecture", "Qwen3.6-27B", "gpt-oss", "corrigibility", "mechanistic interpretability"],
   },
+  {
+    slug: "felt-not-granted",
+    title:
+      "Felt, Not Granted: An Internal Authorization Probe Inherits the Agent's Judgment Error and Is Operationally Blind to Realistic Model-Origin Over-Reach, Where an External Task-Grounded Check Is Not",
+    subtitle:
+      "The authorization direction reads the authorization the model FEELS, not the one the user GRANTED — on 21 realistic over-reaches it allows 100%; an external task-grounded check catches all",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.20685263",
+    status: "published",
+    date: "2026-06-14",
+    abstract:
+      "The authorization direction (paper #9) detects and controls an agent's commitment to unauthorized irreversible actions at AUROC ~1.0. This paper asks what that internal monitor actually reads — and shows it reads the authorization the model FEELS, not the one the user GRANTED. On 21 realistic over-reach scenarios, where the agent in good faith commits an irreversible action the task did not authorize, the internal probe allows 100% of them (CI [0.845, 1.0]); a simple external task-grounded check catches all. Internal monitors inherit the model's own judgment error: they are structurally blind to the over-reach the model itself does not represent as unauthorized. The implication for interpretability-based oversight is a limit, not a technique: felt is not granted.",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.20685263" },
+      { label: "Pre-regs + ledgers + eval (GitHub: agentguard)", href: "https://github.com/OpenInterpretability/agentguard/tree/main/paper" },
+      { label: "Antecedent: #9 The Authorization Direction", href: "https://doi.org/10.5281/zenodo.20683622" },
+    ],
+    tags: ["authorization", "agent safety", "internal monitors", "probes", "over-reach", "detect vs control", "Qwen3.6-27B", "mechanistic interpretability"],
+  },
+  {
+    slug: "the-late-channel",
+    title:
+      "The Late Channel: Chain-of-Thought Becomes Causal and Decodable Only Late in a 27B Reasoning Agent",
+    subtitle:
+      "CoT is causal for the answer — and for the agent's action — only when it changes the outcome; that causal content consolidates in the same late band (L51–63), a readable monitoring locus",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.20752895",
+    status: "published",
+    date: "2026-06-18",
+    abstract:
+      "In a 27B reasoning agent (Qwen3.6-27B), chain-of-thought is causal for the answer — and for the agent's downstream action — only when the reasoning changes the outcome; when the model already knows the answer, the CoT is performative (44/60 Tier-A cases). The causal content of the reasoning consolidates in the same late layer band (L51–63) that carries action commitment, with the largest reasoning-to-answer transfer at L59 (+2.72), confirmed against a logit-lens control that rules out mere output-format consolidation. Faithfulness is CONDITIONAL, and the late state is a readable, causal locus for monitoring reasoning agents. First paper of the interpretability-as-audit phase of the arc; every number recomputes from public ledgers (37/37).",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.20752895" },
+      { label: "Ledgers + eval (GitHub: openinterp-swebench-harness)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/tree/main/paper/faithfulness" },
+    ],
+    tags: ["chain-of-thought", "faithfulness", "reasoning models", "monitoring", "late layers", "interpretability-as-audit", "Qwen3.6-27B"],
+  },
+  {
+    slug: "located-not-secured",
+    title:
+      "Located, Not Secured: Principled Limits of Interpretability-Based Control over Agent Actions",
+    subtitle:
+      "The synthesis of the arc: interpretability locates a real causal control surface — the late action band — but does not secure it, via five orthogonal limits",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.20764857",
+    status: "published",
+    date: "2026-06-19",
+    abstract:
+      "Across fifteen studies on long-horizon tool-using agents, mechanistic interpretability locates a real, causal control surface — the late action-commitment band (L51–63 in Qwen3.6-27B) — but does not secure it. Five orthogonal limits, each established by pre-registered experiments in the arc: detect is not control (a perfect verdict feature does not cause termination); felt is not granted (internal authorization monitors inherit the model's judgment error); form is not granted; control is not robust control (the late brake collapses under an adaptive white-box attack, ASR 0 to 1.0); and intervention is easy exactly where it is unneeded. Locating where behavior is decided is necessary but nowhere near sufficient for securing it. The implication: use interpretability to AUDIT and MONITOR a fixed model in a non-adversarial regime, not to defend against an adversary optimizing against a known locus.",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.20764857" },
+      { label: "The arc it synthesizes (canonical index, HF)", href: "https://huggingface.co/datasets/caiovicentino1/wandering-arc-papers" },
+    ],
+    tags: ["interpretability-as-audit", "agent safety", "AI control", "adversarial robustness", "synthesis", "limits", "mechanistic interpretability"],
+  },
+  {
+    slug: "hybridization-audit",
+    title:
+      "The Criterion Cannot See What It Does Not Measure: Auditing Capability-Guided Attention Hybridization Against a Named Agent-Commitment Circuit",
+    subtitle:
+      "Audit the TRANSFORMATION: a SOTA capability-guided FA-to-linear-attention selection is structurally blind to the agent-commitment circuit — collapses commitment worse than random while its benchmarks register nothing; two named heads restore it",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.21175758",
+    status: "published",
+    date: "2026-07-03",
+    abstract:
+      "Efficiency-driven model transformations increasingly decide which internal components to keep using causal, capability-guided criteria. We audit a HydraHead-style head-level FA-to-linear-attention selection criterion against the named, causally-verified commitment circuit of Qwen3.6-27B. Retrieval-criticality and commitment-writing are anti-aligned: the commit writers carry zero retrieval criticality (kappa=0, stable under doubled probe samples) and are dropped at any FA budget, while the layer's strongest retrieval heads are the circuit's opposers. Ablating the criterion's non-retained late-band heads collapses task-appropriate commitment (P(edit) 0.474 to 0.167; 18/0 monotonic flips, exact McNemar p=7.6e-6) — worse than all five size-matched random selections — while the capability probes that define the criterion register nothing (and, having failed their positive control, could not have). Restoring the two named writer heads (0.5% of FA heads) recovers baseline exactly; two random heads at identical severity do not (p=1.5e-5). Capability-causal is not safety-causal: audit the transformation with the circuits you care about. Fully reproducible (59/59 checks from the public ledger; under 6 GPU-hours).",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.21175758" },
+      { label: "PREREG + results + eval (59/59) + code (GitHub)", href: "https://github.com/OpenInterpretability/openinterp-swebench-harness/tree/main/paper/circuit_breaker" },
+      { label: "Public ledger (HF dataset)", href: "https://huggingface.co/datasets/caiovicentino1/swebench-phase6-verdict-circuit" },
+      { label: "The audited criterion: HydraHead (arXiv:2606.20097)", href: "https://arxiv.org/abs/2606.20097" },
+    ],
+    tags: ["transformation audit", "attention hybridization", "linear attention", "model compression", "agent safety", "interpretability-as-audit", "attention heads", "Qwen3.6-27B"],
+  },
 ];
 
 export function getPaper(slug: string): PaperMeta | undefined {
