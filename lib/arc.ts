@@ -92,10 +92,22 @@ export const arc: ArcBeat[] = [
     doi: '10.5281/zenodo.21175758',
     url: Z('21175758'),
   },
+  {
+    n: '11',
+    title: 'The action lags the answer',
+    finding:
+      'An agent’s tool commitment routes through the emergent verbalizable “global workspace” STRICTLY DEEPER than its answer. There is a depth band where steering the verbalizable direction reroutes a held answer but not the committed tool (at or below a magnitude-matched random-direction control); the action becomes steerable via the same direction only deeper. Replicates across a dense 27B and an MoE 20B — the absolute band is model-dependent, the answer→action depth lag is not. Ablating the verbalizable subspace leaves the commitment intact. A verbalizable monitor thus reads the answer a depth-band before the action is decided. Every positive dissociation is significant (Fisher exact, p from 1.5e-4 to 2.5e-18) and the causal counts are independently GPU-reproduced.',
+    doi: '10.5281/zenodo.21250691',
+    url: Z('21250691'),
+  },
 ]
 
 // The memorable results, pulled out for a strip near the top.
 export const findings = [
+  {
+    headline: 'The action lags the answer.',
+    detail: 'The verbalizable “global workspace” reaches an agent’s tool commitment strictly deeper than its answer — a depth band steers the answer but not the action. Holds across a dense and an MoE model.',
+  },
   {
     headline: 'The lever is late.',
     detail: 'In a long-horizon agent, knowledge consolidates ~30 layers before the action is committed. The knowledge–action gap is a depth gap.',
