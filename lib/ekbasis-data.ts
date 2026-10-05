@@ -108,7 +108,7 @@ print(sim.final, sim.looks, sim.surprises) # when it looked, and which looks fou
 
 /** Planning with no LLM: beam search over actions, every next state predicted by Ekbasis, the plan run for real. */
 export const planning =
-  'Planning with no LLM: searching over actions with Ekbasis alone, 98.9% of the plans for 180 hard puzzles (8–12 actions) worked when run for real, in about 11 s each — the same base model writing the plan while reasoning step by step: 97.8%; answering at once: 38.3%.'
+  'Planning with no LLM: searching over actions with Ekbasis alone, 98.9% of the plans for 180 short puzzles (shortest plans 1–4 actions) worked when run for real, in about 11 s each — the same base model writing the plan while reasoning step by step: 97.8%; answering at once: 38.3%.'
 
 export const speed = {
   caption: '80 forecasts of 10–30 actions (a few variables each), one RTX 6000 Pro per system; latency: the median of 8 forecasts made one at a time; throughput with 16 in parallel.',
