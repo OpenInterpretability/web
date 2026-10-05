@@ -167,6 +167,11 @@ export default function EkbasisPage() {
         <a href={ekbasis.links.dataset} className="inline-flex items-center gap-1.5 rounded-lg ring-1 ring-black/15 dark:ring-white/20 px-4 py-2 text-sm font-medium">
           <Database className="h-4 w-4" /> Data
         </a>
+        {ekbasis.links.paper && (
+          <a href={ekbasis.links.paper} className="inline-flex items-center gap-1.5 rounded-lg ring-1 ring-black/15 dark:ring-white/20 px-4 py-2 text-sm font-medium">
+            <ExternalLink className="h-4 w-4" /> Paper · DOI
+          </a>
+        )}
         <a href={ekbasis.links.prereg} className="inline-flex items-center gap-1.5 rounded-lg ring-1 ring-black/15 dark:ring-white/20 px-4 py-2 text-sm font-medium">
           <ExternalLink className="h-4 w-4" /> Pre-registration
         </a>
