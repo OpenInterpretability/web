@@ -2,9 +2,23 @@ import Link from 'next/link'
 import { ArrowLeft, ShieldCheck, GitBranch, ExternalLink } from 'lucide-react'
 
 export const metadata = {
-  title: 'AgentGuard — the model-origin blind spot, closed · OpenInterp',
+  title: 'AgentGuard — the model-origin blind spot, closed',
   description:
     'A defense-in-depth action firewall for tool-using agents, with a model-internal intent brake that catches harm no text classifier or policy engine can see. Open source, grounded in published circuit-breaker data.',
+  keywords: ['AgentGuard', 'action firewall', 'agent safety', 'prompt injection', 'intent brake', 'circuit breaker', 'AI agents'],
+  alternates: { canonical: '/agentguard' },
+  openGraph: {
+    type: 'website',
+    url: 'https://openinterp.org/agentguard',
+    title: 'AgentGuard — the model-origin blind spot, closed',
+    description: 'A defense-in-depth action firewall for tool-using agents, with a model-internal intent brake.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@openinterp',
+    title: 'AgentGuard — the model-origin blind spot, closed',
+    description: 'A defense-in-depth action firewall for tool-using agents, with a model-internal intent brake.',
+  },
 }
 
 const GH = 'https://github.com/OpenInterpretability/agentguard'
@@ -51,7 +65,7 @@ export default function AgentGuardPage() {
     <main className="mx-auto max-w-5xl px-6 py-16">
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 mb-8"
+        className="flex w-fit items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 mb-8"
       >
         <ArrowLeft className="h-3.5 w-3.5" /> Back home
       </Link>
@@ -106,7 +120,9 @@ export default function AgentGuardPage() {
       <section className="mt-16">
         <h2 className="text-2xl font-semibold tracking-tight">Four independent layers</h2>
         <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">
-          Each covers the others&apos; blind spots. Only the model-internal layer closes model-origin harm.
+          Each covers the others&apos; blind spots. Only the model-internal layer closes model-origin harm. A
+          consequence layer — what the action will do in the current state — now comes from{' '}
+          <Link href="/ekbasis" className="text-brand-600 dark:text-brand-400 underline">Ekbasis</Link>.
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {LAYERS.map((l) => (

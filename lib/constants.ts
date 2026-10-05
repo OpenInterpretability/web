@@ -1,9 +1,9 @@
 export const site = {
   name: 'OpenInterpretability',
   shortName: 'OpenInterp',
-  tagline: 'When should we believe a mech-interp claim?',
+  tagline: 'Understand and control AI agents.',
   description:
-    'OpenInterp answers: when should we believe a mechanistic interpretability claim? A protocol (Six Diagnostics), a benchmark (Failed-Replication Registry), and JSON schemas for the community. Built from 11 studies on Qwen3.6-27B — six walked back. Apache-2.0.',
+    'OpenInterpretability is an independent lab for AI-agent safety: pre-registered research on why agents fail, and open tools that catch failures before they happen — AgentGuard, Ekbasis, ProbeBench. Every number recomputable. Apache-2.0.',
   url: 'https://openinterp.org',
   github: 'https://github.com/OpenInterpretability',
   huggingface: 'https://huggingface.co/caiovicentino1',

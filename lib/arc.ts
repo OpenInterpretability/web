@@ -157,7 +157,8 @@ export const secondLine = [
 export const researchTools = [
   { name: 'openinterp-lab', detail: 'one-command replication of the papers on the Colab CLI', href: 'https://github.com/OpenInterpretability/openinterp-lab' },
   { name: 'openinterp-mcp', detail: 'run probe-causality experiments from any agent (Claude Code, Cursor)', href: 'https://github.com/OpenInterpretability/openinterp-mcp' },
-  { name: 'AgentGuard', detail: 'the four-layer action firewall the safety papers prototype', href: 'https://github.com/OpenInterpretability/agentguard' },
+  { name: 'AgentGuard', detail: 'the layered action firewall the safety papers prototype', href: '/agentguard' },
+  { name: 'Ekbasis', detail: 'the world model for agents: what an action will do in this state, in one pass', href: '/ekbasis' },
   { name: 'Eval / probe schemas', detail: 'the recompute-every-number harness used in each paper', href: 'https://github.com/OpenInterpretability' },
 ]
 

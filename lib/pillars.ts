@@ -263,13 +263,13 @@ export const roadmap = [
 ]
 
 export const heroNew = {
-  eyebrow: 'Independent mechanistic-interpretability lab · 10 papers · 6 honest walk-backs · permanent DOIs',
-  watchLine: 'When should we believe',
-  thinkLine: 'a mech-interp claim?',
+  eyebrow: 'Independent AI-agent safety lab · pre-registered · honest walk-backs · permanent DOIs',
+  watchLine: 'Understand and control',
+  thinkLine: 'AI agents.',
   subBold:
-    'An independent lab studying how LLM agents fail on long-horizon tasks — and what their internals do, and don’t, reveal. Ten papers on one model. Six of our own claims walked back.',
+    'An independent lab studying how LLM agents fail on long-horizon tasks — and building the open tools that catch those failures before they do harm.',
   subText:
-    'We publish positives and nulls with the same rigor: pre-registered, every number recomputed from public data, permanent Zenodo DOIs. This is the WANDERING arc — from “agents that never finish” to “the authorization a model feels is not the one you granted.”',
+    'We publish positives and nulls with the same rigor: pre-registered, every number recomputed from public data, permanent Zenodo DOIs. The WANDERING arc explains how agents fail; AgentGuard and Ekbasis stop the failures that matter.',
 }
 
 // Three-pillar reframing (Protocol / Registry / Standard) — capstone repackage 2026-05-23.

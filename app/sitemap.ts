@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { site } from '@/lib/constants'
 import { probes } from '@/lib/probebench-data'
+import { papers } from '@/lib/papers-content'
 
 /**
  * Static + dynamic sitemap.
@@ -68,8 +69,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/probebench/transfer-matrix',  priority: 0.7, changeFrequency: 'weekly' },
     { path: '/probebench/eval-awareness',   priority: 0.7, changeFrequency: 'weekly' },
 
-    // Products
-    { path: '/products/fabricationguard', priority: 0.9, changeFrequency: 'weekly' },
+    // Products and tools
+    { path: '/tools',                       priority: 0.9, changeFrequency: 'weekly' },
+    { path: '/ekbasis',                     priority: 0.9, changeFrequency: 'weekly' },
+    { path: '/agentguard',                  priority: 0.9, changeFrequency: 'weekly' },
+    { path: '/products/agentguard',         priority: 0.8, changeFrequency: 'weekly' },
+    { path: '/products/agent-probe-guard',  priority: 0.8, changeFrequency: 'weekly' },
+    { path: '/products/fabricationguard',   priority: 0.9, changeFrequency: 'weekly' },
+    { path: '/mcp',                         priority: 0.7, changeFrequency: 'monthly' },
+    { path: '/use',                         priority: 0.7, changeFrequency: 'monthly' },
+    { path: '/start',                       priority: 0.7, changeFrequency: 'monthly' },
+    { path: '/built-on',                    priority: 0.5, changeFrequency: 'monthly' },
+
+    // Blog posts not listed above
+    { path: '/blog/a-detector-is-not-a-fix',                  priority: 0.6, changeFrequency: 'monthly' },
+    { path: '/blog/tool-entropy-crypto-agent-failure-mode',   priority: 0.6, changeFrequency: 'monthly' },
   ]
 
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((r) => ({
@@ -101,5 +115,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   ]
 
-  return [...staticEntries, ...probeEntries]
+  // Research papers (each page carries Google Scholar citation_* tags)
+  const paperEntries: MetadataRoute.Sitemap = papers.map((p) => ({
+    url: `${site.url}/research/papers/${p.slug}`,
+    lastModified: safeDate(p.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }))
+
+  return [...staticEntries, ...paperEntries, ...probeEntries]
 }

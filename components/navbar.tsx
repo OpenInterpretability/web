@@ -9,6 +9,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 // Research-first navigation. The lab and its papers lead; tooling is demoted.
 const primaryNav = [
   { href: '/research', label: 'Research' },
+  { href: '/tools', label: 'Tools' },        // the agent safety stack and every open tool
   { href: '/use', label: 'Use' },            // hub: reproduce, mcp, skills, notebooks
   { href: '/atlas', label: 'Registry' },     // failed-replication registry (honest negatives)
   { href: '/manifesto', label: 'Manifesto' },
@@ -22,7 +23,7 @@ const secondaryNav = [
 
 // Open-source tooling + legacy routes — demoted to the mobile menu + footer, still reachable.
 const tertiaryNav = [
-  { href: '/products', label: 'Open-source tools' },
+  { href: '/tools', label: 'Open-source tools' },
   { href: '/observatory', label: 'Observatory' },
   { href: '/laboratory', label: 'Laboratory' },
   { href: '/watchtower', label: 'Watchtower' },

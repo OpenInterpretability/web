@@ -5,26 +5,25 @@ import {
 } from 'lucide-react'
 import { heroNew } from '@/lib/pillars'
 import { arc, findings, discipline, secondLine, researchTools, credibility } from '@/lib/arc'
+import { papers } from '@/lib/papers-content'
+import { safetyStack } from '@/lib/safety-stack'
 
 export default function HomePage() {
   return (
     <>
-      {/* ===== Announcement banner: openinterp-lab on the Colab CLI ===== */}
-      <a
-        href="https://github.com/OpenInterpretability/openinterp-lab"
-        target="_blank"
-        rel="noopener noreferrer"
+      {/* ===== Announcement banner ===== */}
+      <Link
+        href="/ekbasis"
         className="group block border-b border-brand-500/20 bg-gradient-to-r from-brand-600/15 via-accent-500/10 to-brand-600/15 px-4 py-2.5 text-center text-sm backdrop-blur-sm hover:from-brand-600/25 hover:to-brand-600/25 transition-colors"
       >
         <span className="chip mr-2 bg-brand-500/20 text-brand-700 dark:text-brand-300 ring-brand-500/30 text-[11px] font-semibold uppercase tracking-wide">
-          Reproduce
+          New
         </span>
-        <span className="text-ink-900/70 dark:text-ink-50/70">Replicate any paper in the arc with one command:</span>
-        <code className="mx-1.5 rounded bg-black/[0.06] dark:bg-white/10 px-1.5 py-0.5 font-mono text-[13px] text-ink-900 dark:text-ink-50">
-          oilab replicate lever-is-late
-        </code>
-        <span className="font-medium text-brand-600 dark:text-brand-400 group-hover:underline">GitHub →</span>
-      </a>
+        <span className="text-ink-900/70 dark:text-ink-50/70">
+          <strong className="text-ink-900 dark:text-ink-50">Ekbasis</strong> — an open world model for agents. Not a model that thinks, nor one that judges: a model that foresees.
+        </span>{' '}
+        <span className="font-medium text-brand-600 dark:text-brand-400 group-hover:underline">Read more →</span>
+      </Link>
 
       {/* ===== Hero ===== */}
       <section className="relative overflow-hidden">
@@ -33,7 +32,7 @@ export default function HomePage() {
           className="absolute left-1/2 top-20 -z-10 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-brand-600/20 blur-[120px]"
           aria-hidden="true"
         />
-        <div className="relative mx-auto max-w-5xl px-6 pt-20 pb-20 text-center">
+        <div className="relative mx-auto max-w-5xl px-6 pt-16 pb-16 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-3.5 py-1.5 text-xs font-medium text-brand-700 dark:text-brand-300 backdrop-blur-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-500 animate-pulse-slow" />
             {heroNew.eyebrow}
@@ -60,15 +59,20 @@ export default function HomePage() {
               Read the research arc
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
-            <a
-              href="https://zenodo.org/record/20764857"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/tools"
+              className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
+            >
+              <ShieldCheck className="h-3.5 w-3.5" />
+              The agent safety stack
+            </Link>
+            <Link
+              href="/research"
               className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
             >
               <Library className="h-3.5 w-3.5" />
-              15 papers · permanent DOIs
-            </a>
+              {papers.length} papers · permanent DOIs
+            </Link>
             <a
               href="https://github.com/OpenInterpretability"
               target="_blank"
@@ -79,6 +83,66 @@ export default function HomePage() {
               Code & data →
             </a>
           </div>
+
+          {/* ===== Featured release: Ekbasis ===== */}
+          <Link
+            href="/ekbasis"
+            className="group mt-14 block rounded-2xl bg-white/70 p-6 text-left shadow-xl shadow-brand-600/10 ring-1 ring-brand-500/30 backdrop-blur-sm transition hover:ring-brand-500/60 dark:bg-white/[0.04] sm:p-8"
+          >
+            <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_1fr]">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="chip bg-brand-500/15 text-[11px] font-semibold uppercase tracking-wide text-brand-700 ring-brand-500/30 dark:text-brand-300">
+                    New · open model
+                  </span>
+                  <span className="text-xs text-ink-900/50 dark:text-ink-50/50">Apache-2.0 · weights, data and code</span>
+                </div>
+                <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Ekbasis <span className="font-normal text-ink-900/40 dark:text-ink-50/40">ἔκβασις</span>
+                </h2>
+                <p className="mt-1 text-lg font-medium text-brand-700 dark:text-brand-300">An open world model for agents</p>
+                <p className="mt-3 leading-relaxed text-ink-900/70 dark:text-ink-50/70">
+                  Before an action runs, it predicts what the action will do — will this lose work? will it fail? —
+                  with a calibrated probability, in one forward pass. Trained on what actions actually did.
+                </p>
+                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 group-hover:underline dark:text-brand-400">
+                  Meet Ekbasis <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-ink-900 dark:text-ink-50">
+                  Not a model that thinks. Not a model that judges. A model that foresees.
+                </p>
+                <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
+                  {[
+                    ['LLM', 'thinks in text'],
+                    ['System One', 'judges what is'],
+                    ['Ekbasis', 'foresees what will be'],
+                  ].map(([k, v], i) => (
+                    <div
+                      key={k}
+                      className={`rounded-lg p-3 ring-1 ${i === 2 ? 'bg-brand-500/10 ring-brand-500/40' : 'ring-black/10 dark:ring-white/15'}`}
+                    >
+                      <div className={`font-semibold ${i === 2 ? 'text-brand-700 dark:text-brand-300' : ''}`}>{k}</div>
+                      <div className="mt-1 text-ink-900/60 dark:text-ink-50/60">{v}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                  {[
+                    ['3 / 3', 'work-losing git commands flagged in fresh real repositories'],
+                    ['95.1%', 'git consequences on command types never seen in training'],
+                    ['0.09 s', 'per check, on one GPU'],
+                  ].map(([k, v]) => (
+                    <div key={k}>
+                      <div className="text-2xl font-semibold tabular-nums">{k}</div>
+                      <div className="mt-1 text-[11px] leading-snug text-ink-900/55 dark:text-ink-50/55">{v}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Link>
         </div>
       </section>
 
@@ -97,6 +161,42 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== The agent safety stack ===== */}
+      <section className="mx-auto max-w-7xl px-6 mt-24">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <span className="inline-block text-xs font-semibold uppercase tracking-[0.12em] text-brand-600 dark:text-brand-400 mb-3">
+            The agent safety stack
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-balance">
+            Four questions before an agent acts.
+          </h2>
+          <p className="mt-4 text-lg text-ink-900/70 dark:text-ink-50/70 text-balance leading-relaxed">
+            Each layer sees what the others cannot. All open source, all measured.
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {safetyStack.map((l) => (
+            <Link
+              key={l.layer}
+              href={l.href}
+              className={`group card p-6 transition-shadow hover:ring-brand-500/40 ${l.isNew ? 'ring-brand-500/40 bg-brand-500/5' : ''}`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs text-ink-900/45 dark:text-ink-50/45">{l.layer}</span>
+                {l.isNew && (
+                  <span className="chip bg-brand-500/15 text-brand-700 dark:text-brand-300 ring-brand-500/30 text-[10px] font-semibold uppercase">New</span>
+                )}
+              </div>
+              <p className="mt-3 text-lg font-semibold tracking-tight group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                {l.question}
+              </p>
+              <p className="mt-2 text-sm text-ink-900/65 dark:text-ink-50/65 leading-relaxed">{l.detail}</p>
+              <p className="mt-4 text-xs font-semibold text-brand-700 dark:text-brand-300">{l.tool} →</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* ===== THE ARC (headline spine) ===== */}
       <section className="mx-auto max-w-5xl px-6 mt-24">
         <div className="text-center max-w-3xl mx-auto mb-12">
@@ -104,7 +204,7 @@ export default function HomePage() {
             The WANDERING arc
           </span>
           <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-balance">
-            One question, followed honestly for ten papers.
+            One question, followed honestly for {arc.length} papers.
           </h2>
           <p className="mt-4 text-lg text-ink-900/70 dark:text-ink-50/70 text-balance leading-relaxed">
             Why do capable LLM agents loop forever and never finish — and can their internals tell us, or change it?
@@ -229,12 +329,12 @@ export default function HomePage() {
             Tools that came out of the research.
           </h2>
           <p className="mt-3 text-base text-ink-900/60 dark:text-ink-50/60 leading-relaxed text-balance">
-            Released so others can reproduce and extend the work — not products, just the apparatus. Apache-2.0.
+            Released so others can reproduce, extend and use the work. Apache-2.0. <Link href="/tools" className="text-brand-600 dark:text-brand-400 hover:underline font-medium">All tools →</Link>
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           {researchTools.map((t) => (
-            <a key={t.name} href={t.href} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-3 card p-5 hover:ring-brand-500/40 transition-shadow">
+            <a key={t.name} href={t.href} {...(t.href.startsWith('/') ? {} : { target: '_blank', rel: 'noopener noreferrer' })} className="group flex items-start gap-3 card p-5 hover:ring-brand-500/40 transition-shadow">
               <Terminal className="mt-0.5 h-4 w-4 text-brand-600 dark:text-brand-400 shrink-0" />
               <span className="text-sm">
                 <span className="font-semibold group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{t.name}</span>

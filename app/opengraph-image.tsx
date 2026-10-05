@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
-export const alt = 'OpenInterp — Watch language models think.'
+export const alt = 'OpenInterpretability — Understand and control AI agents.'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -64,7 +64,7 @@ export default async function Image() {
               gap: 18,
             }}
           >
-            <span>Watch language models</span>
+            <span>Understand and control</span>
             <span
               style={{
                 background: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #f97316 100%)',
