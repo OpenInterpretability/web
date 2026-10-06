@@ -19,7 +19,7 @@ export const ekbasis = {
     github: 'https://github.com/OpenInterpretability/ekbasis',
     model: 'https://huggingface.co/caiovicentino1/Ekbasis-27B',
     dataset: 'https://huggingface.co/datasets/caiovicentino1/ekbasis-data',
-    paper: 'https://doi.org/10.5281/zenodo.23146971' as string | null, // "Look When Unsure, Check When Sure" (Zenodo)
+    paper: 'https://doi.org/10.5281/zenodo.23146970' as string | null, // "Look When Unsure, Check When Sure" (Zenodo)
     prereg: 'https://github.com/OpenInterpretability/ekbasis/blob/main/PREREG_release_eval.md',
     agentguard: '/agentguard',
   },
