@@ -4,7 +4,7 @@ import { ArrowLeft, GitBranch, ExternalLink, Database, ShieldCheck, Boxes } from
 import { site } from '@/lib/constants'
 import {
   ekbasis, gitComparison, realRepo, longChains, planning, speed, routing, injection, limits, kinds, builds, lookWhenUnsure,
-  checkWhenSure, client015, client016,
+  checkWhenSure, client015, client016, withAgents,
 } from '@/lib/ekbasis-data'
 
 const URL_ = `${site.url}/ekbasis`
@@ -365,6 +365,25 @@ export default function EkbasisPage() {
         <h2 className="text-2xl font-semibold tracking-tight">We attacked our own guard</h2>
         <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">{injection.caption}</p>
         <Table columns={injection.columns} rows={injection.rows} />
+      </section>
+
+      <section className="mt-16">
+        <h2 className="text-2xl font-semibold tracking-tight">Ekbasis with agents</h2>
+        <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">{withAgents.caption}</p>
+        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+          {withAgents.stats.map((s) => (
+            <li key={s.label} className="rounded-xl ring-1 ring-black/10 dark:ring-white/15 p-4">
+              <div className="text-2xl font-semibold">{s.value}</div>
+              <div className="mt-1 text-sm text-ink-900/60 dark:text-ink-50/60">{s.label}</div>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-ink-900/70 dark:text-ink-50/70">
+          <Link className="underline underline-offset-2" href={withAgents.paper}>
+            When Does a Consequence Model Make AI Agents Safer?
+          </Link>
+          {' '}(the paper, its per-run data, the scripts that recompute every number, and the tasks, apps, adapters and judges to rerun the studies).
+        </p>
       </section>
 
       <section className="mt-16">

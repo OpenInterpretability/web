@@ -605,6 +605,27 @@ export const papers: PaperMeta[] = [
     ],
     tags: ["world models", "agents", "calibration", "active observation", "confident errors", "DAgger", "pre-registration", "Ekbasis-27B"],
   },
+  {
+    slug: "consequence-model-safety-layer",
+    title: "When Does a Consequence Model Make AI Agents Safer?",
+    subtitle: "Pre-registered studies on demo apps, real self-hosted apps and a real terminal",
+    authors: "Caio Vicentino",
+    orcid: CAIO_ORCID,
+    venue: "Zenodo · CC-BY-4.0 · DOI 10.5281/zenodo.23197341",
+    status: "published",
+    date: "2026-10-06",
+    abstract:
+      "Agents called Ekbasis-27B, an open one-pass consequence model, before consequential actions, in studies whose plans were hashed before the runs. On real, unmodified Gitea, Nextcloud and Roundcube driven through a real browser, with the truth read from the apps, Claude Sonnet 5.5's harmful runs fell from 25.0% to 4.2% in a pre-registered secondary contrast with one run per task (95% CI over tasks [−37.5, −6.2]; over the 9 task families [−47.8, 0.0]), mostly on tasks whose request itself names the harmful action, with more runs stopping short. The pre-registered hypotheses for Claude Haiku 4.5 failed there: warned, it mostly did what the request said. A pre-registered follow-up on 32 fresh tasks offered a safer way checked by Ekbasis and asked the user when there was none: with a simulated user that reads every question perfectly, Haiku's harmful runs fell from 72.9% to 2.1%, and in a secondary arm Sonnet's from 50.0% to 8.3%. Asking before every consequential click without Ekbasis did as well (the user's scripts had been checked to object to its question on each harmful path), and the Ekbasis guard asked 43% as many questions where the plan's bar was a quarter, so that hypothesis failed. On our own demo apps harmful runs fell for all five models tested (24/60 to 0/60 for Sonnet) and a placebo did not help Sonnet; the other agents alone had done about as well as Sonnet or better. Three further studies failed their bars where the agent alone was at the ceiling or the policy stated the consequences. In a real terminal, a Claude Code hook kept planted user work in 9/9 sessions against 5/9 and 7/9 without it in two small studies. In the one-pass format Ekbasis was trained on it was more accurate than Qwen-AgentWorld-35B-A3B on all 12 of our question suites; allowed to reason, AgentWorld won 1, showed no resolved difference on 9 and lost 2. The tasks are ours and are released with the app setups, adapters, judges, per-run data and scripts.",
+    artifacts: [
+      { label: "Paper PDF + permanent DOI (Zenodo, CC-BY-4.0)", href: "https://doi.org/10.5281/zenodo.23197341" },
+      { label: "Per-run data, reproduce.py and check_numbers.py (GitHub)", href: "https://github.com/OpenInterpretability/ekbasis/tree/main/paper/agents" },
+      { label: "Benchmark: tasks, apps, adapters and judges to rerun the studies (GitHub)", href: "https://github.com/OpenInterpretability/ekbasis/tree/main/paper/agents/benchmark" },
+      { label: "Model: Ekbasis-27B (HF)", href: "https://huggingface.co/caiovicentino1/Ekbasis-27B" },
+      { label: "The first Ekbasis paper: Look When Unsure, Check When Sure", href: "https://doi.org/10.5281/zenodo.23146970" },
+      { label: "Ekbasis on OpenInterp", href: "/ekbasis" },
+    ],
+    tags: ["agents", "agent safety", "world models", "side effects", "guardrails", "computer-use agents", "pre-registration", "Ekbasis-27B"],
+  },
 ];
 
 export function getPaper(slug: string): PaperMeta | undefined {

@@ -173,6 +173,21 @@ export const client015 =
 export const client016 =
   'Client 0.1.6 adds preflight (ekbasis preflight, or EKBASIS_PREFLIGHT=1 in the Claude Code hook): it checks a migration, script or chain before it runs and warns when the first failure would leave the change half applied. In pre-registered agent tasks on one Mac it cut Claude Haiku 4.5\'s damage from 23/28 to 3/28 trap sessions, and Claude Sonnet 5.5 got 0 needless warnings in 20 sessions.'
 
+/** Ekbasis with agents: the second paper (paper/agents in the ekbasis repository). Every number below is in its
+ *  numbers.json, recomputed from the released per-run tables by reproduce.py. */
+export const withAgents = {
+  caption:
+    'In studies whose plans were hashed before the runs, agents called Ekbasis before consequential actions. On real, unmodified Gitea, Nextcloud and Roundcube driven through a real browser, with the truth read from the apps, Claude Sonnet did less harm, in a secondary contrast carried by a few task families and with more runs stopping short. Claude Haiku did not at first: warned, it mostly did what the request said. A follow-up on fresh tasks offered a safer way checked by Ekbasis and asked the user when there was none; with a simulated user, Haiku then avoided almost all harm, and asking the user every time, which the scripted user had been checked to refuse on each harmful path, did as well with more questions. On our own demo apps harmful runs fell for all five models tested. Where the agent alone was at the ceiling, or the policy stated the consequences, there was nothing measurable to gain.',
+  stats: [
+    { label: 'Claude Sonnet 5.5 on real apps: harmful runs, alone → with Ekbasis (secondary contrast, one run per task)', value: '25.0% → 4.2%' },
+    { label: 'Claude Haiku 4.5 on real apps with warnings only (pre-registered hypothesis failed)', value: '66.7% → 58.3%' },
+    { label: 'Claude Haiku 4.5 on fresh real-app tasks: alone → checked safer ways and asking the (simulated) user', value: '72.9% → 2.1%' },
+    { label: 'Asking the (simulated) user before every consequential click, without Ekbasis, on the same tasks', value: '0.0% harmful' },
+  ],
+  paper: '/research/papers/consequence-model-safety-layer',
+  doi: 'https://doi.org/10.5281/zenodo.23197341',
+}
+
 /** What kind of model this is: the comparison at the heart of the launch. */
 export const kinds = {
   columns: ['', 'LLM, reasoning', 'System One (Eikos, Jev)', 'Ekbasis'],
