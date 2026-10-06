@@ -4,6 +4,7 @@ import { ArrowLeft, GitBranch, ExternalLink, Database, ShieldCheck, Boxes } from
 import { site } from '@/lib/constants'
 import {
   ekbasis, gitComparison, realRepo, longChains, planning, speed, routing, injection, limits, kinds, builds, lookWhenUnsure,
+  checkWhenSure,
 } from '@/lib/ekbasis-data'
 
 const URL_ = `${site.url}/ekbasis`
@@ -381,6 +382,16 @@ ekbasis git-check -- "git checkout -- app.py"
 pip install "ekbasis[mcp] @ git+https://github.com/OpenInterpretability/ekbasis"
 claude mcp add --scope user ekbasis -e EKBASIS_URL=http://127.0.0.1:8000 -- ekbasis-mcp`}</code></pre>
         </div>
+        <p className="mt-4 text-ink-900/70 dark:text-ink-50/70">
+          {checkWhenSure}{' '}
+          <a
+            className="underline underline-offset-2"
+            href="https://github.com/OpenInterpretability/ekbasis/blob/main/docs/VERIFY.md"
+          >
+            How it works
+          </a>
+          .
+        </p>
       </section>
 
       <section className="mt-16">

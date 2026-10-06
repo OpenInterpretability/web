@@ -160,6 +160,11 @@ export const limits = [
   'A safety net, not a security boundary: command obfuscation (bash -c, aliases) is out of scope. The hook fails closed (it asks when it cannot judge), and since client 0.1.3 it treats ignored build, dist, node_modules and cache folders as rebuildable.',
 ]
 
+/** Check when sure: ekbasis.verify (client 0.1.4). The default rule on the second pre-registered test on fresh items
+ *  (results/client_0.1.4 in the ekbasis repository). */
+export const checkWhenSure =
+  'Check when sure (client 0.1.4): ekbasis.verify says which confident answers (confidence ≥ 0.9) to check by real execution before acting. In a pre-registered test on fresh items from five capability suites, none of them overlapping the training data, its default per-domain thresholds caught 84.5% of the confident errors while verifying 22.6% of the confident answers; confidence alone, verifying 23.4%, caught 65.7%. A rule meant to certify at most 2% errors among unchecked answers did not pass.'
+
 /** What kind of model this is: the comparison at the heart of the launch. */
 export const kinds = {
   columns: ['', 'LLM, reasoning', 'System One (Eikos, Jev)', 'Ekbasis'],
