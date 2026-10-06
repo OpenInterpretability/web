@@ -165,6 +165,10 @@ export const limits = [
 export const checkWhenSure =
   'Check when sure (client 0.1.4): ekbasis.verify says which confident answers (confidence ≥ 0.9) to check by real execution before acting. In a pre-registered test on fresh items from five capability suites, none of them overlapping the training data, its default per-domain thresholds caught 84.5% of the confident errors while verifying 22.6% of the confident answers; confidence alone, verifying 23.4%, caught 65.7%. A rule meant to certify at most 2% errors among unchecked answers did not pass.'
 
+/** Client 0.1.5: the certified mode of ekbasis.verify (results/client_0.1.5 in the ekbasis repository). */
+export const client015 =
+  'Client 0.1.5 adds a certified mode to ekbasis.verify: a confident answer goes unchecked only where a Learn-then-Test certificate holds. In a third pre-registered test on fresh items it left 0.39% errors among the answers it accepted, verifying 26.9% and catching 94.8% of the confident errors.'
+
 /** What kind of model this is: the comparison at the heart of the launch. */
 export const kinds = {
   columns: ['', 'LLM, reasoning', 'System One (Eikos, Jev)', 'Ekbasis'],
