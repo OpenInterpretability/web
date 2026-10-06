@@ -4,7 +4,7 @@ import { ArrowLeft, GitBranch, ExternalLink, Database, ShieldCheck, Boxes } from
 import { site } from '@/lib/constants'
 import {
   ekbasis, gitComparison, realRepo, longChains, planning, speed, routing, injection, limits, kinds, builds, lookWhenUnsure,
-  checkWhenSure, client015,
+  checkWhenSure, client015, client016,
 } from '@/lib/ekbasis-data'
 
 const URL_ = `${site.url}/ekbasis`
@@ -397,6 +397,16 @@ claude mcp add --scope user ekbasis -e EKBASIS_URL=http://127.0.0.1:8000 -- ekba
           <a
             className="underline underline-offset-2"
             href="https://github.com/OpenInterpretability/ekbasis/blob/main/results/client_0.1.5/RESULTS.md"
+          >
+            Results
+          </a>
+          .
+        </p>
+        <p className="mt-4 text-ink-900/70 dark:text-ink-50/70">
+          {client016}{' '}
+          <a
+            className="underline underline-offset-2"
+            href="https://github.com/OpenInterpretability/ekbasis/blob/main/results/client_0.1.6/RESULTS.md"
           >
             Results
           </a>

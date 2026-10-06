@@ -169,6 +169,10 @@ export const checkWhenSure =
 export const client015 =
   'Client 0.1.5 adds a certified mode to ekbasis.verify: a confident answer goes unchecked only where a Learn-then-Test certificate holds. In a third pre-registered test on fresh items it left 0.39% errors among the answers it accepted, verifying 26.9% and catching 94.8% of the confident errors.'
 
+/** Client 0.1.6: preflight (results/client_0.1.6 in the ekbasis repository). */
+export const client016 =
+  'Client 0.1.6 adds preflight (ekbasis preflight, or EKBASIS_PREFLIGHT=1 in the Claude Code hook): it checks a migration, script or chain before it runs and warns when the first failure would leave the change half applied. In pre-registered agent tasks on one Mac it cut Claude Haiku 4.5\'s damage from 23/28 to 3/28 trap sessions, and Claude Sonnet 5.5 got 0 needless warnings in 20 sessions.'
+
 /** What kind of model this is: the comparison at the heart of the launch. */
 export const kinds = {
   columns: ['', 'LLM, reasoning', 'System One (Eikos, Jev)', 'Ekbasis'],
