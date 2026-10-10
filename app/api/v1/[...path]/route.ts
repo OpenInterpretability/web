@@ -83,6 +83,16 @@ async function handler(request: Request) {
     }
   }
 
+  // Sessions keep the state in the model server's memory and cannot be deleted through this gateway, which would break
+  // the promise that request contents are never stored. Hosted calls send the full state each time (/v1/systemone);
+  // sessions remain available on self-hosted servers.
+  if (path.startsWith("/v1/sessions")) {
+    return done(
+      json({ error: "sessions are not available on the hosted API: send the full state to /v1/systemone (read_once for several questions); self-hosted servers support sessions" }, 404),
+      "sessions blocked",
+    )
+  }
+
   const auth = request.headers.get("authorization") ?? ""
   const apiKey = auth.replace(/^Bearer\s+/i, "").trim()
   if (!apiKey) return done(json({ error: "unauthorized: send the Authorization: Bearer header" }, 401), "no key")
