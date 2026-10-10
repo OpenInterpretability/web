@@ -1,4 +1,5 @@
 import { getHexclaveServerApp } from "@/hexclave/server"
+import { invalidateUser } from "@/lib/gateway-cache"
 
 export const dynamic = "force-dynamic"
 
@@ -44,5 +45,6 @@ export async function DELETE(request: Request) {
   const key = keys.find((k) => k.id === id)
   if (!key) return Response.json({ error: "not found" }, { status: 404 })
   await key.revoke()
+  await invalidateUser(user.id)
   return Response.json({ ok: true }, { headers: { "Cache-Control": "private, no-store" } })
 }

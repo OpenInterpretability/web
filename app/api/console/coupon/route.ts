@@ -3,6 +3,7 @@ import { changeQuantity } from "@/lib/credit-chunks"
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { redeem } from "@/lib/coupons"
 import { redisConfigured, underLimit } from "@/lib/crypto-pay/redis"
+import { invalidateBalance } from "@/lib/gateway-cache"
 
 export const dynamic = "force-dynamic"
 const json = (obj: unknown, status = 200) => Response.json(obj, { status, headers: { "Cache-Control": "private, no-store" } })
@@ -22,6 +23,7 @@ export async function POST(request: Request) {
   const r = await redeem(code, user, async (tokens) => {
     const item = await user.getItem("tokens")
     await changeQuantity(item, tokens)
+    await invalidateBalance(user.id)
   })
   return r.ok ? json({ ok: true, tokens: r.tokens }) : json({ error: r.error }, 400)
 }

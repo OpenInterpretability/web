@@ -1,5 +1,6 @@
 import { changeQuantity } from "@/lib/credit-chunks"
 import type { Order } from "./orders"
+import { invalidateBalance } from "@/lib/gateway-cache"
 
 type Creditable = { id: string; getItem(itemId: string): Promise<{ increaseQuantity(amount: number): Promise<void>; decreaseQuantity(amount: number): Promise<void> }> }
 
@@ -8,6 +9,7 @@ export function creditFor(user: Creditable) {
   return async (tokens: number, order: Order) => {
     const item = await user.getItem("tokens")
     await changeQuantity(item, tokens)
+    await invalidateBalance(user.id)
     console.log(`[crypto-pay] credited ${tokens} tokens to ${user.id} for order ${order.id} (${order.network} ${order.txHash})`)
   }
 }

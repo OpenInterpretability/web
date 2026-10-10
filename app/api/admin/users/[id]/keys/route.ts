@@ -1,6 +1,7 @@
 /** POST {description?}: create a key for the user (value shown once).  DELETE ?keyId=: revoke it. */
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { requireAdmin, ajson, audit, readJson, notFound } from "@/lib/admin"
+import { invalidateUser } from "@/lib/gateway-cache"
 
 export const dynamic = "force-dynamic"
 type Ctx = { params: Promise<{ id: string }> }
@@ -30,6 +31,7 @@ export async function DELETE(request: Request, { params }: Ctx) {
   const key = (await user.listApiKeys()).find((k) => k.id === keyId)
   if (!key) return notFound()
   await key.revoke()
+  await invalidateUser(id)
   await audit(admin, "key.revoke", id, { email: user.primaryEmail, keyId })
   return ajson({ ok: true })
 }

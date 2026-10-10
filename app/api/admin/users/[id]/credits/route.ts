@@ -2,6 +2,7 @@
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { requireAdmin, ajson, audit, readJson, notFound } from "@/lib/admin"
 import { changeQuantity } from "@/lib/credit-chunks"
+import { invalidateBalance } from "@/lib/gateway-cache"
 
 export const dynamic = "force-dynamic"
 
@@ -19,6 +20,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const item = await user.getItem("tokens")
   const before = item.quantity
   await changeQuantity(item, delta)
+  await invalidateBalance(id)
   const after = (await user.getItem("tokens")).quantity
   await audit(admin, "credits.adjust", id, { email: user.primaryEmail, delta, reason, before, after })
   return ajson({ ok: true, before, after })

@@ -14,6 +14,7 @@
 import { after } from "next/server"
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { newRequestId, recordEvent, type TelemetryEvent } from "@/lib/telemetry"
+import { debitCachedBalance, getBalance, getIdent, keyHash, putBalance, putIdent, type Ident } from "@/lib/gateway-cache"
 
 export const dynamic = "force-dynamic"
 
@@ -98,14 +99,65 @@ async function handler(request: Request) {
   if (!apiKey) return done(json({ error: "unauthorized: send the Authorization: Bearer header" }, 401), "no key")
   ev.key = apiKey.slice(-4)
 
-  const user = await getHexclaveServerApp().getUser({ apiKey })
-  if (!user) return done(json({ error: "unauthorized: invalid or revoked API key" }, 401), "invalid key")
-  ev.uid = user.id
-  ev.email = user.primaryEmail
-  if (user.isRestricted) return done(json({ error: "forbidden: this account is suspended" }, 403), "restricted")
+  // Who the key belongs to and the balance: from the short-lived cache when possible (lib/gateway-cache),
+  // otherwise from Hexclave. Revocations, suspensions and new credits invalidate that cache on the spot.
+  const app = getHexclaveServerApp()
+  const timing: string[] = []
+  const tAuth = Date.now()
+  const hash = keyHash(apiKey)
+  let ident: Ident | null = null
+  let balance: number | null = null
+  try {
+    ident = await getIdent(hash)
+  } catch {
+    ident = null
+  }
+  if (!ident) {
+    const user = await app.getUser({ apiKey })
+    if (!user) return done(json({ error: "unauthorized: invalid or revoked API key" }, 401), "invalid key")
+    ident = { uid: user.id, email: user.primaryEmail, restricted: user.isRestricted }
+    balance = (await user.getItem("tokens")).quantity
+    const cached: Ident = ident
+    const bal: number = balance
+    after(async () => {
+      try {
+        await putIdent(hash, cached)
+        await putBalance(cached.uid, bal)
+      } catch (e) {
+        console.warn("[ekbasis gateway] cache write failed:", e)
+      }
+    })
+    timing.push(`auth;desc="hexclave";dur=${Date.now() - tAuth}`)
+  } else {
+    timing.push(`auth;desc="cache";dur=${Date.now() - tAuth}`)
+  }
+  const uid = ident.uid
+  ev.uid = uid
+  ev.email = ident.email
+  if (ident.restricted) return done(json({ error: "forbidden: this account is suspended" }, 403), "restricted")
 
-  const tokens = await user.getItem("tokens")
-  const balance = tokens?.quantity ?? 0
+  if (balance === null) {
+    const tBal = Date.now()
+    try {
+      balance = await getBalance(uid)
+    } catch {
+      balance = null
+    }
+    if (balance === null) {
+      balance = (await app.getItem({ itemId: "tokens", userId: uid })).quantity
+      const bal: number = balance
+      after(async () => {
+        try {
+          await putBalance(uid, bal)
+        } catch (e) {
+          console.warn("[ekbasis gateway] cache write failed:", e)
+        }
+      })
+      timing.push(`bal;desc="hexclave";dur=${Date.now() - tBal}`)
+    } else {
+      timing.push(`bal;desc="cache";dur=${Date.now() - tBal}`)
+    }
+  }
   if (balance <= 0) return done(json({ error: "payment required: buy a credit pack at /console" }, 402), "no balance")
 
   let body: Record<string, unknown> = {}
@@ -116,6 +168,7 @@ async function handler(request: Request) {
   }
 
   ev.rid = newRequestId()
+  const tModel = Date.now()
   let backendResp: Response
   try {
     backendResp = await fetch(`${BACKEND}${path}`, {
@@ -138,22 +191,24 @@ async function handler(request: Request) {
     respObj = {}
   }
 
-  // Meter: the backend reports the input tokens it consumed for this decision.
+  timing.push(`model;dur=${Date.now() - tModel}`)
+
+  // Meter: the backend reports the input tokens it consumed for this decision. The debit runs after the response
+  // is sent; a balance that runs out mid-request goes negative and the next request gets the 402 above.
   const usage = respObj.usage as { input_tokens?: number; output_tokens?: number } | undefined
   const inputTokens = Math.max(0, Math.round(usage?.input_tokens ?? 0))
   ev.tok = inputTokens
-  if (inputTokens > 0 && tokens) {
-    try {
-      const ok = await tokens.tryDecreaseQuantity(inputTokens)
-      if (!ok) {
-        // The balance ran out mid-request: the answer already went through, so debit it anyway
-        // (the balance goes negative and the next request gets the 402 above).
-        await tokens.decreaseQuantity(inputTokens)
+  if (inputTokens > 0) {
+    after(async () => {
+      try {
+        const item = await app.getItem({ itemId: "tokens", userId: uid })
+        const ok = await item.tryDecreaseQuantity(inputTokens)
+        if (!ok) await item.decreaseQuantity(inputTokens)
+        await debitCachedBalance(uid, inputTokens)
+      } catch (e) {
+        console.warn(`[ekbasis gateway] debit failed for user ${uid}:`, e)
       }
-    } catch (e) {
-      console.warn(`[ekbasis gateway] debit failed for user ${user.id}:`, e)
-      ev.err = "debit failed"
-    }
+    })
   }
 
   return done(
@@ -163,6 +218,7 @@ async function handler(request: Request) {
         "Content-Type": backendResp.headers.get("content-type") ?? "application/json",
         "Cache-Control": "private, no-store",
         "X-Ekbasis-Metered-Tokens": String(inputTokens),
+        "Server-Timing": timing.join(", "),
       },
     }),
     backendResp.ok ? undefined : typeof respObj.error === "string" ? respObj.error.slice(0, 200) : `backend ${backendResp.status}`,

@@ -4,6 +4,7 @@ import { requireAdmin, ajson, audit, readJson, notFound } from "@/lib/admin"
 import { userRows } from "@/lib/admin-users"
 import { listOrders } from "@/lib/crypto-pay/orders"
 import { redis } from "@/lib/crypto-pay/redis"
+import { invalidateUser } from "@/lib/gateway-cache"
 
 export const dynamic = "force-dynamic"
 type Ctx = { params: Promise<{ id: string }> }
@@ -62,6 +63,7 @@ export async function PATCH(request: Request, { params }: Ctx) {
     }
   }
   await user.update(update)
+  if (typeof b.restricted === "boolean") await invalidateUser(id)
   await audit(admin, "user.update", id, { email: user.primaryEmail, ...b })
   return ajson({ ok: true })
 }
@@ -75,6 +77,7 @@ export async function DELETE(request: Request, { params }: Ctx) {
   if (!user) return notFound()
   const email = user.primaryEmail
   await user.delete()
+  await invalidateUser(id)
   await audit(admin, "user.delete", id, { email })
   return ajson({ ok: true })
 }
