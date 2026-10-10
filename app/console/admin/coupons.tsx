@@ -19,6 +19,8 @@ export function Coupons() {
   const [note, setNote] = useState("")
   const [created, setCreated] = useState<string[]>([])
   const [open, setOpen] = useState<string | null>(null)
+  const [editExp, setEditExp] = useState<string | null>(null)
+  const [expValue, setExpValue] = useState("")
   const [reds, setReds] = useState<Red[]>([])
 
   const load = useCallback(async () => {
@@ -84,11 +86,21 @@ export function Coupons() {
                   <td className="px-3 py-2 font-mono">{c.code}</td>
                   <td className="px-3 py-2 text-right tabular-nums">{fmtTok(c.tokens)}</td>
                   <td className="px-3 py-2 tabular-nums"><button className="underline decoration-dotted" onClick={() => { void showReds(c.code) }}>{c.redemptions} / {c.maxRedemptions || "∞"}</button></td>
-                  <td className="px-3 py-2 text-xs">{c.expiresAt ? when(c.expiresAt) : "never"}</td>
+                  <td className="px-3 py-2 text-xs">
+                    {editExp === c.code ? (
+                      <div className="flex flex-wrap items-center gap-1">
+                        <Input type="date" value={expValue} onChange={(e) => setExpValue(e.target.value)} aria-label="Expiry date" />
+                        <Btn kind="primary" disabled={!expValue} onClick={() => { void patch(c.code, { expiresAt: new Date(expValue + "T23:59:59").getTime() }).then(() => setEditExp(null)) }}>Save</Btn>
+                        <Btn onClick={() => { void patch(c.code, { expiresAt: null }).then(() => setEditExp(null)) }}>Never</Btn>
+                        <Btn onClick={() => setEditExp(null)}>Cancel</Btn>
+                      </div>
+                    ) : c.expiresAt ? when(c.expiresAt) : "never"}
+                  </td>
                   <td className="px-3 py-2">{!c.active ? <Badge tone="bad">disabled</Badge> : c.expiresAt && c.expiresAt < Date.now() ? <Badge tone="warn">expired</Badge> : c.maxRedemptions && c.redemptions >= c.maxRedemptions ? <Badge>used up</Badge> : <Badge tone="good">active</Badge>}</td>
                   <td className="px-3 py-2 text-xs">{c.note}</td>
                   <td className="px-3 py-2 text-right space-x-1 whitespace-nowrap">
                     <Btn onClick={() => { void patch(c.code, { active: !c.active }) }}>{c.active ? "Disable" : "Enable"}</Btn>
+                    <Btn onClick={() => { setEditExp(c.code); setExpValue(c.expiresAt ? new Date(c.expiresAt).toISOString().slice(0, 10) : "") }}>Expires</Btn>
                     <Btn onClick={() => { const v = window.prompt("Uses per code (0 = unlimited)", String(c.maxRedemptions)); if (v !== null) void patch(c.code, { maxRedemptions: Number(v) }) }}>Limit</Btn>
                     <Btn onClick={() => { void remove(c.code) }}>Delete</Btn>
                   </td>
