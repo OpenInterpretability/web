@@ -46,7 +46,7 @@ export default function ConsolePage() {
             <CreditCard className="h-5 w-5 text-brand-600 dark:text-brand-400" /> Credits
           </h2>
           <p className="mt-2 text-sm text-ink-900/60 dark:text-ink-50/60">
-            1 credit pack = input tokens at $0.04/1M. A check is ~1.5k tokens. Credits never expire.
+            Credit packs buy input tokens at $0.04/1M, paid in USDC or USDT. A check is ~1.5k tokens. Credits never expire.
           </p>
           <CreditsPanel />
         </section>

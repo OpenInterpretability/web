@@ -133,7 +133,8 @@ export default function PricingPage() {
         <p className="mt-3 text-sm text-ink-900/70 dark:text-ink-50/70">
           A check is ~1.5k input tokens → <strong className="tabular-nums">≈ $0.00006 per check</strong> (
           <strong className="tabular-nums">$0.06 per 1,000 checks</strong>). A $5 credit pack buys{' '}
-          <strong className="tabular-nums">125M tokens ≈ 83,000 checks</strong>. At typical API inference prices
+          <strong className="tabular-nums">125M tokens ≈ 83,000 checks</strong>. Pay in{' '}
+          <strong>USDC or USDT</strong> on Polygon, Arbitrum, Base or Ethereum. At typical API inference prices
           ($0.10–0.60/1M) the guard adds a small fraction to the bill; if you self-host your inference, the
           self-hosted guard costs zero.
         </p>
@@ -234,6 +235,7 @@ cd your-repo && ekbasis git-check -- "git reset --hard"
         </div>
         <ul className="mt-5 space-y-2 text-sm text-ink-900/75 dark:text-ink-50/75">
           <li className="flex gap-2"><Check className="h-4 w-4 mt-0.5 text-brand-600 dark:text-brand-400" /> No subscription, no minimum bill, credits never expire</li>
+          <li className="flex gap-2"><Check className="h-4 w-4 mt-0.5 text-brand-600 dark:text-brand-400" /> Paid in USDC or USDT, straight to the OpenInterp wallet (Polygon, Arbitrum, Base, Ethereum): no card</li>
           <li className="flex gap-2"><Check className="h-4 w-4 mt-0.5 text-brand-600 dark:text-brand-400" /> Fails closed: no credits → &quot;cannot judge&quot; → treated as risky (nothing destructive slips through)</li>
           <li className="flex gap-2"><Check className="h-4 w-4 mt-0.5 text-brand-600 dark:text-brand-400" /> The weights stay open: you can always leave, or stay free</li>
         </ul>

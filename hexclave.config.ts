@@ -3,6 +3,8 @@ import type { HexclaveConfig } from "@hexclave/next";
 /**
  * Hexclave config for the OpenInterp console (keys, credits, usage).
  * Payment model: prepaid credit packs — 1 USD buys 25M input tokens at $0.04/1M.
+ * Paid in USDC/USDT on-chain only (lib/crypto-pay): the packs are serverOnly, so no card checkout exists;
+ * the server credits the "tokens" item after verifying the transfer.
  * Credits never expire; out of credits the Ekbasis guard fails closed.
  */
 export const config: HexclaveConfig = {
@@ -13,6 +15,11 @@ export const config: HexclaveConfig = {
       payments: { enabled: true },
       emails: { enabled: true },
       analytics: { enabled: true },
+    },
+  },
+  apiKeys: {
+    enabled: {
+      user: true,
     },
   },
   auth: {
@@ -38,6 +45,7 @@ export const config: HexclaveConfig = {
         displayName: "Starter — 125M input tokens",
         productLineId: "credits",
         customerType: "user",
+        serverOnly: true,
         prices: { once: { USD: "5.00" } },
         includedItems: { tokens: { quantity: 125000000 } },
       },
@@ -45,6 +53,7 @@ export const config: HexclaveConfig = {
         displayName: "Team — 500M input tokens",
         productLineId: "credits",
         customerType: "user",
+        serverOnly: true,
         prices: { once: { USD: "20.00" } },
         includedItems: { tokens: { quantity: 500000000 } },
       },
@@ -52,6 +61,7 @@ export const config: HexclaveConfig = {
         displayName: "Business — 1.25B input tokens",
         productLineId: "credits",
         customerType: "user",
+        serverOnly: true,
         prices: { once: { USD: "50.00" } },
         includedItems: { tokens: { quantity: 1250000000 } },
       },
