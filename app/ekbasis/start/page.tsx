@@ -456,6 +456,11 @@ export default function EkbasisStartPage() {
         <strong>calibrated probabilities</strong>, in one forward pass. This page shows how to think about it, how to
         write a state it can use, and what it really answers.
       </p>
+      <p className="mt-4 text-lg leading-relaxed text-ink-900/70 dark:text-ink-50/70">
+        It is not only for code. It works for anything you can describe in the state — git and the shell, payments,
+        databases, email, calendars, cloud and Kubernetes — and has been measured in 21 domains.{' '}
+        <a href="#examples" className="text-brand-600 underline underline-offset-2 dark:text-brand-400">See real answers by domain</a>.
+      </p>
       <p className="mt-3 text-sm text-ink-900/50 dark:text-ink-50/50">
         Every answer on this page is a real response of {data.meta.model} on the hosted API, recorded on {recordedDay}{' '}
         ({data.meta.calls} calls), unless it is marked as measured in the{' '}
