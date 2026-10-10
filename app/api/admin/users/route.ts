@@ -1,3 +1,4 @@
+import { changeQuantity } from "@/lib/credit-chunks"
 /** GET ?query=&cursor=: users with balance and usage.  POST {email, name?, tokens?}: create a user. */
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { requireAdmin, ajson, audit, readJson } from "@/lib/admin"
@@ -36,7 +37,7 @@ export async function POST(request: Request) {
     primaryEmailVerified: false,
     displayName: b.name ? String(b.name).slice(0, 100) : undefined,
   })
-  if (tokens > 0) await (await user.getItem("tokens")).increaseQuantity(tokens)
+  if (tokens > 0) await changeQuantity(await user.getItem("tokens"), tokens)
   await audit(admin, "user.create", user.id, { email, tokens })
   return ajson({ id: user.id })
 }

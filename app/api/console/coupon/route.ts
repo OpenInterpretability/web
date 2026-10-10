@@ -1,3 +1,4 @@
+import { changeQuantity } from "@/lib/credit-chunks"
 /** POST {code}: redeem a coupon on the signed-in account (10 attempts per hour against guessing). */
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { redeem } from "@/lib/coupons"
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
   }
   const r = await redeem(code, user, async (tokens) => {
     const item = await user.getItem("tokens")
-    await item.increaseQuantity(tokens)
+    await changeQuantity(item, tokens)
   })
   return r.ok ? json({ ok: true, tokens: r.tokens }) : json({ error: r.error }, 400)
 }

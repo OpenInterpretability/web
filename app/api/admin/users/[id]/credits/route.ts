@@ -1,6 +1,7 @@
 /** POST {delta, reason}: add (delta > 0) or remove (delta < 0) input tokens. */
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { requireAdmin, ajson, audit, readJson, notFound } from "@/lib/admin"
+import { changeQuantity } from "@/lib/credit-chunks"
 
 export const dynamic = "force-dynamic"
 
@@ -17,8 +18,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (!reason) return ajson({ error: "a reason is required (it goes to the audit log)" }, 400)
   const item = await user.getItem("tokens")
   const before = item.quantity
-  if (delta > 0) await item.increaseQuantity(delta)
-  else await item.decreaseQuantity(-delta)
+  await changeQuantity(item, delta)
   const after = (await user.getItem("tokens")).quantity
   await audit(admin, "credits.adjust", id, { email: user.primaryEmail, delta, reason, before, after })
   return ajson({ ok: true, before, after })
