@@ -42,3 +42,18 @@ export async function underLimit(key: string, limit: number, windowSeconds: numb
   if (n === 1) await redis("EXPIRE", key, windowSeconds)
   return n <= limit
 }
+
+/** Several commands in one round trip (Upstash /pipeline). Each entry is [result] or throws on transport error. */
+export async function pipeline(commands: (string | number)[][]): Promise<unknown[]> {
+  if (!URL_ || !TOKEN) throw new Error("payments store not configured")
+  if (commands.length === 0) return []
+  const r = await fetch(`${URL_}/pipeline`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" },
+    body: JSON.stringify(commands.map((c) => c.map(String))),
+    cache: "no-store",
+  })
+  if (!r.ok) throw new Error(`redis pipeline: HTTP ${r.status}`)
+  const d = (await r.json()) as { result?: unknown; error?: string }[]
+  return d.map((x) => (x.error ? null : x.result))
+}

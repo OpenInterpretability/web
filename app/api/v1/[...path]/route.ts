@@ -3,32 +3,72 @@
  * token balance, proxies the decision request to the Ekbasis backend, then debits the exact
  * input tokens reported by the model server.
  *
- * Fail-closed: no valid key -> 401; no balance -> 402; backend down -> 503. The ekbasis client
- * maps every one of these to "cannot judge" (exit 3), which every tool treats as risky — so an
- * unpaid or broken state can never let a destructive action through silently.
+ * Fail-closed: no valid key -> 401; restricted account -> 403; no balance -> 402; backend down -> 503.
+ * The ekbasis client maps every one of these to "cannot judge" (exit 3), which every tool treats as
+ * risky — so an unpaid or broken state can never let a destructive action through silently.
+ *
+ * Every request is recorded for the admin console after the response is sent (lib/telemetry).
  */
+import { after } from "next/server"
 import { getHexclaveServerApp } from "@/hexclave/server"
+import { recordEvent, type TelemetryEvent } from "@/lib/telemetry"
 
 export const dynamic = "force-dynamic"
 
 const BACKEND = process.env.EKBASIS_BACKEND_URL
 const BACKEND_KEY = process.env.EKBASIS_BACKEND_KEY
-const PRICE_PER_1M = 0.04 // USD per 1M input tokens (informational; the balance is in tokens)
 
 function json(obj: unknown, status: number) {
   return Response.json(obj, { status, headers: { "Cache-Control": "private, no-store" } })
 }
 
-async function handler(request: Request) {
-  if (!BACKEND) return json({ error: "backend not configured yet" }, 503)
+/** The backend reports its model directory; customers only need the model name. */
+function publicModel(text: string): string {
+  try {
+    const o = JSON.parse(text) as Record<string, unknown>
+    if (typeof o.model === "string" && o.model.includes("/")) o.model = o.model.split("/").filter(Boolean).pop()
+    return JSON.stringify(o)
+  } catch {
+    return text
+  }
+}
 
-  // `ekbasis health` (GET /health) is a setup check: answer it without a key or credits, and never meter it.
-  const healthPath = new URL(request.url).pathname.replace(/^\/api\/v1/, "")
+async function handler(request: Request) {
+  const t0 = Date.now()
+  const path = new URL(request.url).pathname.replace(/^\/api\/v1/, "") || "/"
+  const ev: TelemetryEvent = {
+    t: t0, uid: null, email: null, key: null, path, status: 0, tok: 0, ms: 0,
+    ip: (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || null,
+    country: request.headers.get("x-vercel-ip-country"),
+  }
+  const done = (resp: Response, err?: string) => {
+    ev.status = resp.status
+    ev.ms = Date.now() - t0
+    if (err) ev.err = err
+    if (path !== "/health" && path !== "/v1/health") {
+      after(async () => {
+        try {
+          await recordEvent(ev)
+        } catch (e) {
+          console.warn("[ekbasis gateway] telemetry failed:", e)
+        }
+      })
+    }
+    return resp
+  }
+
+  if (!BACKEND) return done(json({ error: "backend not configured yet" }, 503), "no backend")
+
+  // `ekbasis health` (GET /health) is a setup check: answered without a key or credits, never metered.
   if (request.method === "GET") {
-    if (healthPath !== "/health" && healthPath !== "/v1/health") return json({ error: "not found" }, 404)
+    if (path !== "/health" && path !== "/v1/health") return json({ error: "not found" }, 404)
     try {
-      const r = await fetch(`${BACKEND}/health`, { cache: "no-store", signal: AbortSignal.timeout(10_000) })
-      return new Response(await r.text(), { status: r.status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } })
+      const r = await fetch(`${BACKEND}/health`, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(10_000),
+        headers: BACKEND_KEY ? { Authorization: `Bearer ${BACKEND_KEY}` } : {},
+      })
+      return new Response(publicModel(await r.text()), { status: r.status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } })
     } catch {
       return json({ error: "the model server is unreachable" }, 503)
     }
@@ -36,16 +76,19 @@ async function handler(request: Request) {
 
   const auth = request.headers.get("authorization") ?? ""
   const apiKey = auth.replace(/^Bearer\s+/i, "").trim()
-  if (!apiKey) return json({ error: "unauthorized: send the Authorization: Bearer header" }, 401)
+  if (!apiKey) return done(json({ error: "unauthorized: send the Authorization: Bearer header" }, 401), "no key")
+  ev.key = apiKey.slice(-4)
 
   const user = await getHexclaveServerApp().getUser({ apiKey })
-  if (!user) return json({ error: "unauthorized: invalid or revoked API key" }, 401)
+  if (!user) return done(json({ error: "unauthorized: invalid or revoked API key" }, 401), "invalid key")
+  ev.uid = user.id
+  ev.email = user.primaryEmail
+  if (user.isRestricted) return done(json({ error: "forbidden: this account is suspended" }, 403), "restricted")
 
   const tokens = await user.getItem("tokens")
   const balance = tokens?.quantity ?? 0
-  if (balance <= 0) return json({ error: "payment required: buy a credit pack at /console" }, 402)
+  if (balance <= 0) return done(json({ error: "payment required: buy a credit pack at /console" }, 402), "no balance")
 
-  const path = new URL(request.url).pathname.replace(/^\/api\/v1/, "")
   let body: Record<string, unknown> = {}
   try {
     body = (await request.json()) as Record<string, unknown>
@@ -64,7 +107,7 @@ async function handler(request: Request) {
       body: JSON.stringify(body),
     })
   } catch {
-    return json({ error: "the model server is unreachable" }, 503)
+    return done(json({ error: "the model server is unreachable" }, 503), "backend unreachable")
   }
 
   const respText = await backendResp.text()
@@ -78,27 +121,32 @@ async function handler(request: Request) {
   // Meter: the backend reports the input tokens it consumed for this decision.
   const usage = respObj.usage as { input_tokens?: number; output_tokens?: number } | undefined
   const inputTokens = Math.max(0, Math.round(usage?.input_tokens ?? 0))
+  ev.tok = inputTokens
   if (inputTokens > 0 && tokens) {
     try {
       const ok = await tokens.tryDecreaseQuantity(inputTokens)
       if (!ok) {
-        // The balance ran out mid-request: the answer still went through (one free check),
-        // but the next requests will hit the 402 above. Log honestly.
-        console.warn(`[ekbasis gateway] overdraft for user ${user.id}: -${inputTokens} tokens`)
+        // The balance ran out mid-request: the answer already went through, so debit it anyway
+        // (the balance goes negative and the next request gets the 402 above).
+        await tokens.decreaseQuantity(inputTokens)
       }
     } catch (e) {
       console.warn(`[ekbasis gateway] debit failed for user ${user.id}:`, e)
+      ev.err = "debit failed"
     }
   }
 
-  return new Response(respText, {
-    status: backendResp.status,
-    headers: {
-      "Content-Type": backendResp.headers.get("content-type") ?? "application/json",
-      "Cache-Control": "private, no-store",
-      "X-Ekbasis-Metered-Tokens": String(inputTokens),
-    },
-  })
+  return done(
+    new Response(publicModel(respText), {
+      status: backendResp.status,
+      headers: {
+        "Content-Type": backendResp.headers.get("content-type") ?? "application/json",
+        "Cache-Control": "private, no-store",
+        "X-Ekbasis-Metered-Tokens": String(inputTokens),
+      },
+    }),
+    backendResp.ok ? undefined : typeof respObj.error === "string" ? respObj.error.slice(0, 200) : `backend ${backendResp.status}`,
+  )
 }
 
 export const GET = handler

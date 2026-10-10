@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { ArrowLeft, KeyRound, CreditCard, Activity } from "lucide-react"
+import { ArrowLeft, KeyRound, CreditCard, Activity, Shield } from "lucide-react"
+import { currentAdmin } from "@/lib/admin"
 import { KeysPanel } from "./keys-panel"
 import { CreditsPanel } from "./credits-panel"
 
@@ -10,7 +11,8 @@ export const metadata = {
   description: "Your API keys, prepaid credits and usage for the Ekbasis consequence model.",
 }
 
-export default function ConsolePage() {
+export default async function ConsolePage() {
+  const admin = await currentAdmin().catch(() => null)
   return (
     <main className="mx-auto max-w-5xl px-6 py-16">
       <Link
@@ -20,6 +22,14 @@ export default function ConsolePage() {
         <ArrowLeft className="h-3.5 w-3.5" /> Back to pricing
       </Link>
 
+      {admin && (
+        <Link
+          href="/console/admin"
+          className="mb-6 ml-auto flex w-fit items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium ring-1 ring-brand-500/40 hover:bg-brand-500/10"
+        >
+          <Shield className="h-4 w-4" /> Admin
+        </Link>
+      )}
       <span className="chip bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-brand-500/30 ring-inset">
         CONSOLE · KEYS · CREDITS
       </span>
@@ -56,8 +66,9 @@ export default function ConsolePage() {
             <Activity className="h-5 w-5 text-brand-600 dark:text-brand-400" /> Usage
           </h2>
           <p className="mt-2 text-sm text-ink-900/60 dark:text-ink-50/60">
-            Per-day charts and per-key breakdowns ship with the public beta. The live balance above is already
-            metered per request.
+            Every API request is metered against your balance as it happens. To operate and bill the API we log
+            request metadata — time, account, key (last 4 characters), IP address and country, path, status, input
+            tokens and latency. The content of your requests (states, questions, images) is never stored.
           </p>
         </section>
       </div>

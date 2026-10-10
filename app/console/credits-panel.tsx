@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useUser } from "@hexclave/next"
 import QRCode from "qrcode"
-import { Wallet, Copy, Check, ExternalLink, Loader2, X, Smartphone } from "lucide-react"
+import { Wallet, Copy, Check, ExternalLink, Loader2, X, Smartphone, Ticket } from "lucide-react"
 
 const PACKS = [
   { id: "pack-5", name: "Starter", usd: 5, tokens: "125M tokens ≈ 83k checks" },
@@ -164,6 +164,22 @@ export function CreditsPanel() {
       setError(e instanceof Error ? e.message : String(e))
     } finally {
       setBusy(false)
+    }
+  }
+
+  const [coupon, setCoupon] = useState("")
+  const [couponMsg, setCouponMsg] = useState<{ ok: boolean; text: string } | null>(null)
+  const redeemCoupon = async () => {
+    setCouponMsg(null)
+    try {
+      const r = await fetch("/api/console/coupon", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: coupon }) })
+      const d = await r.json()
+      if (!r.ok) throw new Error(d.error || `HTTP ${r.status}`)
+      setCouponMsg({ ok: true, text: `+${Number(d.tokens).toLocaleString()} input tokens added` })
+      setCoupon("")
+      void loadBalance()
+    } catch (e) {
+      setCouponMsg({ ok: false, text: e instanceof Error ? e.message : String(e) })
     }
   }
 
@@ -334,6 +350,29 @@ export function CreditsPanel() {
             </button>
           </div>
         </div>
+      )}
+
+      <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="flex min-w-0 flex-1 items-center gap-2 rounded-lg px-3 py-2 ring-1 ring-black/10 dark:ring-white/15">
+          <Ticket className="h-4 w-4 shrink-0 text-brand-600 dark:text-brand-400" />
+          <input
+            value={coupon}
+            onChange={(e) => setCoupon(e.target.value.toUpperCase())}
+            onKeyDown={(e) => { if (e.key === "Enter" && coupon.trim()) void redeemCoupon() }}
+            placeholder="Have a coupon? Enter the code"
+            className="min-w-0 flex-1 bg-transparent font-mono text-sm focus:outline-none"
+          />
+        </div>
+        <button
+          onClick={() => { void redeemCoupon() }}
+          disabled={!coupon.trim()}
+          className="rounded-lg bg-ink-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-ink-900"
+        >
+          Redeem
+        </button>
+      </div>
+      {couponMsg && (
+        <p className={`mt-2 text-sm ${couponMsg.ok ? "text-emerald-700 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>{couponMsg.text}</p>
       )}
 
       <p className="mt-3 text-xs text-ink-900/50 dark:text-ink-50/50">

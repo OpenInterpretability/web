@@ -12,7 +12,7 @@
 import { randomBytes, randomInt } from "crypto"
 import { NETWORKS, PACKS, TREASURY, TREASURY_DISPLAY, PAY_WINDOW_MS, SCAN_WINDOW_MS, DECIMALS, type NetworkId, type TokenId, type PackId } from "./config"
 import { blockNumber, transfersTo, transfersInTx, type TransferLog } from "./chain"
-import { setNX, getJSON, setJSON, redis } from "./redis"
+import { setNX, getJSON, setJSON, redis, pipeline } from "./redis"
 
 export type OrderStatus = "pending" | "paid" | "expired" | "review"
 
@@ -77,7 +77,12 @@ export async function createOrder(userId: string, packId: PackId, network: Netwo
     status: "pending",
   }
   await setJSON(orderKey(id), order, ORDER_TTL)
-  await redis("SET", lastKey(userId), id, "EX", ORDER_TTL)
+  await pipeline([
+    ["SET", lastKey(userId), id, "EX", ORDER_TTL],
+    // indexes for the admin console (orders older than ORDER_TTL drop out of cp:order:* but stay listed by id)
+    ["ZADD", "cp:orders", now, id],
+    ["ZADD", `cp:uorders:${userId}`, now, id],
+  ])
   return order
 }
 
@@ -107,7 +112,48 @@ async function settle(order: Order, log: TransferLog, credit: Credit): Promise<O
   await credit(order.tokens, claimed)
   const paid: Order = { ...claimed, status: "paid", creditedAt: Date.now() }
   await setJSON(orderKey(order.id), paid, ORDER_TTL)
+  await recordRevenue(paid)
   return paid
+}
+
+/** Revenue counters for the admin console, in micro-units of the stablecoin (= micro-USD). */
+async function recordRevenue(o: Order) {
+  const d = new Date(o.creditedAt ?? Date.now())
+  const day = `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, "0")}${String(d.getUTCDate()).padStart(2, "0")}`
+  await pipeline([
+    ["HINCRBY", `rev:d:${day}`, "units", o.units], ["HINCRBY", `rev:d:${day}`, "orders", 1], ["HINCRBY", `rev:d:${day}`, `${o.network}:${o.token}`, o.units],
+    ["HINCRBY", "rev:total", "units", o.units], ["HINCRBY", "rev:total", "orders", 1],
+  ])
+}
+
+/** Admin: credit a pending or review order by hand (payment checked off-site), at most once. */
+export async function adminMarkPaid(order: Order, credit: Credit, txHash: string | null): Promise<Order | string> {
+  if (order.status === "paid") return "already paid"
+  if (txHash && !(await setNX(`cp:tx:${order.network}:${txHash.toLowerCase()}:manual`, order.id))) return "this transaction was already used"
+  if (!(await setNX(`cp:credit:${order.id}`, txHash ?? "manual"))) {
+    if (order.status !== "review") return "this order was already credited"
+    // review = transfer claimed but the credit never confirmed: the admin decides to credit it now.
+  }
+  await credit(order.tokens, order)
+  const paid: Order = { ...order, status: "paid", txHash: order.txHash ?? txHash ?? undefined, creditedAt: Date.now() }
+  await setJSON(orderKey(order.id), paid, ORDER_TTL)
+  await recordRevenue(paid)
+  return paid
+}
+
+/** Admin: close an order without crediting. */
+export async function adminExpire(order: Order): Promise<Order> {
+  const expired: Order = { ...order, status: "expired" }
+  await setJSON(orderKey(order.id), expired, ORDER_TTL)
+  return expired
+}
+
+export async function listOrders(opts: { userId?: string; limit?: number }): Promise<Order[]> {
+  const key = opts.userId ? `cp:uorders:${opts.userId}` : "cp:orders"
+  const ids = (await redis<string[]>("ZREVRANGE", key, 0, (opts.limit ?? 100) - 1)) ?? []
+  if (ids.length === 0) return []
+  const raw = await pipeline(ids.map((id) => ["GET", orderKey(id)]))
+  return raw.filter(Boolean).map((r) => JSON.parse(r as string) as Order)
 }
 
 function matches(order: Order, log: TransferLog): boolean {
