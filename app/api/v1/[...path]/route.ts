@@ -4,7 +4,7 @@
  * input tokens reported by the model server.
  *
  * Fail-closed: no valid key -> 401; restricted account -> 403; no balance -> 402; backend down -> 503.
- * The ekbasis client maps every one of these to "cannot judge" (exit 3), which every tool treats as
+ * The ekbasis client maps every one of these to "cannot foresee" (exit 3), which every tool treats as
  * risky — so an unpaid or broken state can never let a destructive action through silently.
  *
  * Every request is recorded for the admin console after the response is sent (lib/telemetry).

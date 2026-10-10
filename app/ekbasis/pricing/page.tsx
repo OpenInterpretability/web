@@ -62,7 +62,7 @@ const ways = [
     name: 'Hosted API',
     price: '$0.04',
     unit: 'per 1M input tokens',
-    body: 'No output charges: a check is ~1.5k input tokens and the model generates none — the answer is read from the logits. Prepaid credits, no subscription, no minimum. Out of credits the guard fails closed (cannot judge → treated as risky): it never silently turns off.',
+    body: 'No output charges: a check is ~1.5k input tokens and the model generates none — the answer is read from the logits. Prepaid credits, no subscription, no minimum. Out of credits the guard fails closed (cannot foresee → treated as risky): it never silently turns off.',
     note: '≈ $0.00006 per check · $0.06 per 1,000 checks',
   },
   {
@@ -118,7 +118,7 @@ export default function PricingPage() {
       <p className="mt-5 text-lg text-ink-900/70 dark:text-ink-50/70 leading-relaxed max-w-2xl text-balance">
         The guard is billed by what it actually consumes: <strong>input tokens</strong>. It generates no text, so
         there is no output charge — ever. Prepaid credits; when they run out the guard <em>fails closed</em>
-        {' '}(answers &quot;cannot judge&quot;, which every tool treats as risky) rather than silently going away.
+        {' '}(answers &quot;cannot foresee&quot;, which every tool treats as risky) rather than silently going away.
       </p>
 
       <div className="mt-8 rounded-2xl bg-brand-500/5 p-6 ring-1 ring-brand-500/30 sm:p-8">
@@ -236,7 +236,7 @@ cd your-repo && ekbasis git-check -- "git reset --hard"
         <ul className="mt-5 space-y-2 text-sm text-ink-900/75 dark:text-ink-50/75">
           <li className="flex gap-2"><Check className="h-4 w-4 mt-0.5 text-brand-600 dark:text-brand-400" /> No subscription, no minimum bill, credits never expire</li>
           <li className="flex gap-2"><Check className="h-4 w-4 mt-0.5 text-brand-600 dark:text-brand-400" /> Paid in USDC or USDT, straight to the OpenInterp wallet (Polygon, Arbitrum, Base, Ethereum): no card</li>
-          <li className="flex gap-2"><Check className="h-4 w-4 mt-0.5 text-brand-600 dark:text-brand-400" /> Fails closed: no credits → &quot;cannot judge&quot; → treated as risky (nothing destructive slips through)</li>
+          <li className="flex gap-2"><Check className="h-4 w-4 mt-0.5 text-brand-600 dark:text-brand-400" /> Fails closed: no credits → &quot;cannot foresee&quot; → treated as risky (nothing destructive slips through)</li>
           <li className="flex gap-2"><Check className="h-4 w-4 mt-0.5 text-brand-600 dark:text-brand-400" /> The weights stay open: you can always leave, or stay free</li>
         </ul>
         <p className="mt-6 text-sm text-ink-900/60 dark:text-ink-50/60">

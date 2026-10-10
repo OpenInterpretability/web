@@ -36,7 +36,7 @@ export default async function ConsolePage() {
       <h1 className="mt-4 text-4xl sm:text-5xl font-semibold tracking-tight text-balance">Ekbasis console</h1>
       <p className="mt-4 text-lg text-ink-900/70 dark:text-ink-50/70 max-w-2xl text-balance">
         Generate your API keys, buy prepaid credits and watch your balance. Out of credits the guard fails
-        closed: it answers &quot;cannot judge&quot; — which every tool treats as risky — instead of silently going away.
+        closed: it answers &quot;cannot foresee&quot; — which every tool treats as risky — instead of silently going away.
       </p>
 
       <div className="mt-10 space-y-10">
