@@ -2,24 +2,24 @@
 
 import Link from 'next/link'
 import { site } from '@/lib/constants'
-import { Github, Menu, X } from 'lucide-react'
+import { Github, KeyRound, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { ThemeToggle } from '@/components/theme-toggle'
 
-// Research-first navigation. The lab and its papers lead; tooling is demoted.
+// Product-first navigation: the Ekbasis API leads; the lab and its research stay one click away.
 const primaryNav = [
+  { href: '/ekbasis', label: 'Ekbasis' },
+  { href: '/ekbasis/start', label: 'Guide' },
+  { href: '/ekbasis/pricing', label: 'Pricing' },
   { href: '/research', label: 'Research' },
-  { href: '/tools', label: 'Tools' },        // the agent safety stack and every open tool
-  { href: '/use', label: 'Use' },            // hub: reproduce, mcp, skills, notebooks
-  { href: '/atlas', label: 'Registry' },     // failed-replication registry (honest negatives)
-  { href: '/manifesto', label: 'Manifesto' },
+  { href: '/lab', label: 'Lab' },
 ]
 
 const secondaryNav = [
-  { href: '/console', label: 'Console' },
+  { href: '/tools', label: 'Tools' },
   { href: '/blog', label: 'Notes' },
-  { href: '/contribute', label: 'Collaborate' },
-  { href: '/roadmap', label: 'Roadmap' },
+  { href: '/atlas', label: 'Registry' },
+  { href: '/manifesto', label: 'Manifesto' },
 ]
 
 // Open-source tooling + legacy routes — demoted to the mobile menu + footer, still reachable.
@@ -90,11 +90,18 @@ export function Navbar() {
             <Github className="h-4 w-4" />
           </Link>
           <Link
-            href="/use"
-            className="hidden sm:inline-flex items-center gap-1 rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
+            href="/console"
+            className="hidden sm:inline-flex items-center rounded-lg px-3 py-1.5 text-sm font-medium text-ink-900/75 hover:bg-black/5 hover:text-ink-900 dark:text-ink-50/75 dark:hover:bg-white/5 dark:hover:text-ink-50 transition-colors"
           >
-            <span className="hidden xl:inline">Use the tools</span>
-            <span className="xl:hidden">Use</span>
+            Sign in
+          </Link>
+          <Link
+            href="/console"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
+          >
+            <KeyRound className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Get API key</span>
+            <span className="sm:hidden">API key</span>
           </Link>
           <button
             onClick={() => setOpen((o) => !o)}
@@ -112,8 +119,15 @@ export function Navbar() {
           <div className="mx-auto max-w-7xl px-6 py-4">
             <div className="grid gap-1">
               <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-1.5 pt-2">
-                Research
+                Ekbasis API
               </div>
+              <Link
+                href="/console"
+                onClick={() => setOpen(false)}
+                className="py-2 text-sm font-semibold text-brand-600 dark:text-brand-400"
+              >
+                Sign in · get your API key
+              </Link>
               {primaryNav.map((item) => (
                 <Link
                   key={item.href}

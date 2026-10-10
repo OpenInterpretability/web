@@ -55,7 +55,7 @@ export default async function Image() {
         >
           <div
             style={{
-              fontSize: 108,
+              fontSize: 84,
               fontWeight: 800,
               letterSpacing: '-0.04em',
               lineHeight: 1.0,
@@ -64,7 +64,7 @@ export default async function Image() {
               gap: 18,
             }}
           >
-            <span>Understand and control</span>
+            <span>Know what an action will do</span>
             <span
               style={{
                 background: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #f97316 100%)',
@@ -72,7 +72,7 @@ export default async function Image() {
                 color: 'transparent',
               }}
             >
-              think.
+              before your agent runs it.
             </span>
           </div>
           <div
@@ -84,7 +84,7 @@ export default async function Image() {
               lineHeight: 1.3,
             }}
           >
-            MCP server + production probes + ProbeBench leaderboard. Any agent — Claude Code, Cursor, Cline — runs interp on your Colab. Privacy-first · Apache-2.0.
+            Ekbasis API — a consequence model: calibrated probabilities for what an action will do, in one call. $0.04 per 1M input tokens · open weights · Apache-2.0.
           </div>
         </div>
 
@@ -100,7 +100,7 @@ export default async function Image() {
           }}
         >
           <span>openinterp.org</span>
-          <span>pip install openinterp-mcp</span>
+          <span>openinterp.org/console → get your API key</span>
         </div>
       </div>
     ),

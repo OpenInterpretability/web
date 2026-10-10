@@ -1,9 +1,9 @@
 export const site = {
   name: 'OpenInterpretability',
   shortName: 'OpenInterp',
-  tagline: 'Understand and control AI agents.',
+  tagline: 'Know what an action will do before your agent runs it.',
   description:
-    'OpenInterpretability is an independent lab for AI-agent safety: pre-registered research on why agents fail, and open tools that catch failures before they happen — AgentGuard, Ekbasis, ProbeBench. Every number recomputable. Apache-2.0.',
+    'Ekbasis API: an open consequence model that forecasts what an action will do before your agent runs it — calibrated probabilities in one call, $0.04 per 1M input tokens. From OpenInterpretability, an independent lab for AI-agent safety with pre-registered research and open weights (Apache-2.0).',
   url: 'https://openinterp.org',
   github: 'https://github.com/OpenInterpretability',
   huggingface: 'https://huggingface.co/caiovicentino1',

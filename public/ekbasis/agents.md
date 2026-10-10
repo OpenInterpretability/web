@@ -65,7 +65,6 @@ Request:
 ```json
 {
   "state": "Checking account available balance: $180.20. About to: transfer $250.00 to savings.",
-  "read_once": true,
   "questions": {
     "outcome": {"type": "choice", "instructions": "What happens with the transfer?",
                 "options": ["transfer succeeds", "transfer fails: insufficient funds"]},
@@ -77,8 +76,10 @@ Request:
 
 - `state` (string): the facts **and** the action, in plain language. Put the numbers in.
 - `questions` (object): your own names → question objects. Several questions about one state go in **one** request.
-- `read_once` (bool, recommended with 2+ questions): the state is read once and shared by all questions, so you pay
-  for it once. Measured: 3 questions on one state = 261 input tokens with `read_once`, 420 without.
+- `read_once` (bool, optional): the state is read once and shared by all questions, so you pay for it once
+  (measured: 3 questions on one state = 261 input tokens with it, 420 without). It costs 0.9–3.1 points of accuracy
+  on the answers an action changes (client README, "Read-once"). Use it to screen several questions cheaply; send the
+  one question that decides an irreversible action without it.
 
 Question types and the exact answer shapes (real responses):
 

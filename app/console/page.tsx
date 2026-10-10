@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { ArrowLeft, KeyRound, CreditCard, Activity, Shield } from "lucide-react"
 import { currentAdmin } from "@/lib/admin"
+import { getHexclaveServerApp } from "@/hexclave/server"
+import { SignedOut } from "./signed-out"
 import { KeysPanel } from "./keys-panel"
 import { CreditsPanel } from "./credits-panel"
 
@@ -12,14 +14,22 @@ export const metadata = {
 }
 
 export default async function ConsolePage() {
+  const user = await getHexclaveServerApp().getUser().catch(() => null)
+  if (!user) {
+    return (
+      <main className="px-6 py-16 sm:py-24">
+        <SignedOut />
+      </main>
+    )
+  }
   const admin = await currentAdmin().catch(() => null)
   return (
     <main className="mx-auto max-w-5xl px-6 py-16">
       <Link
-        href="/ekbasis/pricing"
+        href="/"
         className="flex w-fit items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 mb-8"
       >
-        <ArrowLeft className="h-3.5 w-3.5" /> Back to pricing
+        <ArrowLeft className="h-3.5 w-3.5" /> Home
       </Link>
 
       {admin && (
