@@ -119,7 +119,10 @@ ekbasis git-check -- "git reset --hard"
           through this API, with an ordinary key. Harmful runs went from 23, 24 and 26 of 47 to 3, 0 and 0; finished tasks
           roughly doubled. The same tasks each time, so this shows the result holds from run to run, not across new tasks.{' '}
           <a href="https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/agents-3reps" className="underline underline-offset-2">Data</a>.</li>
-        <li className="pl-5 -indent-5">— On those apps, harm fell for all five models we tried; a placebo reminder did not help.</li>
+        <li className="pl-5 -indent-5">— On a second set of demo apps (a bank, travel booking and others), harm fell with Ekbasis for Claude
+          Sonnet, Claude Haiku and Qwen 9B. For GLM and Qwen 4B it fell too, but after removing runs affected by a
+          harness error the interval reaches zero, so those two are not conclusive (<Link href={PAPER} className="underline underline-offset-2">erratum</Link>).
+          A placebo reminder, tested with Claude Sonnet, did not help.</li>
       </ul>
       <P>
         Not everything worked. With Claude Haiku on real apps, our pre-registered hypotheses failed: a warning alone was

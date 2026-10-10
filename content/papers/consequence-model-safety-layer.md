@@ -4,6 +4,15 @@
 **Caio Vicentino · OpenInterpretability · Published 2026-10-06.**
 **Zenodo · CC-BY-4.0 · [DOI 10.5281/zenodo.23197341](https://doi.org/10.5281/zenodo.23197341).**
 
+> **Erratum (v2, 2026-10-10).** In the GLM-5.3-Flash and Qwen 3.5 runs, the agent harness (opencode) also loaded a
+> `computer-use` skill from the operator's user directory. It was not part of the study, and it tells the agent never to
+> move money. GLM loaded it in 55 of 105 runs (Qwen: 22 of 420). In five of GLM's six bank runs without Ekbasis it
+> loaded the skill and stopped before paying. So GLM's low harm alone came from the skill, and the claim that GLM alone
+> did less harm than Sonnet is withdrawn. Every harm difference with Ekbasis keeps its sign without the affected runs:
+> without every task where it was loaded, −33.3 points [−66.7, 0.0] for GLM, −36.0 [−56.0, −16.0] for Qwen 9B and
+> −13.6 [−27.3, 0.0] for Qwen 4B, so for GLM and Qwen 4B the interval now reaches zero. The Claude runs could not load
+> skills. The PDF is updated.
+
 > The on-site summary. The full paper (every table, the pre-registrations and how every number is recomputed) is the
 > **[PDF](/papers/consequence-model-safety-layer.pdf)**; the per-run data and the scripts are in
 > **[paper/agents](https://github.com/OpenInterpretability/ekbasis/tree/main/paper/agents)** on GitHub, and the tasks,
@@ -62,8 +71,9 @@ user; asking every time did as well with more questions. Real users are the next
 - **Hidden consequences, demo apps (Claude Sonnet, pre-registered).** Fresh set: 24/60 harmful runs alone, 0/60 with
   Ekbasis, 22/60 with a placebo and 10/60 with Claude answering the same questions, all 10 in the bank app.
 - **Five models.** Every harm difference over tasks is below zero; the relative cut was smaller for the two Qwen models
-  (74.1% and 36.7%). Alone, Haiku did exactly as Sonnet and GLM did less harm, so the comparisons with Sonnet alone show
-  the effect of the forecast, not a weaker agent lifted above a stronger one.
+  (74.1% and 36.7%). Alone, Haiku did exactly as Sonnet, so the comparisons with Sonnet alone show the effect of the
+  forecast, not a weaker agent lifted above a stronger one. GLM's runs alone are not comparable: its harness loaded an
+  unrelated skill (see the erratum).
 - **Cost.** Haiku with thinking off plus Ekbasis costs 1.02 [0.94, 1.12] times Sonnet alone in Claude spend per run,
   before pricing the GPU that serves Ekbasis.
 - **The follow-up's hypotheses (pre-registered).** R2-H1 passed (Haiku asking through Ekbasis against Haiku alone:

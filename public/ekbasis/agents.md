@@ -198,8 +198,9 @@ it works in any domain where the state writes down the facts and rules that deci
 171 scenarios in 21 domains: 168 of 168 scored right, 3 ambiguous ones answered with honestly low confidence
 (0.59–0.84). Full tables: https://github.com/OpenInterpretability/ekbasis-cookbook/blob/main/examples/results.md
 
-With agents, in pre-registered studies: harmful actions fell for all 5 models on our demo apps (everyday web apps
-such as a bank and file storage, built for the study); on unmodified Gitea, Nextcloud and Roundcube, Claude Sonnet went from 6/24 to 1/24
+With agents, in pre-registered studies: harmful actions fell on our demo apps (everyday web apps
+such as a bank and file storage, built for the study) for Claude Sonnet, Claude Haiku and Qwen 9B, and for GLM and Qwen 4B
+not conclusively (paper erratum, v2); on unmodified Gitea, Nextcloud and Roundcube, Claude Sonnet went from 6/24 to 1/24
 harmful tasks; on a real Kubernetes cluster, Claude Haiku went from 24/36 to 2/36 harmful runs
 (paper: https://doi.org/10.5281/zenodo.23197341; Kubernetes study in the cookbook).
 
