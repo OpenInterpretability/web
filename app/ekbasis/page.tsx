@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, GitBranch, ExternalLink, Database, ShieldCheck, Boxes, CreditCard } from 'lucide-react'
+import { ArrowLeft, GitBranch, ExternalLink, Database, ShieldCheck, Boxes, CreditCard, BookOpen } from 'lucide-react'
 import { site } from '@/lib/constants'
 import {
   ekbasis, gitComparison, realRepo, longChains, planning, speed, routing, injection, limits, kinds, builds, lookWhenUnsure,
@@ -159,6 +159,9 @@ export default function EkbasisPage() {
       <p className="mt-3 text-sm text-ink-900/50 dark:text-ink-50/50">{ekbasis.status}</p>
 
       <div className="mt-6 flex flex-wrap gap-3">
+        <Link href="/ekbasis/start" className="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 text-white hover:bg-brand-700 px-4 py-2 text-sm font-medium">
+          <BookOpen className="h-4 w-4" /> Getting started
+        </Link>
         <a href={ekbasis.links.github} className="inline-flex items-center gap-1.5 rounded-lg bg-ink-900 text-white dark:bg-white dark:text-ink-900 px-4 py-2 text-sm font-medium">
           <GitBranch className="h-4 w-4" /> GitHub
         </a>

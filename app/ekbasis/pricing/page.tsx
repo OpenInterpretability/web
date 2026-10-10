@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Server, KeyRound, Building2, Boxes, CreditCard, ShieldCheck, ArrowRight, Check } from 'lucide-react'
+import { ArrowLeft, Server, KeyRound, Building2, Boxes, CreditCard, ShieldCheck, ArrowRight, Check, BookOpen } from 'lucide-react'
 import { site } from '@/lib/constants'
 
 const URL_ = `${site.url}/ekbasis/pricing`
@@ -142,6 +142,9 @@ export default function PricingPage() {
           <a href="/console" className="inline-flex items-center gap-1.5 rounded-lg bg-ink-900 text-white dark:bg-white dark:text-ink-900 px-4 py-2 text-sm font-medium">
             <CreditCard className="h-4 w-4" /> Get an API key
           </a>
+          <Link href="/ekbasis/start" className="inline-flex items-center gap-1.5 rounded-lg ring-1 ring-brand-500/40 bg-brand-500/5 px-4 py-2 text-sm font-medium text-brand-700 dark:text-brand-300">
+            <BookOpen className="h-4 w-4" /> Getting started guide
+          </Link>
           <a href={`${site.github}/ekbasis`} className="inline-flex items-center gap-1.5 rounded-lg ring-1 ring-black/15 dark:ring-white/20 px-4 py-2 text-sm font-medium">
             <Boxes className="h-4 w-4" /> Self-host: the weights
           </a>
@@ -223,6 +226,13 @@ export default function PricingPage() {
 
       <section className="mt-16">
         <h2 className="text-2xl font-semibold tracking-tight">Start in 60 seconds</h2>
+        <p className="mt-2 text-sm text-ink-900/60 dark:text-ink-50/60">
+          Never used a consequence model?{' '}
+          <Link className="underline underline-offset-2 text-brand-600 dark:text-brand-400" href="/ekbasis/start">
+            Read the getting-started guide
+          </Link>{' '}
+          first: how to write a state, the question types and how to read the probabilities, with real answers.
+        </p>
         <div className="mt-4 overflow-x-auto rounded-xl bg-black/[0.03] p-4 ring-1 ring-black/10 dark:bg-white/[0.04] dark:ring-white/15">
           <pre className="text-sm leading-relaxed">
             <code>{`pip install "git+https://github.com/OpenInterpretability/ekbasis"

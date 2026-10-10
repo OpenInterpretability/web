@@ -98,7 +98,13 @@ export function KeysPanel() {
         {keys === null ? (
           <p className="p-4 text-sm text-ink-900/60 dark:text-ink-50/60">Loading keys…</p>
         ) : keys.length === 0 ? (
-          <p className="p-4 text-sm text-ink-900/60 dark:text-ink-50/60">No keys yet.</p>
+          <p className="p-4 text-sm text-ink-900/60 dark:text-ink-50/60">
+            No keys yet. New to Ekbasis?{" "}
+            <a className="underline underline-offset-2 text-brand-600 dark:text-brand-400" href="/ekbasis/start">
+              Read the getting-started guide
+            </a>
+            .
+          </p>
         ) : (
           <ul className="divide-y divide-black/5 dark:divide-white/10 text-sm">
             {keys.map((k) => (

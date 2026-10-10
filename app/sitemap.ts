@@ -72,6 +72,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Products and tools
     { path: '/tools',                       priority: 0.9, changeFrequency: 'weekly' },
     { path: '/ekbasis',                     priority: 0.9, changeFrequency: 'weekly' },
+    { path: '/ekbasis/start',               priority: 0.8, changeFrequency: 'monthly' },
     { path: '/agentguard',                  priority: 0.9, changeFrequency: 'weekly' },
     { path: '/products/agentguard',         priority: 0.8, changeFrequency: 'weekly' },
     { path: '/products/agent-probe-guard',  priority: 0.8, changeFrequency: 'weekly' },

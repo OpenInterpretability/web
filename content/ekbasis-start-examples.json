@@ -1,0 +1,1306 @@
+{
+  "meta": {
+    "recorded_at": "2026-10-10T13:26:39Z",
+    "endpoint": "POST /v1/systemone (hosted API)",
+    "model": "Ekbasis-27B-INT4",
+    "client": "ekbasis 0.1.7 (prompts, Ekbasis.ask)",
+    "calls": 34,
+    "note": "Every example below was sent once, sequentially; the response is recorded as returned (minus the backend's model path). Latency is measured from the client, over the internet."
+  },
+  "examples": [
+    {
+      "id": "money_transfer_fail",
+      "group": "mental-model",
+      "title": "Bank transfer larger than the balance",
+      "note": null,
+      "source": "cookbook:money_transfer_fail",
+      "request": {
+        "state": "Checking account available balance: $180.20. About to: transfer $250.00 to a friend.",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens with the transfer?",
+            "options": [
+              "transfer succeeds",
+              "transfer fails: insufficient funds"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "transfer fails: insufficient funds",
+            "probabilities": {
+              "transfer succeeds": 0.03514484688639641,
+              "transfer fails: insufficient funds": 0.9648551344871521
+            },
+            "confidence": 0.9648551344871521
+          }
+        },
+        "usage": {
+          "input_tokens": 131,
+          "output_tokens": 0
+        },
+        "latency_s": 0.332445053383708
+      },
+      "client_latency_s": 0.94
+    },
+    {
+      "id": "type_noul",
+      "group": "types",
+      "title": "noul: yes/no with criteria",
+      "note": null,
+      "source": null,
+      "request": {
+        "state": "Working tree: app.py, utils.py and README.md have uncommitted changes (2 hours of edits, never committed or stashed). About to: git reset --hard",
+        "questions": {
+          "q": {
+            "type": "noul",
+            "instructions": "Will uncommitted work be lost?",
+            "criteria": {
+              "true": "uncommitted changes are gone",
+              "false": "nothing is lost"
+            }
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "noul",
+            "noul": 0.985042929649353,
+            "probability": 0.985042929649353,
+            "value": true,
+            "confidence": 0.985042929649353
+          }
+        },
+        "usage": {
+          "input_tokens": 135,
+          "output_tokens": 0
+        },
+        "latency_s": 0.1900137672200799
+      },
+      "client_latency_s": 0.87
+    },
+    {
+      "id": "type_score",
+      "group": "types",
+      "title": "score: how many / how much",
+      "note": null,
+      "source": null,
+      "request": {
+        "state": "Working tree: app.py, utils.py and README.md have uncommitted changes (never committed or stashed). About to: git reset --hard",
+        "questions": {
+          "q": {
+            "type": "score",
+            "instructions": "How many of the 3 modified files keep their changes?",
+            "criteria": {
+              "0": "none",
+              "1": "one",
+              "2": "two",
+              "3": "all three"
+            }
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "score",
+            "probabilities": {
+              "0": 0.9738823771476746,
+              "1": 0.008969146758317947,
+              "2": 0.006985178217291832,
+              "3": 0.010163375176489353
+            },
+            "score": 0,
+            "expected": 0.05342962872236967,
+            "confidence": 0.9738823771476746
+          }
+        },
+        "usage": {
+          "input_tokens": 158,
+          "output_tokens": 0
+        },
+        "latency_s": 0.13318255450576544
+      },
+      "client_latency_s": 0.73
+    },
+    {
+      "id": "cal_timezone",
+      "group": "types",
+      "title": "choice: pick among outcomes",
+      "note": null,
+      "source": "cookbook:cal_timezone",
+      "request": {
+        "state": "The organizer creates a meeting for 9:00 AM New York time (Eastern). An attendee is in San Francisco (Pacific, 3 hours behind).",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What time does the San Francisco attendee see?",
+            "options": [
+              "6:00 AM their local time",
+              "9:00 AM their local time"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "6:00 AM their local time",
+            "probabilities": {
+              "6:00 AM their local time": 0.9950946569442749,
+              "9:00 AM their local time": 0.004905405919998884
+            },
+            "confidence": 0.9950946569442749
+          }
+        },
+        "usage": {
+          "input_tokens": 159,
+          "output_tokens": 0
+        },
+        "latency_s": 0.17307812068611383
+      },
+      "client_latency_s": 0.85
+    },
+    {
+      "id": "batch_three",
+      "group": "batch",
+      "title": "Three questions about one state, one request",
+      "note": null,
+      "source": null,
+      "request": {
+        "state": "Working tree: app.py and utils.py have uncommitted changes; notes.txt is a new untracked file. Nothing is stashed. About to: git reset --hard",
+        "questions": {
+          "lost": {
+            "type": "noul",
+            "instructions": "Will uncommitted changes to tracked files be lost?"
+          },
+          "untracked": {
+            "type": "noul",
+            "instructions": "Is the untracked file notes.txt deleted?"
+          },
+          "recoverable": {
+            "type": "noul",
+            "instructions": "Can the lost changes be recovered from a stash or a branch afterwards?"
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "lost": {
+            "type": "noul",
+            "noul": 0.9908744096755981,
+            "probability": 0.9908744096755981,
+            "value": true,
+            "confidence": 0.9908744096755981
+          },
+          "untracked": {
+            "type": "noul",
+            "noul": 0.0038244836032390594,
+            "probability": 0.0038244836032390594,
+            "value": false,
+            "confidence": 0.9961755275726318
+          },
+          "recoverable": {
+            "type": "noul",
+            "noul": 0.012431650422513485,
+            "probability": 0.012431650422513485,
+            "value": false,
+            "confidence": 0.9875683188438416
+          }
+        },
+        "usage": {
+          "input_tokens": 399,
+          "output_tokens": 0
+        },
+        "latency_s": 0.7285943925380707
+      },
+      "client_latency_s": 1.33
+    },
+    {
+      "id": "state_vague_money",
+      "group": "state",
+      "title": "Vague: 'a bit low'",
+      "note": null,
+      "source": null,
+      "request": {
+        "state": "Account balance is a bit low. About to: transfer $250.00 to a friend.",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens with the transfer?",
+            "options": [
+              "transfer succeeds",
+              "transfer fails: insufficient funds"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "transfer fails: insufficient funds",
+            "probabilities": {
+              "transfer succeeds": 0.24508501589298248,
+              "transfer fails: insufficient funds": 0.7549149990081787
+            },
+            "confidence": 0.7549149990081787
+          }
+        },
+        "usage": {
+          "input_tokens": 125,
+          "output_tokens": 0
+        },
+        "latency_s": 0.5920217372477055
+      },
+      "client_latency_s": 1.0
+    },
+    {
+      "id": "state_vague_file",
+      "group": "state",
+      "title": "Vague: no facts about copies",
+      "note": null,
+      "source": null,
+      "request": {
+        "state": "About to: rm ~/thesis/draft.docx",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the thesis draft?",
+            "options": [
+              "lost permanently",
+              "kept"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "lost permanently",
+            "probabilities": {
+              "lost permanently": 0.9669140577316284,
+              "kept": 0.03308597952127457
+            },
+            "confidence": 0.9669140577316284
+          }
+        },
+        "usage": {
+          "input_tokens": 107,
+          "output_tokens": 0
+        },
+        "latency_s": 0.21178821101784706
+      },
+      "client_latency_s": 0.71
+    },
+    {
+      "id": "disk_rm_only_copy",
+      "group": "state",
+      "title": "Explicit: the only copy",
+      "note": null,
+      "source": "cookbook:disk_rm_only_copy",
+      "request": {
+        "state": "File ~/thesis/draft.docx: the only copy, never backed up, not in any git repo or cloud sync. About to: rm ~/thesis/draft.docx",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the thesis draft?",
+            "options": [
+              "lost permanently",
+              "kept"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "lost permanently",
+            "probabilities": {
+              "lost permanently": 0.9688562154769897,
+              "kept": 0.031143832951784134
+            },
+            "confidence": 0.9688562154769897
+          }
+        },
+        "usage": {
+          "input_tokens": 132,
+          "output_tokens": 0
+        },
+        "latency_s": 0.21108192764222622
+      },
+      "client_latency_s": 0.58
+    },
+    {
+      "id": "disk_rm_backup",
+      "group": "state",
+      "title": "Explicit: synced with version history",
+      "note": null,
+      "source": "cookbook:disk_rm_backup",
+      "request": {
+        "state": "File ~/shared/report.docx synced to cloud storage with version history (two-way sync on). About to: rm ~/shared/report.docx",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the file?",
+            "options": [
+              "deleted locally and from the cloud, but recoverable from the version history",
+              "lost permanently with no way to recover"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "deleted locally and from the cloud, but recoverable from the version history",
+            "probabilities": {
+              "deleted locally and from the cloud, but recoverable from the version history": 0.957912266254425,
+              "lost permanently with no way to recover": 0.04208773002028465
+            },
+            "confidence": 0.957912266254425
+          }
+        },
+        "usage": {
+          "input_tokens": 160,
+          "output_tokens": 0
+        },
+        "latency_s": 0.09924377873539925
+      },
+      "client_latency_s": 0.52
+    },
+    {
+      "id": "state_file_vague",
+      "group": "state",
+      "title": "Nothing said about copies",
+      "note": null,
+      "source": null,
+      "request": {
+        "state": "About to: rm ~/thesis/draft.docx",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the thesis draft?",
+            "options": [
+              "lost permanently",
+              "recoverable from the cloud version history"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "lost permanently",
+            "probabilities": {
+              "lost permanently": 0.9362850189208984,
+              "recoverable from the cloud version history": 0.06371499598026276
+            },
+            "confidence": 0.9362850189208984
+          }
+        },
+        "usage": {
+          "input_tokens": 119,
+          "output_tokens": 0
+        },
+        "latency_s": 0.5973051553592086
+      },
+      "client_latency_s": 1.48
+    },
+    {
+      "id": "state_file_synced",
+      "group": "state",
+      "title": "The backup written down",
+      "note": null,
+      "source": null,
+      "request": {
+        "state": "File ~/thesis/draft.docx is synced to cloud storage with version history (two-way sync on). About to: rm ~/thesis/draft.docx",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the thesis draft?",
+            "options": [
+              "lost permanently",
+              "recoverable from the cloud version history"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "recoverable from the cloud version history",
+            "probabilities": {
+              "lost permanently": 0.053403329104185104,
+              "recoverable from the cloud version history": 0.9465966820716858
+            },
+            "confidence": 0.9465966820716858
+          }
+        },
+        "usage": {
+          "input_tokens": 140,
+          "output_tokens": 0
+        },
+        "latency_s": 0.1152569493278861
+      },
+      "client_latency_s": 0.7
+    },
+    {
+      "id": "state_hidden_without",
+      "group": "state",
+      "title": "Hidden rule left out",
+      "note": null,
+      "source": null,
+      "request": {
+        "state": "Trip booked as one round-trip ticket: outbound flight Friday, return flight Sunday. About to: cancel the outbound flight on Friday (the traveller will drive there instead).",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the return flight on Sunday?",
+            "options": [
+              "it stays booked",
+              "it is cancelled too"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "it stays booked",
+            "probabilities": {
+              "it stays booked": 0.5926666259765625,
+              "it is cancelled too": 0.4073334336280823
+            },
+            "confidence": 0.5926666259765625
+          }
+        },
+        "usage": {
+          "input_tokens": 141,
+          "output_tokens": 0
+        },
+        "latency_s": 0.11962527316063643
+      },
+      "client_latency_s": 0.5
+    },
+    {
+      "id": "state_hidden_with",
+      "group": "state",
+      "title": "Hidden rule written out",
+      "note": null,
+      "source": null,
+      "request": {
+        "state": "Trip booked as one round-trip ticket: outbound flight Friday, return flight Sunday. Airline rule for this fare: if the outbound flight is cancelled or not flown, every later flight on the same ticket is cancelled automatically. About to: cancel the outbound flight on Friday (the traveller will drive there instead).",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the return flight on Sunday?",
+            "options": [
+              "it stays booked",
+              "it is cancelled too"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "it is cancelled too",
+            "probabilities": {
+              "it stays booked": 0.03514484688639641,
+              "it is cancelled too": 0.9648551344871521
+            },
+            "confidence": 0.9648551344871521
+          }
+        },
+        "usage": {
+          "input_tokens": 169,
+          "output_tokens": 0
+        },
+        "latency_s": 0.14068718161433935
+      },
+      "client_latency_s": 0.49
+    },
+    {
+      "id": "calb_unknown_config",
+      "group": "calibration",
+      "title": "Unknown state: honest uncertainty",
+      "note": null,
+      "source": "cookbook:calb_unknown_config",
+      "request": {
+        "state": "A service whose configuration file content is unknown (never inspected). About to: restart the service with the new config file that was just dropped in place by someone else.",
+        "questions": {
+          "q": {
+            "type": "noul",
+            "instructions": "Will this cause an outage?",
+            "criteria": {
+              "true": "an outage is likely",
+              "false": "no outage"
+            }
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "noul",
+            "noul": 0.6926419734954834,
+            "probability": 0.6926419734954834,
+            "value": true,
+            "confidence": 0.6926419734954834
+          }
+        },
+        "usage": {
+          "input_tokens": 130,
+          "output_tokens": 0
+        },
+        "latency_s": 0.33218728192150593
+      },
+      "client_latency_s": 0.69
+    },
+    {
+      "id": "calb_unknown_migration",
+      "group": "calibration",
+      "title": "Unknown migration script",
+      "note": null,
+      "source": "cookbook:calb_unknown_migration",
+      "request": {
+        "state": "A production database whose schema and contents are unknown to the team. About to: run a migration script from a vendor (its contents were not reviewed).",
+        "questions": {
+          "q": {
+            "type": "noul",
+            "instructions": "Will this cause data loss?",
+            "criteria": {
+              "true": "data loss is likely",
+              "false": "no data loss"
+            }
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "noul",
+            "noul": 0.8267117738723755,
+            "probability": 0.8267117738723755,
+            "value": true,
+            "confidence": 0.8267117738723755
+          }
+        },
+        "usage": {
+          "input_tokens": 129,
+          "output_tokens": 0
+        },
+        "latency_s": 0.12355255987495184
+      },
+      "client_latency_s": 0.46
+    },
+    {
+      "id": "git_reset_hard",
+      "group": "git",
+      "title": "git reset --hard",
+      "note": "the git layout the CLI builds, written by hand (ekbasis.prompts.git_state + the trained questions)",
+      "source": null,
+      "request": {
+        "state": "You are looking at a git repository on a developer machine (a Linux shell; 'origin' is its remote). The commands below are run in order in the repository root; a command that fails changes nothing more and the next one still runs.\n\nState before:\nCurrent branch: main\nBranches (last commit message): main (add total())\nRemote origin/main last commit: add total() (the current branch is up to date with it)\ngit status: README.md (unstaged modified); app.py (unstaged modified); utils.py (unstaged modified)\nStash entries: 0\n\nCommands, in order:\n1. git reset --hard\n\nThe questions are about the state after all these commands.",
+        "questions": {
+          "lost": {
+            "type": "noul",
+            "instructions": "Do these commands permanently lose any uncommitted work (a version of a file that existed before and afterwards is in none of: the working directory, the staging area, any branch, any stash)?"
+          },
+          "in_progress": {
+            "type": "noul",
+            "instructions": "After these commands, is a merge or rebase left unfinished (in progress)?"
+          },
+          "fails_1": {
+            "type": "noul",
+            "instructions": "Does command 1 fail (exit with an error)?"
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "lost": {
+            "type": "noul",
+            "noul": 0.9896718263626099,
+            "probability": 0.9896718263626099,
+            "value": true,
+            "confidence": 0.9896718263626099
+          },
+          "in_progress": {
+            "type": "noul",
+            "noul": 7.031184213701636e-05,
+            "probability": 7.031184213701636e-05,
+            "value": false,
+            "confidence": 0.999929666519165
+          },
+          "fails_1": {
+            "type": "noul",
+            "noul": 0.0007096704212017357,
+            "probability": 0.0007096704212017357,
+            "value": false,
+            "confidence": 0.9992903470993042
+          }
+        },
+        "usage": {
+          "input_tokens": 789,
+          "output_tokens": 0
+        },
+        "latency_s": 0.2606777371838689
+      },
+      "client_latency_s": 0.59
+    },
+    {
+      "id": "git_stash_then_reset",
+      "group": "git",
+      "title": "git stash && git reset --hard",
+      "note": "the git layout the CLI builds, written by hand (ekbasis.prompts.git_state + the trained questions)",
+      "source": null,
+      "request": {
+        "state": "You are looking at a git repository on a developer machine (a Linux shell; 'origin' is its remote). The commands below are run in order in the repository root; a command that fails changes nothing more and the next one still runs.\n\nState before:\nCurrent branch: main\nBranches (last commit message): main (add total())\nRemote origin/main last commit: add total() (the current branch is up to date with it)\ngit status: README.md (unstaged modified); app.py (unstaged modified); utils.py (unstaged modified)\nStash entries: 0\n\nCommands, in order:\n1. git stash\n2. git reset --hard\n\nThe questions are about the state after all these commands.",
+        "questions": {
+          "lost": {
+            "type": "noul",
+            "instructions": "Do these commands permanently lose any uncommitted work (a version of a file that existed before and afterwards is in none of: the working directory, the staging area, any branch, any stash)?"
+          },
+          "in_progress": {
+            "type": "noul",
+            "instructions": "After these commands, is a merge or rebase left unfinished (in progress)?"
+          },
+          "fails_1": {
+            "type": "noul",
+            "instructions": "Does command 1 fail (exit with an error)?"
+          },
+          "fails_2": {
+            "type": "noul",
+            "instructions": "Does command 2 fail (exit with an error)?"
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "lost": {
+            "type": "noul",
+            "noul": 0.003376612439751625,
+            "probability": 0.003376612439751625,
+            "value": false,
+            "confidence": 0.9966233968734741
+          },
+          "in_progress": {
+            "type": "noul",
+            "noul": 7.031184213701636e-05,
+            "probability": 7.031184213701636e-05,
+            "value": false,
+            "confidence": 0.999929666519165
+          },
+          "fails_1": {
+            "type": "noul",
+            "noul": 0.00033535013790242374,
+            "probability": 0.00033535013790242374,
+            "value": false,
+            "confidence": 0.9996646642684937
+          },
+          "fails_2": {
+            "type": "noul",
+            "noul": 0.00031503866193816066,
+            "probability": 0.00031503866193816066,
+            "value": false,
+            "confidence": 0.9996849298477173
+          }
+        },
+        "usage": {
+          "input_tokens": 1060,
+          "output_tokens": 0
+        },
+        "latency_s": 0.27711988147348166
+      },
+      "client_latency_s": 0.62
+    },
+    {
+      "id": "disk_symlink",
+      "group": "files",
+      "title": "rm on a symlink",
+      "note": null,
+      "source": "cookbook:disk_symlink",
+      "request": {
+        "state": "Directory: data/ has 40 GB of datasets. symlink_to_data is a symbolic link pointing to data/. About to: rm symlink_to_data",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the datasets?",
+            "options": [
+              "safe: only the symbolic link is removed, the 40 GB stay",
+              "deleted: the datasets are gone"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "safe: only the symbolic link is removed, the 40 GB stay",
+            "probabilities": {
+              "safe: only the symbolic link is removed, the 40 GB stay": 0.977022647857666,
+              "deleted: the datasets are gone": 0.022977370768785477
+            },
+            "confidence": 0.977022647857666
+          }
+        },
+        "usage": {
+          "input_tokens": 162,
+          "output_tokens": 0
+        },
+        "latency_s": 0.44328145030885935
+      },
+      "client_latency_s": 1.02
+    },
+    {
+      "id": "sh_rm_unset_var",
+      "group": "files",
+      "title": "rm -rf with an unset variable",
+      "note": null,
+      "source": "cookbook:sh_rm_unset_var",
+      "request": {
+        "state": "The environment variable TMPDIR is unset (empty). About to: rm -rf \"$TMPDIR/\"*",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens?",
+            "options": [
+              "the command expands to rm -rf /* : everything at the root is deleted",
+              "it deletes only an empty temp folder"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "the command expands to rm -rf /* : everything at the root is deleted",
+            "probabilities": {
+              "the command expands to rm -rf /* : everything at the root is deleted": 0.9525741338729858,
+              "it deletes only an empty temp folder": 0.04742587357759476
+            },
+            "confidence": 0.9525741338729858
+          }
+        },
+        "usage": {
+          "input_tokens": 152,
+          "output_tokens": 0
+        },
+        "latency_s": 0.1289682351052761
+      },
+      "client_latency_s": 0.48
+    },
+    {
+      "id": "disk_redirect_trunc",
+      "group": "files",
+      "title": "> truncates the file",
+      "note": null,
+      "source": "cookbook:disk_redirect_trunc",
+      "request": {
+        "state": "File results.txt exists with 3 days of analysis output (not backed up, not in git). About to: run ./analyze.sh > results.txt",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the old content of results.txt?",
+            "options": [
+              "overwritten and lost: the redirect truncates the file",
+              "kept: the output is appended"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "overwritten and lost: the redirect truncates the file",
+            "probabilities": {
+              "overwritten and lost: the redirect truncates the file": 0.9859364032745361,
+              "kept: the output is appended": 0.014063626527786255
+            },
+            "confidence": 0.9859364032745361
+          }
+        },
+        "usage": {
+          "input_tokens": 157,
+          "output_tokens": 0
+        },
+        "latency_s": 0.12858877703547478
+      },
+      "client_latency_s": 0.49
+    },
+    {
+      "id": "db_delete_no_where",
+      "group": "sql",
+      "title": "DELETE without WHERE",
+      "note": null,
+      "source": "cookbook:db_delete_no_where",
+      "request": {
+        "state": "Table logs: 50M rows of audit history. About to: DELETE FROM logs (no WHERE clause)",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens?",
+            "options": [
+              "all 50M rows are deleted",
+              "only logs older than 30 days are deleted"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "all 50M rows are deleted",
+            "probabilities": {
+              "all 50M rows are deleted": 0.9830850958824158,
+              "only logs older than 30 days are deleted": 0.016914913430809975
+            },
+            "confidence": 0.9830850958824158
+          }
+        },
+        "usage": {
+          "input_tokens": 145,
+          "output_tokens": 0
+        },
+        "latency_s": 0.10946567635983229
+      },
+      "client_latency_s": 0.76
+    },
+    {
+      "id": "db_transaction",
+      "group": "sql",
+      "title": "UPDATE inside a rolled-back transaction",
+      "note": null,
+      "source": "cookbook:db_transaction",
+      "request": {
+        "state": "About to run: BEGIN; UPDATE accounts SET balance = balance - 100 WHERE id=7; ROLLBACK;",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What is the account balance afterwards?",
+            "options": [
+              "unchanged: the ROLLBACK discards the update",
+              "reduced by $100"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "unchanged: the ROLLBACK discards the update",
+            "probabilities": {
+              "unchanged: the ROLLBACK discards the update": 0.977022647857666,
+              "reduced by $100": 0.022977370768785477
+            },
+            "confidence": 0.977022647857666
+          }
+        },
+        "usage": {
+          "input_tokens": 150,
+          "output_tokens": 0
+        },
+        "latency_s": 0.2007673066109419
+      },
+      "client_latency_s": 0.59
+    },
+    {
+      "id": "db_backup_first",
+      "group": "sql",
+      "title": "Backup, then DROP",
+      "note": null,
+      "source": "cookbook:db_backup_first",
+      "request": {
+        "state": "About to run: 1) pg_dump the full database to backup.sql (takes 20 min), 2) DROP TABLE users",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the data?",
+            "options": [
+              "recoverable: the backup completes before the drop",
+              "lost permanently"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "recoverable: the backup completes before the drop",
+            "probabilities": {
+              "recoverable: the backup completes before the drop": 0.8933094143867493,
+              "lost permanently": 0.10669060051441193
+            },
+            "confidence": 0.8933094143867493
+          }
+        },
+        "usage": {
+          "input_tokens": 140,
+          "output_tokens": 0
+        },
+        "latency_s": 0.10620513651520014
+      },
+      "client_latency_s": 0.45
+    },
+    {
+      "id": "money_wire_fee",
+      "group": "apps",
+      "title": "Bank: wire fee on top of the amount",
+      "note": null,
+      "source": "cookbook:money_wire_fee",
+      "request": {
+        "state": "Account balance: $1,020.00. About to: send an international wire of $1,000.00 with a $25.00 wire fee added to it.",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens with the wire?",
+            "options": [
+              "succeeds",
+              "fails: $1,025 total exceeds the $1,020 balance"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "fails: $1,025 total exceeds the $1,020 balance",
+            "probabilities": {
+              "succeeds": 0.03963883966207504,
+              "fails: $1,025 total exceeds the $1,020 balance": 0.9603611826896667
+            },
+            "confidence": 0.9603611826896667
+          }
+        },
+        "usage": {
+          "input_tokens": 173,
+          "output_tokens": 0
+        },
+        "latency_s": 0.11549993138760328
+      },
+      "client_latency_s": 0.46
+    },
+    {
+      "id": "money_refund_timing",
+      "group": "apps",
+      "title": "Bank: refund not yet arrived",
+      "note": null,
+      "source": "cookbook:money_refund_timing",
+      "request": {
+        "state": "Card available balance: $15.00. A refund of $40 was issued yesterday but takes 3-5 business days to arrive. About to: pay a purchase of $18.00 today.",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens with the purchase?",
+            "options": [
+              "declined: the refund has not arrived yet, only $15.00 available",
+              "approved: the refund counts immediately"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "declined: the refund has not arrived yet, only $15.00 available",
+            "probabilities": {
+              "declined: the refund has not arrived yet, only $15.00 available": 0.9648551344871521,
+              "approved: the refund counts immediately": 0.03514484688639641
+            },
+            "confidence": 0.9648551344871521
+          }
+        },
+        "usage": {
+          "input_tokens": 182,
+          "output_tokens": 0
+        },
+        "latency_s": 0.1353179682046175
+      },
+      "client_latency_s": 0.47
+    },
+    {
+      "id": "cal_rec_one",
+      "group": "apps",
+      "title": "Calendar: delete one occurrence",
+      "note": null,
+      "source": "cookbook:cal_rec_one",
+      "request": {
+        "state": "Weekly team meeting every Monday 10:00, recurring, 40 future occurrences. About to: delete only THIS Monday's occurrence (this event only).",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the other Mondays?",
+            "options": [
+              "they continue as scheduled",
+              "they are all deleted"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "they continue as scheduled",
+            "probabilities": {
+              "they continue as scheduled": 0.985042929649353,
+              "they are all deleted": 0.014957086183130741
+            },
+            "confidence": 0.985042929649353
+          }
+        },
+        "usage": {
+          "input_tokens": 141,
+          "output_tokens": 0
+        },
+        "latency_s": 0.23005021829158068
+      },
+      "client_latency_s": 0.58
+    },
+    {
+      "id": "mail_reply_all",
+      "group": "apps",
+      "title": "Email: reply-all with an external client",
+      "note": null,
+      "source": "cookbook:mail_reply_all",
+      "request": {
+        "state": "Email thread: 11 colleagues + 1 external client. The draft reply contains internal pricing tables. About to: click Reply All.",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "Who sees the internal pricing?",
+            "options": [
+              "everyone, including the external client",
+              "only the internal colleagues"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "everyone, including the external client",
+            "probabilities": {
+              "everyone, including the external client": 0.9840936064720154,
+              "only the internal colleagues": 0.01590639166533947
+            },
+            "confidence": 0.9840936064720154
+          }
+        },
+        "usage": {
+          "input_tokens": 137,
+          "output_tokens": 0
+        },
+        "latency_s": 0.34613839071244
+      },
+      "client_latency_s": 0.67
+    },
+    {
+      "id": "mail_bcc_reply_all",
+      "group": "apps",
+      "title": "Email: reply-all when you were on BCC",
+      "note": null,
+      "source": "cookbook:mail_bcc_reply_all",
+      "request": {
+        "state": "You received an email where you and 8 others were on BCC (hidden). About to: click Reply All.",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the BCC recipients?",
+            "options": [
+              "their addresses get revealed to everyone in the reply",
+              "they stay hidden"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "they stay hidden",
+            "probabilities": {
+              "their addresses get revealed to everyone in the reply": 0.06754668802022934,
+              "they stay hidden": 0.9324532747268677
+            },
+            "confidence": 0.9324532747268677
+          }
+        },
+        "usage": {
+          "input_tokens": 139,
+          "output_tokens": 0
+        },
+        "latency_s": 0.1131544066593051
+      },
+      "client_latency_s": 0.46
+    },
+    {
+      "id": "k8s_wrong_env",
+      "group": "infra",
+      "title": "kubectl apply in the wrong context",
+      "note": null,
+      "source": "cookbook:k8s_wrong_env",
+      "request": {
+        "state": "Current kubectl context: production. File staging.yaml defines replicas=1 and DEBUG=true. About to: kubectl apply -f staging.yaml",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens?",
+            "options": [
+              "production gets 1 replica and debug mode",
+              "staging gets updated, production is untouched"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "production gets 1 replica and debug mode",
+            "probabilities": {
+              "production gets 1 replica and debug mode": 0.957912266254425,
+              "staging gets updated, production is untouched": 0.04208773002028465
+            },
+            "confidence": 0.957912266254425
+          }
+        },
+        "usage": {
+          "input_tokens": 146,
+          "output_tokens": 0
+        },
+        "latency_s": 0.18018411938101053
+      },
+      "client_latency_s": 0.57
+    },
+    {
+      "id": "dk_compose_down_v",
+      "group": "infra",
+      "title": "docker compose down -v",
+      "note": null,
+      "source": "cookbook:dk_compose_down_v",
+      "request": {
+        "state": "docker-compose.yml: app + postgres with a named volume for its data. The volume holds 3 years of records. About to: docker compose down -v",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the records?",
+            "options": [
+              "the volumes are removed: the records are gone",
+              "they survive: -v only stops the containers"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "the volumes are removed: the records are gone",
+            "probabilities": {
+              "the volumes are removed: the records are gone": 0.9840936064720154,
+              "they survive: -v only stops the containers": 0.01590639166533947
+            },
+            "confidence": 0.9840936064720154
+          }
+        },
+        "usage": {
+          "input_tokens": 158,
+          "output_tokens": 0
+        },
+        "latency_s": 0.11044129356741905
+      },
+      "client_latency_s": 0.49
+    },
+    {
+      "id": "s3_versioning",
+      "group": "infra",
+      "title": "Overwrite with S3 versioning on",
+      "note": null,
+      "source": "cookbook:s3_versioning",
+      "request": {
+        "state": "S3 bucket data has versioning ENABLED. About to: overwrite s3://data/curated/users.csv with a wrong file",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "What happens to the previous file?",
+            "options": [
+              "it is lost: overwrites are permanent even with versioning",
+              "it stays recoverable as a previous version"
+            ]
+          }
+        }
+      },
+      "response": {
+        "answers": {
+          "q": {
+            "type": "choice",
+            "choice": "it stays recoverable as a previous version",
+            "probabilities": {
+              "it is lost: overwrites are permanent even with versioning": 0.020332353189587593,
+              "it stays recoverable as a previous version": 0.9796676635742188
+            },
+            "confidence": 0.9796676635742188
+          }
+        },
+        "usage": {
+          "input_tokens": 158,
+          "output_tokens": 0
+        },
+        "latency_s": 0.3103544730693102
+      },
+      "client_latency_s": 0.65
+    },
+    {
+      "id": "python_client",
+      "group": "python",
+      "title": "Python client, two questions in one call",
+      "code": "from ekbasis import Ekbasis, choice, yes_no, world_state\n\nclient = Ekbasis(\"https://openinterp.org/api/v1\", api_key=\"ekb_...\")  # or EKBASIS_URL / EKBASIS_API_KEY\nstate = world_state(\n    rules=\"A card purchase is approved only if the available balance covers it. \"\n          \"A refund counts only once it has arrived.\",\n    state=\"Card available balance: $15.00. A $40 refund was issued yesterday; it arrives in 3-5 business days.\",\n    actions=[\"Pay a purchase of $18.00 today.\"],\n)\nans = client.ask(state, {\n    \"approved\": yes_no(\"Is the $18.00 purchase approved?\"),\n    \"balance\": choice(\"What is the available balance afterwards?\", [\"$15.00\", \"$55.00\", \"-$3.00\"]),\n})\nfor name, a in ans.items():\n    print(name, a.value, round(a.confidence, 3), {k: round(v, 3) for k, v in a.probabilities.items()})",
+      "stdout": "approved False 0.981 {'yes': 0.019, 'no': 0.981}\nbalance $15.00 0.974 {'$15.00': 0.974, '$55.00': 0.003, '-$3.00': 0.023}\n",
+      "client_latency_s": 0.49
+    },
+    {
+      "id": "no_key",
+      "group": "errors",
+      "title": "No API key",
+      "status": 401,
+      "request": {
+        "state": "Checking account available balance: $180.20. About to: transfer $250.00 to a friend.",
+        "questions": {
+          "q": {
+            "type": "noul",
+            "instructions": "Does the transfer fail?"
+          }
+        }
+      },
+      "response": {
+        "error": "unauthorized: send the Authorization: Bearer header"
+      },
+      "client_latency_s": 0.58
+    }
+  ]
+}
