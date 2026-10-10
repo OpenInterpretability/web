@@ -11,7 +11,7 @@
  *   - at most EKBASIS_MAX_INFLIGHT requests (default 2, what the model server runs at once) are in flight;
  *   - our own accounts (serverMetadata.internal: studies, benchmarks) yield to customers: they go through only while
  *     the bucket is above half full, at most EKBASIS_INTERNAL_TOKENS_PER_SEC (default 600) through a lane of their own,
- *     one at a time, and may wait up to EKBASIS_INTERNAL_MAX_WAIT_MS (default 120 s).
+ *     EKBASIS_INTERNAL_INFLIGHT at a time (default 1), and may wait up to EKBASIS_INTERNAL_MAX_WAIT_MS (default 120 s).
  *
  * State lives in Redis (shared by every serverless instance). A customer request waits at most EKBASIS_MAX_WAIT_MS
  * (default 20 s), then gets 429 with Retry-After, which the client reports as "cannot foresee" (fail closed). If Redis
@@ -27,10 +27,12 @@ const RATE = Math.max(1, Number(process.env.EKBASIS_TOKENS_PER_SEC ?? 1500))
 const BURST = Math.max(1, Number(process.env.EKBASIS_BURST_TOKENS ?? 30_000))
 export const MAX_WAIT_MS = Math.max(0, Number(process.env.EKBASIS_MAX_WAIT_MS ?? 20_000))
 const INTERNAL_RATE = Math.max(1, Number(process.env.EKBASIS_INTERNAL_TOKENS_PER_SEC ?? 600))
+const INTERNAL_INFLIGHT = Math.max(1, Number(process.env.EKBASIS_INTERNAL_INFLIGHT ?? 1))
 const INTERNAL_MAX_WAIT_MS = Math.max(0, Number(process.env.EKBASIS_INTERNAL_MAX_WAIT_MS ?? 120_000))
 const HOLD_MS = 60_000 // an in-flight entry whose request never released it frees itself after this long
 
-// KEYS: inflight zset, bucket hash, lane zset. ARGV: now, id, maxInflight, rate, burst, minLevel, internal(0/1).
+// KEYS: inflight zset, bucket hash, lane zset. ARGV: now, id, maxInflight, rate, burst, minLevel, internal(0/1),
+// internalInflight.
 // Refill the bucket; admit if a slot is free, the bucket is above minLevel and (internal) the lane is free.
 const ACQUIRE = `
 local now = tonumber(ARGV[1])
@@ -43,7 +45,7 @@ redis.call('HSET', KEYS[2], 'level', level, 'ts', now)
 redis.call('PEXPIRE', KEYS[2], 3600000)
 if redis.call('ZCARD', KEYS[1]) >= tonumber(ARGV[3]) then return 0 end
 if level <= tonumber(ARGV[6]) then return 0 end
-if ARGV[7] == '1' and redis.call('ZCARD', KEYS[3]) >= 1 then return 0 end
+if ARGV[7] == '1' and redis.call('ZCARD', KEYS[3]) >= tonumber(ARGV[8]) then return 0 end
 redis.call('ZADD', KEYS[1], now + ${HOLD_MS}, ARGV[2])
 redis.call('PEXPIRE', KEYS[1], 120000)
 if ARGV[7] == '1' then
@@ -80,7 +82,7 @@ export async function acquireSlot(id: string, internal = false): Promise<Slot> {
   for (;;) {
     try {
       const ok = await redis<number>("EVAL", ACQUIRE, 3, INFLIGHT, BUCKET, LANE, Date.now(), id, MAX_INFLIGHT, RATE,
-        BURST, minLevel, internal ? 1 : 0)
+        BURST, minLevel, internal ? 1 : 0, INTERNAL_INFLIGHT)
       if (ok === 1) return { id, internal, waitedMs: Date.now() - t0 }
     } catch (e) {
       console.warn("[gateway-limit] Redis unavailable, not limiting:", e)
