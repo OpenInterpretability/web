@@ -99,6 +99,15 @@ ekbasis git-check -- "git reset --hard"
         the runs, and the hypotheses that fail are published alongside the ones that hold. The studies are small and run
         by us, so we report the counts.
       </P>
+      <P>
+        Ekbasis is not limited to git. It was trained on git and on worlds whose rules are written in the state, and it
+        works wherever the state writes down the facts that decide the outcome. Across 171 scenarios in 21 domains —
+        payments, files and shell, databases, email, calendars, cloud and Kubernetes, docker, CI pipelines, identity and
+        access, networks, data and ML pipelines, scheduled jobs — it answered 168 of the 168 we scored correctly. We wrote
+        those scenarios ourselves, with the deciding facts in the state, so they show reach rather than a benchmark;{' '}
+        <a href="https://github.com/OpenInterpretability/ekbasis-cookbook/blob/main/examples/results.md" className="underline underline-offset-2">every result is published</a>.
+        With agents:
+      </P>
       <ul className="mt-5 space-y-3 text-[17px] leading-[1.7] text-ink-900/80 dark:text-ink-50/80">
         <li className="pl-5 -indent-5">— On unmodified Gitea, Nextcloud and Roundcube driven through a real browser, Claude Sonnet did
           harm in 6 of 24 tasks on its own and in 1 of 24 with Ekbasis (one run per task).{' '}
