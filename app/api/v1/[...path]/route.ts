@@ -46,8 +46,9 @@ async function handler(request: Request) {
   const path = new URL(request.url).pathname.replace(/^\/api\/v1/, "") || "/"
   const ev: TelemetryEvent = {
     t: t0, uid: null, email: null, key: null, path, status: 0, tok: 0, ms: 0,
-    ip: (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || null,
-    country: request.headers.get("x-vercel-ip-country"),
+    // openinterp.org is behind Cloudflare, so x-forwarded-for starts with Cloudflare's edge; cf-connecting-ip is the caller.
+    ip: (request.headers.get("cf-connecting-ip") ?? "").trim() || (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || null,
+    country: request.headers.get("cf-ipcountry") || request.headers.get("x-vercel-ip-country"),
   }
   const ua = request.headers.get("user-agent")
   if (ua) ev.cl = ua.slice(0, 80)
