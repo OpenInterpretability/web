@@ -73,7 +73,10 @@ export async function acquireSlot(id: string, internal = false): Promise<Slot> {
   const t0 = Date.now()
   const deadline = t0 + (internal ? INTERNAL_MAX_WAIT_MS : MAX_WAIT_MS)
   const minLevel = internal ? BURST / 2 : 0
-  let delay = 50
+  // Customers poll fast (their wait is the latency an agent feels); our own studies poll once a second, which keeps
+  // Redis commands low during long batch runs.
+  let delay = internal ? 1000 : 50
+  const maxDelay = internal ? 1000 : 300
   for (;;) {
     try {
       const ok = await redis<number>("EVAL", ACQUIRE, 3, INFLIGHT, BUCKET, LANE, Date.now(), id, MAX_INFLIGHT, RATE,
@@ -85,7 +88,7 @@ export async function acquireSlot(id: string, internal = false): Promise<Slot> {
     }
     if (Date.now() + delay > deadline) return { id: null, waitedMs: Date.now() - t0, busy: true }
     await sleep(delay + Math.floor(Math.random() * 30))
-    delay = Math.min(delay * 1.5, 300)
+    delay = Math.min(delay * 1.5, maxDelay)
   }
 }
 
