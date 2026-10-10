@@ -22,6 +22,18 @@ function json(obj: unknown, status: number) {
 async function handler(request: Request) {
   if (!BACKEND) return json({ error: "backend not configured yet" }, 503)
 
+  // `ekbasis health` (GET /health) is a setup check: answer it without a key or credits, and never meter it.
+  const healthPath = new URL(request.url).pathname.replace(/^\/api\/v1/, "")
+  if (request.method === "GET") {
+    if (healthPath !== "/health" && healthPath !== "/v1/health") return json({ error: "not found" }, 404)
+    try {
+      const r = await fetch(`${BACKEND}/health`, { cache: "no-store", signal: AbortSignal.timeout(10_000) })
+      return new Response(await r.text(), { status: r.status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } })
+    } catch {
+      return json({ error: "the model server is unreachable" }, 503)
+    }
+  }
+
   const auth = request.headers.get("authorization") ?? ""
   const apiKey = auth.replace(/^Bearer\s+/i, "").trim()
   if (!apiKey) return json({ error: "unauthorized: send the Authorization: Bearer header" }, 401)

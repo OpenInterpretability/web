@@ -115,7 +115,8 @@ function matches(order: Order, log: TransferLog): boolean {
 }
 
 /** Scan new confirmed blocks for the order's payment (bounded work per call). */
-export async function refresh(order: Order, credit: Credit, maxChunks = 4): Promise<Order> {
+export async function refresh(order: Order, credit: Credit, maxChunks = 4, budgetMs = 7000): Promise<Order> {
+  const started = Date.now()
   if (order.status !== "pending") return order
   const now = Date.now()
   if (now > order.scanUntil) {
@@ -127,7 +128,8 @@ export async function refresh(order: Order, credit: Credit, maxChunks = 4): Prom
   const safeHead = (await blockNumber(net)) - net.confirmations
   let from = order.scannedTo + 1
   let current = order
-  for (let i = 0; i < maxChunks && from <= safeHead; i++) {
+  // Stop early on slow RPCs so the function never times out with the progress unsaved.
+  for (let i = 0; i < maxChunks && from <= safeHead && Date.now() - started < budgetMs; i++) {
     const to = Math.min(safeHead, from + net.chunk - 1)
     const logs = await transfersTo(net, order.tokenAddress, TREASURY, from, to)
     const hit = logs.find((l) => matches(order, l))
