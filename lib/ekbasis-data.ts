@@ -157,7 +157,7 @@ export const limits = [
   'The state must contain what decides the outcome; the git guard adds it (which files differ, what both sides changed).',
   'Errors that never fade (orderings) compound in long chains, and in the worlds it knows its rare errors come with confidence: let it look at the real state when it is not sure, with a check now and then (cards: 8 of 8 chains exact at 200 actions, about 33 looks per 100).',
   'With written rules and time to think, large reasoning models are more accurate; Ekbasis wins on cost, latency and calibrated confidence.',
-  'A safety net, not a security boundary: command obfuscation (bash -c, aliases) is out of scope. The hook fails closed (it asks when it cannot foredge), and since client 0.1.3 it treats ignored build, dist, node_modules and cache folders as rebuildable.',
+  'A safety net, not a security boundary: command obfuscation (bash -c, aliases) is out of scope. The hook fails closed (it asks when it cannot foresee), and since client 0.1.3 it treats ignored build, dist, node_modules and cache folders as rebuildable.',
 ]
 
 /** Check when sure: ekbasis.verify (client 0.1.4). The default rule on the second pre-registered test on fresh items
