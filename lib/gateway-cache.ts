@@ -15,7 +15,7 @@ import { pipeline, redis } from "@/lib/crypto-pay/redis"
 const IDENT_TTL = 60
 const BAL_TTL = 300
 
-export type Ident = { uid: string; email: string | null; restricted: boolean }
+export type Ident = { uid: string; email: string | null; restricted: boolean; internal?: boolean }
 
 export const keyHash = (apiKey: string) => createHash("sha256").update(apiKey).digest("hex")
 

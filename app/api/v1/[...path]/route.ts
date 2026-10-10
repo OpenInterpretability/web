@@ -16,8 +16,10 @@ import { getHexclaveServerApp } from "@/hexclave/server"
 import { newRequestId, recordEvent, type TelemetryEvent } from "@/lib/telemetry"
 import { debitCachedBalance, getBalance, getIdent, keyHash, putBalance, putIdent, type Ident } from "@/lib/gateway-cache"
 import { acquireSlot, releaseSlot } from "@/lib/gateway-limit"
+import { isInternalAccount } from "@/lib/admin"
 
 export const dynamic = "force-dynamic"
+export const maxDuration = 300 // internal accounts may wait up to 120 s for the model server (lib/gateway-limit)
 
 const BACKEND = process.env.EKBASIS_BACKEND_URL
 const BACKEND_KEY = process.env.EKBASIS_BACKEND_KEY
@@ -116,7 +118,7 @@ async function handler(request: Request) {
   if (!ident) {
     const user = await app.getUser({ apiKey })
     if (!user) return done(json({ error: "unauthorized: invalid or revoked API key" }, 401), "invalid key")
-    ident = { uid: user.id, email: user.primaryEmail, restricted: user.isRestricted }
+    ident = { uid: user.id, email: user.primaryEmail, restricted: user.isRestricted, internal: isInternalAccount(user) }
     balance = (await user.getItem("tokens")).quantity
     const cached: Ident = ident
     const bal: number = balance
@@ -173,7 +175,8 @@ async function handler(request: Request) {
 
   // The model server shares its GPUs with another production service: a global limit (lib/gateway-limit) keeps every
   // caller together to a bounded share. Waiting is part of the latency; a caller that cannot get a slot in time gets 429.
-  const slot = await acquireSlot(rid)
+  const internal = ident.internal === true
+  const slot = await acquireSlot(rid, internal)
   if (slot.waitedMs > 0) timing.push(`queue;dur=${slot.waitedMs}`)
   if ("busy" in slot && slot.busy) {
     const resp = json({ error: "busy: the model server is at its limit right now; retry in a few seconds" }, 429)
@@ -184,7 +187,7 @@ async function handler(request: Request) {
   const release = (tokens: number) => {
     if (slot.id === null || releasedTokens !== null) return
     releasedTokens = tokens
-    after(() => releaseSlot(rid, tokens))
+    after(() => releaseSlot(rid, tokens, internal))
   }
 
   const tModel = Date.now()
