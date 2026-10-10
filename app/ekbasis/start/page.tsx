@@ -459,6 +459,11 @@ export default function EkbasisStartPage() {
         ({data.meta.calls} calls), unless it is marked as measured in the{' '}
         <a className="underline underline-offset-2" href={COOKBOOK}>cookbook</a>.
       </p>
+      <p className="mt-2 text-sm text-ink-900/60 dark:text-ink-50/60">
+        Building an agent? Point it at{' '}
+        <a className="font-mono underline underline-offset-2" href="/ekbasis/agents.md">openinterp.org/ekbasis/agents.md</a>
+        {' '}— the same guide written for language models: exact formats, when to consult, decision rules, failure handling.
+      </p>
 
       <nav aria-label="On this page" className="mt-8 flex flex-wrap gap-2">
         {TOC.map(([id, label]) => (

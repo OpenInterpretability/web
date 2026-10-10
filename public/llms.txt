@@ -1,0 +1,15 @@
+# OpenInterpretability
+
+> Independent lab for AI-agent safety: pre-registered research and open tools. Main product: Ekbasis, an open
+> consequence model that forecasts what an action will do before an agent runs it (typed questions, calibrated
+> probabilities, one forward pass). Hosted API at https://openinterp.org/api/v1 ($0.04 per 1M input tokens).
+
+## Ekbasis
+
+- [Ekbasis for AI agents](https://openinterp.org/ekbasis/agents.md): exact API formats, when to consult it, decision rules, failure handling. Start here if you are an agent.
+- [Getting started (human guide)](https://openinterp.org/ekbasis/start): mental model, writing a good state, real examples by domain.
+- [Ekbasis overview](https://openinterp.org/ekbasis): results, builds, papers.
+- [Pricing](https://openinterp.org/ekbasis/pricing) and [console](https://openinterp.org/console) (API keys, credits).
+- [Client, CLI guard, Claude Code hook, MCP server](https://github.com/OpenInterpretability/ekbasis)
+- [Cookbook: measured use cases, agent skill, studies](https://github.com/OpenInterpretability/ekbasis-cookbook)
+- [Paper: When Does a Consequence Model Make AI Agents Safer?](https://doi.org/10.5281/zenodo.23197341)
