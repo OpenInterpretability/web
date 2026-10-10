@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
+    "@hexclave/next": "^1.0.125",
     "@vercel/analytics": "^2.0.1",
     "@xyflow/react": "^12.10.2",
     "clsx": "^2.1.1",
@@ -25,6 +26,7 @@
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
+    "@hexclave/cli": "^1.0.125",
     "@types/node": "^22.8.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

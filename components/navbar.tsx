@@ -16,6 +16,7 @@ const primaryNav = [
 ]
 
 const secondaryNav = [
+  { href: '/console', label: 'Console' },
   { href: '/blog', label: 'Notes' },
   { href: '/contribute', label: 'Collaborate' },
   { href: '/roadmap', label: 'Roadmap' },
