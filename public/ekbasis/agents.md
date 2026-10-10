@@ -208,7 +208,13 @@ harmful tasks; on a real Kubernetes cluster, Claude Haiku went from 24/36 to 2/3
 not an independent benchmark. Real states that leave facts out do worse, and so do things it has never seen (git
 command types never seen in training: 85.8% vs 95.8%).
 
-Weak: facts the state does not contain; command types and domains far from anything above; obfuscated commands
+**Third-party benchmark (TS-Bench, pre-registered, October 2026):** on AgentDojo prompt injections F1 97.5 (95% CI
+96.1–98.6) vs GPT-4o's published 56.6; rewriting the injections changed none of 301 decisions. On AgentHarm and ASB it
+was weak (F1 54.6 and 64.3, below labelling every step unsafe), missing most unsafe steps; where it flags a step it is
+usually right (precision 87–97%). Its probabilities are calibrated where the question is the step's consequence, not
+everywhere: a calibrator fitted on two subsets made the third worse. Study: https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/tsbench
+
+Weak: probably labels about a request's intent or a tool's origin rather than what the step does (above; our reading); facts the state does not contain; command types and domains far from anything above; obfuscated commands
 (`bash -c`, aliases, variables). `shell-check` is a prototype: `curl … | bash` and `kill -9 -1` currently pass. It is a
 warning layer that can be wrong, **not a security boundary**.
 

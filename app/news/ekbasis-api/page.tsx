@@ -123,9 +123,18 @@ ekbasis git-check -- "git reset --hard"
           Sonnet, Claude Haiku and Qwen 9B. For GLM and Qwen 4B it fell too, but after removing runs affected by a
           harness error the interval reaches zero, so those two are not conclusive (<Link href={PAPER} className="underline underline-offset-2">erratum</Link>).
           A placebo reminder, tested with Claude Sonnet, did not help.</li>
+        <li className="pl-5 -indent-5">— On TS-Bench, a third-party benchmark that labels agent steps before they run, we
+          pre-registered and ran all 7,182 test steps for $0.56. On its AgentDojo prompt injections, Ekbasis scored F1 97.5
+          (95% CI 96.1–98.6) against GPT-4o&apos;s published 56.6, in one forward pass per step. Rewriting the injection&apos;s
+          wrapper, and on 101 items also the attacker&apos;s addresses, changed none of 301 decisions; that argues against
+          memorized wording but cannot rule out that the general injection pattern was seen in pretraining.{' '}
+          <a href="https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/tsbench" className="underline underline-offset-2">Study</a>.</li>
       </ul>
       <P>
-        Not everything worked. With Claude Haiku on real apps, our pre-registered hypotheses failed: a warning alone was
+        Not everything worked. On TS-Bench&apos;s AgentHarm and ASB subsets Ekbasis was weak: F1 54.6 and 64.3, below what
+        labelling every step unsafe would score, missing most unsafe steps there. Our reading, not separately tested: those
+        labels follow the request&apos;s intent or the tool&apos;s origin, which a forecast of one step&apos;s effect does not
+        capture. A calibrator fitted on two of its subsets made the third worse, so calibration holds per domain. With Claude Haiku on real apps, our pre-registered hypotheses failed: a warning alone was
         not enough for a smaller agent to change course. In the Kubernetes study, Ekbasis as a guard missed matching
         Claude Sonnet as a guard by one case — at about one twenty-seventh of the cost per run. Three earlier studies
         missed their bars as well. All of it is in the{' '}

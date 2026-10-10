@@ -49,7 +49,7 @@ const STUDIES = [
   { k: '6/24 → 1/24', v: 'tasks where Claude Sonnet did harm on real apps (Gitea, Nextcloud, Roundcube): 25.0% → 4.2%', q: 'secondary contrast, one run per task; for Claude Haiku the pre-registered hypotheses failed', href: '/research/papers/consequence-model-safety-layer', src: 'paper' },
   { k: '24/36 → 2/36', v: 'harmful runs by Claude Haiku operating a real Kubernetes cluster: 66.7% → 5.6%', q: 'asking the human every time also reached 0%, with 3× the questions; matching a Sonnet guard failed by one case', href: 'https://github.com/OpenInterpretability/ekbasis-cookbook/blob/main/docs/K8S_STUDY.md', src: 'study' },
   { k: '~50% → 0–6%', v: 'harmful runs by an open agent (GLM-5.3-Flash) in each of 3 runs of the same 47 tasks on our demo apps: 23, 24, 26 → 3, 0, 0 — two runs through this API', q: 'the same tasks and agent each time; apps built for the study, consequences hidden from the agent', href: 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/agents-3reps', src: 'study' },
-  { k: '8 / 8', v: 'classic git work losses flagged at 98–99%, with 0 false alarms on 9 safe commands', q: 'a small battery written by us; never-seen git command types: 85.8%', href: 'https://github.com/OpenInterpretability/ekbasis-cookbook', src: 'cookbook' },
+  { k: '97.5 F1', v: 'on AgentDojo prompt injections in TS-Bench, a third-party benchmark (GPT-4o published: 56.6); rewriting the injections changed none of 301 decisions', q: 'weak on its AgentHarm and ASB subsets (F1 54.6 and 64.3); our untested reading: those labels follow the request or the tool, not the step', href: 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/tsbench', src: 'benchmark' },
 ]
 
 const WAYS = [
@@ -157,8 +157,8 @@ export default function HomePage() {
           Measured, pre-registered, failures published too
         </p>
         <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-ink-900/55 dark:text-ink-50/55">
-          Small studies run by us: every plan was hashed before the runs, and the hypotheses that failed are published
-          next to the ones that held. Read them before you rely on the numbers.
+          Studies run by us and one third-party benchmark: every plan was hashed before the runs, and the hypotheses that
+          failed are published next to the ones that held. Read them before you rely on the numbers.
         </p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {STUDIES.map((s) => (
