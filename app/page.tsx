@@ -114,11 +114,11 @@ export default function HomePage() {
         <div className="absolute left-1/2 top-10 -z-10 h-[520px] w-[760px] -translate-x-1/2 rounded-full bg-brand-600/20 blur-[120px]" aria-hidden="true" />
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-10 text-center sm:pt-20">
           <Link
-            href="/ekbasis"
+            href="/news/ekbasis-api"
             className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-3.5 py-1.5 text-xs font-medium text-brand-700 backdrop-blur-sm hover:bg-brand-500/15 dark:text-brand-300"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse-slow" />
-            Ekbasis API is live · open weights, Apache-2.0
+            Introducing the Ekbasis API · read the announcement
           </Link>
           <h1 className="mx-auto mt-7 max-w-4xl text-4xl font-semibold leading-[1.05] tracking-tight text-balance sm:text-6xl lg:text-7xl">
             Know what an action will do <span className="gradient-text">before your agent runs it.</span>
