@@ -176,6 +176,7 @@ async function handler(request: Request) {
   // The model server shares its GPUs with another production service: a global limit (lib/gateway-limit) keeps every
   // caller together to a bounded share. Waiting is part of the latency; a caller that cannot get a slot in time gets 429.
   const internal = ident.internal === true
+  if (internal) ev.int = 1
   const slot = await acquireSlot(rid, internal)
   if (slot.waitedMs > 0) timing.push(`queue;dur=${slot.waitedMs}`)
   if ("busy" in slot && slot.busy) {
