@@ -85,7 +85,7 @@ export default function EkbasisApiAnnouncement() {
         calendars, email, cloud resources — the REST API takes a state and your questions directly.
       </P>
       <pre className="mt-6 overflow-x-auto rounded-xl bg-ink-950 p-5 text-[13px] leading-relaxed text-ink-50/90 ring-1 ring-white/10">
-        <code>{`pip install "git+https://github.com/OpenInterpretability/ekbasis"
+        <code>{`pip install ekbasis
 export EKBASIS_URL=https://openinterp.org/api/v1
 export EKBASIS_API_KEY=ekb_...
 

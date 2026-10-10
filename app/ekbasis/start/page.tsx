@@ -243,7 +243,7 @@ const IS_NOT = [
 
 const QUICK_CLI = `# 1. get a key: ${site.url}/console → Create API key (then buy credits)
 # 2. install the client (Python ≥ 3.9, no dependencies)
-pip install "git+https://github.com/OpenInterpretability/ekbasis"
+pip install ekbasis
 
 # 3. point it at the hosted API
 export EKBASIS_URL=${HOSTED}
@@ -268,7 +268,7 @@ const HOOK_JSON = `{
   }
 }`
 
-const MCP_CMD = `pip install "ekbasis[mcp] @ git+https://github.com/OpenInterpretability/ekbasis"   # Python ≥ 3.10
+const MCP_CMD = `pip install "ekbasis[mcp]"   # Python ≥ 3.10
 claude mcp add --scope user ekbasis \\
   -e EKBASIS_URL=${HOSTED} -e EKBASIS_API_KEY=ekb_... -- ekbasis-mcp`
 

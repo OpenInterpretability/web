@@ -57,7 +57,7 @@ const WAYS = [
     icon: Terminal,
     title: 'Git and shell guard',
     note: 'One command. The CLI reads your repository and writes the state for you.',
-    code: `pip install "git+https://github.com/OpenInterpretability/ekbasis"
+    code: `pip install ekbasis
 export EKBASIS_URL=https://openinterp.org/api/v1
 export EKBASIS_API_KEY=ekb_...
 

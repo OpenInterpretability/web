@@ -395,7 +395,7 @@ export default function EkbasisPage() {
       <section className="mt-16">
         <h2 className="text-2xl font-semibold tracking-tight">Use it</h2>
         <div className="mt-6 rounded-xl ring-1 ring-black/10 dark:ring-white/15 p-6">
-          <pre className="text-sm overflow-x-auto"><code>{`pip install "git+https://github.com/OpenInterpretability/ekbasis"
+          <pre className="text-sm overflow-x-auto"><code>{`pip install ekbasis
 export EKBASIS_URL=http://127.0.0.1:8000     # your served Ekbasis (see the model card)
 
 ekbasis git-check -- "git checkout -- app.py"
@@ -404,7 +404,7 @@ ekbasis git-check -- "git checkout -- app.py"
 # Claude Code: ask before git commands that may lose work
 #   ~/.claude/settings.json → PreToolUse, matcher "Bash", command "ekbasis-claude-hook"
 # Any MCP client (Python ≥ 3.10):
-pip install "ekbasis[mcp] @ git+https://github.com/OpenInterpretability/ekbasis"
+pip install "ekbasis[mcp]"
 claude mcp add --scope user ekbasis -e EKBASIS_URL=http://127.0.0.1:8000 -- ekbasis-mcp`}</code></pre>
         </div>
         <p className="mt-4 text-ink-900/70 dark:text-ink-50/70">

@@ -42,7 +42,7 @@ Send a descriptive `User-Agent` (for example `my-agent/1.0`). The official clien
 ## 3. The fastest path: the CLI guard (git and shell)
 
 ```bash
-pip install "git+https://github.com/OpenInterpretability/ekbasis"
+pip install ekbasis
 export EKBASIS_URL=https://openinterp.org/api/v1
 export EKBASIS_API_KEY=ekb_...
 ekbasis git-check -- "git reset --hard"        # reads the repo itself; you write no state
@@ -54,7 +54,9 @@ Exit codes: **0** no risk found · **2** RISKY (may lose work or file content) �
 **Treat 3 exactly like 2.** `--json` prints a machine-readable verdict (`risky`, `p_lost`, `p_fail`, `reasons`; when it cannot
 foresee: `{"risky": true, "judged": false, "cannot_foresee": "<why>"}`).
 
-For Claude Code: the hook (`ekbasis-claude-hook`, PreToolUse on Bash) asks the human when a command may lose work.
+For Claude Code: the plugin bundles the hook (PreToolUse on Bash: asks the human when a command may lose work), this
+guidance as a skill and the MCP server — `claude plugin marketplace add OpenInterpretability/ekbasis --sparse .claude-plugin plugins`
+then `claude plugin install ekbasis@ekbasis`, and set `EKBASIS_API_KEY`. Or wire `ekbasis-claude-hook` by hand.
 For any MCP client: `ekbasis-mcp` exposes `check_git_commands`, `predict_consequences` and `preflight_command`.
 Setup: https://github.com/OpenInterpretability/ekbasis-cookbook
 
