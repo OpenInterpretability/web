@@ -6,7 +6,7 @@ import { api, Badge, Btn, Card, ErrorLine, Input, ago, fmt, fmtTok, usd, when } 
 
 type Row = {
   id: string; name: string | null; email: string | null; verified: boolean; signedUpAt: number; lastActiveAt: number
-  restricted: boolean; restrictedReason: unknown; note: string; balance: number | null; requests: number; tokensUsed: number; errors: number; lastRequestAt: number | null
+  restricted: boolean; restrictedReason: unknown; note: string; internal: boolean; balance: number | null; requests: number; tokensUsed: number; errors: number; lastRequestAt: number | null
 }
 type Detail = {
   user: Row
@@ -74,7 +74,7 @@ export function Users() {
             {rows.map((r) => (
               <tr key={r.id} onClick={() => setSelected(r.id)} className="cursor-pointer border-t border-black/5 hover:bg-black/[0.02] dark:border-white/10 dark:hover:bg-white/[0.03]">
                 <td className="px-3 py-2">{r.email ?? <span className="text-ink-900/40">(no email)</span>}{r.name && <span className="ml-2 text-xs text-ink-900/50 dark:text-ink-50/50">{r.name}</span>}</td>
-                <td className="px-3 py-2 space-x-1">{r.restricted ? <Badge tone="bad">suspended</Badge> : <Badge tone="good">active</Badge>}{!r.verified && <Badge tone="warn">unverified</Badge>}</td>
+                <td className="px-3 py-2 space-x-1">{r.restricted ? <Badge tone="bad">suspended</Badge> : <Badge tone="good">active</Badge>}{!r.verified && <Badge tone="warn">unverified</Badge>}{r.internal && <Badge>internal</Badge>}</td>
                 <td className={`px-3 py-2 text-right tabular-nums ${r.balance !== null && r.balance < 0 ? "text-red-600" : ""}`}>{fmtTok(r.balance)}</td>
                 <td className="px-3 py-2 text-right tabular-nums">{fmt(r.requests)}</td>
                 <td className="px-3 py-2 text-right tabular-nums">{fmtTok(r.tokensUsed)}</td>
@@ -125,6 +125,7 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
         <h2 className="text-xl font-semibold">{u.email}</h2>
         {u.restricted ? <Badge tone="bad">suspended</Badge> : <Badge tone="good">active</Badge>}
         {!u.verified && <Badge tone="warn">email unverified</Badge>}
+        {u.internal && <Badge>internal</Badge>}
         <span className="font-mono text-xs text-ink-900/50 dark:text-ink-50/50">{u.id}</span>
       </div>
       <ErrorLine error={error} />
@@ -154,6 +155,10 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="display name" className="w-full" />
             <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="private admin note" rows={3} className="w-full rounded-lg bg-transparent px-3 py-1.5 text-sm ring-1 ring-black/10 dark:ring-white/15" />
             <Btn onClick={() => { void act(() => api(`/api/admin/users/${id}`, { method: "PATCH", body: { name, note } }), "Profile saved") }}>Save</Btn>
+            <label className="flex items-center gap-2 pt-1 text-xs text-ink-900/70 dark:text-ink-50/70">
+              <input type="checkbox" checked={u.internal} onChange={(e) => { const v = e.target.checked; void act(() => api(`/api/admin/users/${id}`, { method: "PATCH", body: { internal: v } }), v ? "Marked internal: excluded from the study" : "Unmarked internal") }} />
+              Internal account (ours — excluded from the real-users study)
+            </label>
           </div>
         </Card>
       </div>

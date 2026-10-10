@@ -23,7 +23,7 @@ export async function userRows(users: U[]) {
     const flat = usage[i]
     const c: Record<string, number> = {}
     if (Array.isArray(flat)) for (let k = 0; k < flat.length; k += 2) c[String(flat[k])] = Number(flat[k + 1])
-    const meta = (u.serverMetadata ?? {}) as { adminNote?: string }
+    const meta = (u.serverMetadata ?? {}) as { adminNote?: string; internal?: unknown }
     return {
       id: u.id,
       name: u.displayName,
@@ -34,6 +34,7 @@ export async function userRows(users: U[]) {
       restricted: u.isRestricted,
       restrictedReason: u.restrictedReason ?? null,
       note: meta.adminNote ?? "",
+      internal: meta.internal === true,
       balance: balances[i],
       requests: c.req ?? 0,
       tokensUsed: c.tok ?? 0,

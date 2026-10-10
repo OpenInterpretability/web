@@ -8,10 +8,12 @@
  * risky — so an unpaid or broken state can never let a destructive action through silently.
  *
  * Every request is recorded for the admin console after the response is sent (lib/telemetry).
+ * Every call that reaches the model gets a request id, returned in X-Ekbasis-Request-Id and recorded with the
+ * event, so the caller can attach feedback to it later (POST /api/v1/feedback).
  */
 import { after } from "next/server"
 import { getHexclaveServerApp } from "@/hexclave/server"
-import { recordEvent, type TelemetryEvent } from "@/lib/telemetry"
+import { newRequestId, recordEvent, type TelemetryEvent } from "@/lib/telemetry"
 
 export const dynamic = "force-dynamic"
 
@@ -33,6 +35,8 @@ function publicModel(text: string): string {
   }
 }
 
+const SURFACE_RE = /^[a-z0-9][a-z0-9_.-]{0,31}$/
+
 async function handler(request: Request) {
   const t0 = Date.now()
   const path = new URL(request.url).pathname.replace(/^\/api\/v1/, "") || "/"
@@ -41,7 +45,12 @@ async function handler(request: Request) {
     ip: (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || null,
     country: request.headers.get("x-vercel-ip-country"),
   }
+  const ua = request.headers.get("user-agent")
+  if (ua) ev.cl = ua.slice(0, 80)
+  const surface = (request.headers.get("x-ekbasis-surface") ?? "").trim().toLowerCase()
+  if (SURFACE_RE.test(surface)) ev.sf = surface
   const done = (resp: Response, err?: string) => {
+    if (ev.rid) resp.headers.set("X-Ekbasis-Request-Id", ev.rid)
     ev.status = resp.status
     ev.ms = Date.now() - t0
     if (err) ev.err = err
@@ -96,6 +105,7 @@ async function handler(request: Request) {
     body = {}
   }
 
+  ev.rid = newRequestId()
   let backendResp: Response
   try {
     backendResp = await fetch(`${BACKEND}${path}`, {

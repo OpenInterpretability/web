@@ -19,6 +19,17 @@ export const notFound = () => ajson({ error: "not found" }, 404)
 
 type AdminUser = NonNullable<Awaited<ReturnType<ReturnType<typeof getHexclaveServerApp>["getUser"]>>>
 
+/** True for the configured admin emails (the study excludes them from every cohort). */
+export function isAdminEmail(email: string | null | undefined): boolean {
+  return Boolean(email && ADMIN_EMAILS.includes(email.toLowerCase()))
+}
+
+/** Accounts marked internal (serverMetadata.internal === true) are ours: excluded from the real-users study. */
+export function isInternalAccount(user: { serverMetadata: unknown }): boolean {
+  const m = user.serverMetadata
+  return Boolean(m && typeof m === "object" && (m as { internal?: unknown }).internal === true)
+}
+
 export function isAdminUser(user: { primaryEmail: string | null; primaryEmailVerified: boolean; isRestricted: boolean } | null): boolean {
   return Boolean(
     user && user.primaryEmail && user.primaryEmailVerified && !user.isRestricted && ADMIN_EMAILS.includes(user.primaryEmail.toLowerCase()),

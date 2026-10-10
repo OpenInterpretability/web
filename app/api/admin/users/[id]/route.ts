@@ -1,4 +1,4 @@
-/** GET: everything about one user.  PATCH {name?, restricted?, reason?, note?}.  DELETE: remove the account. */
+/** GET: everything about one user.  PATCH {name?, restricted?, reason?, note?, internal?}.  DELETE: remove the account. */
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { requireAdmin, ajson, audit, readJson, notFound } from "@/lib/admin"
 import { userRows } from "@/lib/admin-users"
@@ -44,7 +44,7 @@ export async function PATCH(request: Request, { params }: Ctx) {
   const { id } = await params
   const user = await getHexclaveServerApp().getUser(id)
   if (!user) return notFound()
-  const b = await readJson<{ name: string; restricted: boolean; reason: string; note: string }>(request)
+  const b = await readJson<{ name: string; restricted: boolean; reason: string; note: string; internal: boolean }>(request)
   if (b.restricted === true && id === admin.id) return ajson({ error: "you cannot suspend your own admin account" }, 400)
   const update: Record<string, unknown> = {}
   if (typeof b.name === "string") update.displayName = b.name.slice(0, 100)
@@ -52,7 +52,15 @@ export async function PATCH(request: Request, { params }: Ctx) {
     update.restrictedByAdmin = b.restricted
     update.restrictedByAdminReason = b.restricted ? String(b.reason ?? "suspended by admin").slice(0, 200) : null
   }
-  if (typeof b.note === "string") update.serverMetadata = { ...((user.serverMetadata ?? {}) as object), adminNote: b.note.slice(0, 2000) }
+  // serverMetadata is replaced as a whole, so note and internal are merged onto what is there.
+  // internal = one of our own accounts: excluded from the real-users study (docs/STUDY_REAL_USERS.md).
+  if (typeof b.note === "string" || typeof b.internal === "boolean") {
+    update.serverMetadata = {
+      ...((user.serverMetadata ?? {}) as object),
+      ...(typeof b.note === "string" ? { adminNote: b.note.slice(0, 2000) } : {}),
+      ...(typeof b.internal === "boolean" ? { internal: b.internal } : {}),
+    }
+  }
   await user.update(update)
   await audit(admin, "user.update", id, { email: user.primaryEmail, ...b })
   return ajson({ ok: true })
