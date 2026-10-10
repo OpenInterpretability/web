@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useUser } from "@hexclave/next"
-import { Wallet, Copy, Check, ExternalLink, Loader2, X } from "lucide-react"
+import QRCode from "qrcode"
+import { Wallet, Copy, Check, ExternalLink, Loader2, X, Smartphone } from "lucide-react"
 
 const PACKS = [
   { id: "pack-5", name: "Starter", usd: 5, tokens: "125M tokens ≈ 83k checks" },
@@ -35,6 +36,7 @@ type PublicOrder = {
   status: "pending" | "paid" | "expired" | "review"
   txHash: string | null
   explorerUrl: string | null
+  paymentUri: string
 }
 
 function amount(units: string) {
@@ -59,6 +61,20 @@ function CopyField({ label, value }: { label: string; value: string }) {
       </div>
     </div>
   )
+}
+
+function PaymentQR({ uri }: { uri: string }) {
+  const [svg, setSvg] = useState<string | null>(null)
+  useEffect(() => {
+    let alive = true
+    QRCode.toString(uri, { type: "svg", margin: 1, errorCorrectionLevel: "M", color: { dark: "#111111", light: "#ffffff" } })
+      .then((s) => { if (alive) setSvg(s) })
+      .catch(() => { if (alive) setSvg(null) })
+    return () => { alive = false }
+  }, [uri])
+  if (!svg) return null
+  // The SVG is generated locally by the qrcode library from our own order data.
+  return <div className="h-44 w-44 shrink-0 rounded-lg bg-white p-2 ring-1 ring-black/10" dangerouslySetInnerHTML={{ __html: svg }} />
 }
 
 export function CreditsPanel() {
@@ -190,10 +206,24 @@ export function CreditsPanel() {
               <X className="h-4 w-4" />
             </button>
           </div>
-          <div className="mt-4 grid gap-3">
-            <CopyField label="Amount (exact — the last digits identify your order)" value={amount(order.units)} />
-            <CopyField label={`OpenInterp address (${order.networkName} only)`} value={order.treasury} />
-            <CopyField label={`${order.token} token contract on ${order.networkName}`} value={order.tokenAddress} />
+          <div className="mt-4 flex flex-col gap-5 sm:flex-row">
+            <div className="flex flex-col items-center gap-2">
+              <PaymentQR uri={order.paymentUri} />
+              <a
+                href={order.paymentUri}
+                className="inline-flex items-center gap-1 text-xs font-medium text-brand-600 dark:text-brand-400 sm:hidden"
+              >
+                <Smartphone className="h-3.5 w-3.5" /> Open in wallet
+              </a>
+              <p className="max-w-44 text-center text-[11px] leading-snug text-ink-900/50 dark:text-ink-50/50">
+                Scan with MetaMask or another EIP-681 wallet. Check the amount and network before confirming.
+              </p>
+            </div>
+            <div className="grid min-w-0 flex-1 content-start gap-3">
+              <CopyField label="Amount (exact — the last digits identify your order)" value={amount(order.units)} />
+              <CopyField label={`OpenInterp address (${order.networkName} only)`} value={order.treasury} />
+              <CopyField label={`${order.token} token contract on ${order.networkName}`} value={order.tokenAddress} />
+            </div>
           </div>
           <p className="mt-4 inline-flex items-center gap-2 text-xs text-ink-900/60 dark:text-ink-50/60">
             <Loader2 className="h-3.5 w-3.5 animate-spin" /> Watching the chain — this page updates by itself.

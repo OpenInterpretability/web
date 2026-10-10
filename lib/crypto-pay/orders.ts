@@ -10,7 +10,7 @@
  * being credited twice: under-credit is fixable by hand, double-credit is not.
  */
 import { randomBytes, randomInt } from "crypto"
-import { NETWORKS, PACKS, TREASURY, PAY_WINDOW_MS, SCAN_WINDOW_MS, DECIMALS, type NetworkId, type TokenId, type PackId } from "./config"
+import { NETWORKS, PACKS, TREASURY, TREASURY_DISPLAY, PAY_WINDOW_MS, SCAN_WINDOW_MS, DECIMALS, type NetworkId, type TokenId, type PackId } from "./config"
 import { blockNumber, transfersTo, transfersInTx, type TransferLog } from "./chain"
 import { setNX, getJSON, setJSON, redis } from "./redis"
 
@@ -178,9 +178,11 @@ export function publicOrder(o: Order) {
     confirmations: net.confirmations,
     token: o.token,
     tokenLabel: net.tokens[o.token]?.label ?? o.token,
-    tokenAddress: o.tokenAddress,
+    tokenAddress: net.tokens[o.token]?.display ?? o.tokenAddress,
     units: o.units,
-    treasury: o.treasury,
+    treasury: o.treasury === TREASURY ? TREASURY_DISPLAY : o.treasury,
+    /** EIP-681 payment request: wallets that support it prefill token, chain, recipient and amount. */
+    paymentUri: `ethereum:${net.tokens[o.token]?.display ?? o.tokenAddress}@${net.chainId}/transfer?address=${o.treasury === TREASURY ? TREASURY_DISPLAY : o.treasury}&uint256=${o.units}`,
     createdAt: o.createdAt,
     payBy: o.payBy,
     scanUntil: o.scanUntil,

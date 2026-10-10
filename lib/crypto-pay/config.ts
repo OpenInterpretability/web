@@ -3,7 +3,9 @@
  * No processor, no fiat, no test mode. Token contracts were checked on-chain (symbol + 6 decimals).
  */
 
-export const TREASURY = (process.env.CRYPTO_TREASURY ?? "0xf3AE7C060e79988715AAe1fEd96040b194E7B297").toLowerCase()
+/** EIP-55 checksummed form for display; comparisons use the lowercase TREASURY. */
+export const TREASURY_DISPLAY = process.env.CRYPTO_TREASURY ?? "0xf3AE7C060e79988715AAe1fEd96040b194E7B297"
+export const TREASURY = TREASURY_DISPLAY.toLowerCase()
 
 export type NetworkId = "polygon" | "arbitrum" | "base" | "ethereum"
 export type TokenId = "USDC" | "USDT"
@@ -17,7 +19,8 @@ export type Network = {
   chunk: number
   explorer: string
   rpcs: string[]
-  tokens: Partial<Record<TokenId, { address: string; label: string }>>
+  /** `address` is lowercase (for matching); `display` is the EIP-55 checksummed form. */
+  tokens: Partial<Record<TokenId, { address: string; display: string; label: string }>>
 }
 
 function rpcs(envName: string, defaults: string[]): string[] {
@@ -35,8 +38,8 @@ export const NETWORKS: Record<NetworkId, Network> = {
     explorer: "https://polygonscan.com/tx/",
     rpcs: rpcs("RPC_URLS_POLYGON", ["https://rpc-mainnet.matic.quiknode.pro", "https://polygon-bor-rpc.publicnode.com"]),
     tokens: {
-      USDC: { address: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359", label: "USDC (native)" },
-      USDT: { address: "0xc2132d05d31c914a87c6611c10748aeb04b58e8f", label: "USDT" },
+      USDC: { address: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359", display: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359", label: "USDC (native)" },
+      USDT: { address: "0xc2132d05d31c914a87c6611c10748aeb04b58e8f", display: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F", label: "USDT" },
     },
   },
   arbitrum: {
@@ -48,8 +51,8 @@ export const NETWORKS: Record<NetworkId, Network> = {
     explorer: "https://arbiscan.io/tx/",
     rpcs: rpcs("RPC_URLS_ARBITRUM", ["https://arb1.arbitrum.io/rpc", "https://arbitrum-one-rpc.publicnode.com"]),
     tokens: {
-      USDC: { address: "0xaf88d065e77c8cc2239327c5edb3a432268e5831", label: "USDC (native)" },
-      USDT: { address: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9", label: "USDT0" },
+      USDC: { address: "0xaf88d065e77c8cc2239327c5edb3a432268e5831", display: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", label: "USDC (native)" },
+      USDT: { address: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9", display: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", label: "USDT0" },
     },
   },
   base: {
@@ -61,7 +64,7 @@ export const NETWORKS: Record<NetworkId, Network> = {
     explorer: "https://basescan.org/tx/",
     rpcs: rpcs("RPC_URLS_BASE", ["https://base-rpc.publicnode.com", "https://mainnet.base.org"]),
     tokens: {
-      USDC: { address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", label: "USDC (native)" },
+      USDC: { address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", display: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", label: "USDC (native)" },
     },
   },
   ethereum: {
@@ -73,8 +76,8 @@ export const NETWORKS: Record<NetworkId, Network> = {
     explorer: "https://etherscan.io/tx/",
     rpcs: rpcs("RPC_URLS_ETHEREUM", ["https://ethereum-rpc.publicnode.com"]),
     tokens: {
-      USDC: { address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", label: "USDC" },
-      USDT: { address: "0xdac17f958d2ee523a2206206994597c13d831ec7", label: "USDT" },
+      USDC: { address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", display: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", label: "USDC" },
+      USDT: { address: "0xdac17f958d2ee523a2206206994597c13d831ec7", display: "0xdAC17F958D2ee523a2206206994597C13D831ec7", label: "USDT" },
     },
   },
 }
