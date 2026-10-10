@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { Source_Serif_4 } from 'next/font/google'
+import localFont from 'next/font/local'
 
-const serif = Source_Serif_4({ subsets: ['latin'], weight: ['400', '500'], display: 'swap' })
+const serif = localFont({ src: '../../fonts/source-serif-4-latin-wght-normal.woff2', weight: '200 900', display: 'swap' })
 
 export const metadata = {
   title: 'Introducing the Ekbasis API',

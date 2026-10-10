@@ -1,23 +1,25 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 import { Analytics } from '@vercel/analytics/next'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { site } from '@/lib/constants'
 
-const inter = Inter({
-  subsets: ['latin'],
+// Fonts are served from the repository (app/fonts, SIL OFL), not fetched from Google Fonts at build time: that fetch
+// failed production builds now and then.
+const inter = localFont({
+  src: './fonts/inter-latin-wght-normal.woff2',
   display: 'swap',
   variable: '--font-inter',
-  weight: ['400', '500', '600', '700'],
+  weight: '100 900',
 })
 
-const mono = JetBrains_Mono({
-  subsets: ['latin'],
+const mono = localFont({
+  src: './fonts/jetbrains-mono-latin-wght-normal.woff2',
   display: 'swap',
   variable: '--font-mono',
-  weight: ['400', '500', '600'],
+  weight: '100 800',
 })
 
 export const metadata: Metadata = {
