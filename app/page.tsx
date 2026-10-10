@@ -234,7 +234,9 @@ export default function HomePage() {
           ))}
         </div>
         <p className="mt-6 text-center text-sm text-ink-900/60 dark:text-ink-50/60">
-          Every example, with the real answer: <Link href="/ekbasis/start#examples" className="text-brand-600 underline underline-offset-2 dark:text-brand-400">the getting-started guide</Link>.
+          Measured in 21 domains — 168 of 168 scored scenarios right, written by us with the deciding facts in the state:{' '}
+          <a href="https://github.com/OpenInterpretability/ekbasis-cookbook/blob/main/examples/results.md" className="text-brand-600 underline underline-offset-2 dark:text-brand-400">every result</a>
+          {' '}· every example with its real answer: <Link href="/ekbasis/start#examples" className="text-brand-600 underline underline-offset-2 dark:text-brand-400">the guide</Link>.
         </p>
       </section>
 

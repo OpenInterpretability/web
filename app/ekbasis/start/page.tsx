@@ -306,6 +306,8 @@ const THRESHOLDS: [string, string][] = [
 ]
 
 const STRONG = [
+  'Not a git-only model: it works wherever the state writes down the facts and rules that decide the outcome. Git is where it was trained most; the domains below were measured after training.',
+  'Agents, in pre-registered studies: less harm on unmodified Gitea, Nextcloud and Roundcube (Claude Sonnet 6/24 → 1/24 harmful tasks) and on a real Kubernetes cluster (Claude Haiku 24/36 → 2/36), and for all 5 models on our demo apps.',
   'Classic git losses: 8 of 8 destructive commands flagged at 98–99%, and no false alarm on the 9 safe commands tested (a small battery).',
   'Short consequence questions in 21 domains (money, files, mail, calendar, cloud, databases, deploys, shell, identity, docker, network, pipelines, ML ops, scheduled jobs): 168 of 168 scored scenarios right, ~0.55 s each on a GPU. These are short states that spell out the deciding facts; real states are messier, and it will be wrong sometimes.',
   'Honest uncertainty: on states that do not decide the outcome, confidence drops to 0.59–0.84 instead of a fake 0.99.',

@@ -165,13 +165,41 @@ curl -X POST https://openinterp.org/api/v1/feedback -H "Authorization: Bearer $E
 
 ## 9. Where it is strong and weak
 
-- Strong: git work loss (8/8 classic losses flagged at 98–99%, 0 false alarms on 9 safe commands), states with explicit
-  numbers and rules, recognising ambiguity. In pre-registered agent studies, harmful actions fell for every model
-  tested; on real apps Claude Sonnet went from 25.0% to 4.2% (paper: https://doi.org/10.5281/zenodo.23197341).
-- Weak: domains far from its training; command types it has never seen (git questions: 85.8% vs 95.8% on seen types);
-  facts the state does not contain; obfuscated commands (`bash -c`, aliases, variables).
-- `shell-check` is a prototype: `curl … | bash` and `kill -9 -1` currently pass.
-- It is a warning layer that can be wrong, **not a security boundary**.
+**It is not a git-only model.** It was trained on git and on rule-based worlds whose rules are written in the state, and
+it works in any domain where the state writes down the facts and rules that decide the outcome. Measured
+(cookbook, October 2026, Ekbasis-27B-INT4 on the hosted API):
+
+| domain | scenarios right | examples |
+|---|---|---|
+| money / payments | 10/10 | running totals, a wire fee added on top, a refund that has not arrived |
+| files and shell | 9/9 · 8/8 | `mv` overwrite, `>` truncation, `rm -rf "$UNSET/"*`, stale-PID kill, `crontab -r` |
+| databases / SQL | 8/8 | DELETE without WHERE, migration downgrade, ROLLBACK, backup before DROP |
+| email and messages | 8/8 | reply-all leak, autocomplete to the wrong person, BCC stays hidden |
+| calendar | 7/7 | time zones, one vs all occurrences of a recurring event |
+| cloud / Kubernetes | 9/9 | namespace, PVC and secret deletion, apply in the wrong context |
+| cloud storage | 9/9 | bucket `--force`, versioning keeps old objects, AMI needs its snapshot |
+| docker | 10/10 | `compose down -v` and prune destroy data, hot patch lost on rebuild |
+| deploy / CI and pipelines | 7/7 · 8/8 | canary vs all, secrets echoed in public logs, `pull_request_target` |
+| identity / access, network, org | 10/10 · 9/9 · 8/8 | committed secrets survive removal, `ufw reset`, SSO lockout |
+| data pipelines, ML ops, jobs | 8/8 · 7/7 · 8/8 | partial overwrite, backfill duplicates, eval leakage, cron time zones |
+| numbers and plans | 8/8 · 5/5 | MB↔GB, rounding with tax, exact deadlines, a step that breaks a later one |
+| git (trained) | 8/8 classic losses at 98–99%, 0 false alarms on 9 safe commands | plus 9/9 harder cases (rebase of a shared branch, `clean -fdx`) |
+
+171 scenarios in 21 domains: 168 of 168 scored right, 3 ambiguous ones answered with honestly low confidence
+(0.59–0.84). Full tables: https://github.com/OpenInterpretability/ekbasis-cookbook/blob/main/examples/results.md
+
+With agents, in pre-registered studies: harmful actions fell for all 5 models on our demo apps (everyday web apps
+such as a bank and file storage, built for the study); on unmodified Gitea, Nextcloud and Roundcube, Claude Sonnet went from 6/24 to 1/24
+harmful tasks; on a real Kubernetes cluster, Claude Haiku went from 24/36 to 2/36 harmful runs
+(paper: https://doi.org/10.5281/zenodo.23197341; Kubernetes study in the cookbook).
+
+**Read these numbers correctly:** the scenarios were written by us and put the deciding facts in the state; they are
+not an independent benchmark. Real states that leave facts out do worse, and so do things it has never seen (git
+command types never seen in training: 85.8% vs 95.8%).
+
+Weak: facts the state does not contain; command types and domains far from anything above; obfuscated commands
+(`bash -c`, aliases, variables). `shell-check` is a prototype: `curl … | bash` and `kill -9 -1` currently pass. It is a
+warning layer that can be wrong, **not a security boundary**.
 
 ## Links
 
