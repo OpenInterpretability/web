@@ -152,7 +152,15 @@ drops (0.59–0.84 measured). A low-confidence answer is information, not an err
 
 ## 8. Telling us when it was wrong
 
-Every hosted answer has a request id (`X-Ekbasis-Request-Id`). Report the outcome when you know it, at no charge:
+Every hosted answer has a request id (`X-Ekbasis-Request-Id`). Report the outcome when you know it, at no charge.
+With the client (0.1.9 or later), `--last` is the last answer this machine received:
+
+```bash
+ekbasis feedback --last --wrong --note "the file was in .gitignore"
+ekbasis feedback --last --prevented-harm        # also --correct, --false-alarm; or pass the req_… id
+```
+
+Exit 0 recorded, 4 refused (unknown id, already sent, rate limit), 3 server unreachable. Without the client:
 
 ```bash
 curl -X POST https://openinterp.org/api/v1/feedback -H "Authorization: Bearer $EKBASIS_API_KEY" \
