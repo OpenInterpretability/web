@@ -57,7 +57,7 @@ export default function EkbasisApiAnnouncement() {
         </p>
         <div className="my-6 h-px bg-black/10 dark:bg-white/10" />
         <div className="flex justify-between text-[15px] font-semibold"><span>Uncommitted changes are gone</span><span className="tabular-nums">98.5%</span></div>
-        <div className="mt-2 h-1.5 rounded-full bg-black/[0.06] dark:bg-white/10"><div className="h-1.5 rounded-full bg-[#C96442]" style={{ width: '98.5%' }} /></div>
+        <div className="mt-2 h-1.5 rounded-full bg-black/[0.06] dark:bg-white/10"><div className="h-1.5 rounded-full bg-gradient-to-r from-brand-600 to-accent-500" style={{ width: '98.5%' }} /></div>
         <div className="mt-4 flex justify-between text-[15px] text-ink-900/50 dark:text-ink-50/50"><span>Nothing is lost</span><span className="tabular-nums">1.5%</span></div>
         <figcaption className="mt-6 text-xs text-ink-900/45 dark:text-ink-50/45">
           A real response from the hosted API: 135 input tokens, 0.19 seconds on the server.
