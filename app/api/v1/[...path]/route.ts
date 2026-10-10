@@ -183,11 +183,12 @@ async function handler(request: Request) {
     resp.headers.set("Retry-After", "5")
     return done(resp, "busy (gateway limit)")
   }
+  const acquiredAt = Date.now()
   let releasedTokens: number | null = null
   const release = (tokens: number) => {
     if (slot.id === null || releasedTokens !== null) return
     releasedTokens = tokens
-    after(() => releaseSlot(rid, tokens, internal))
+    after(() => releaseSlot(rid, tokens, internal, acquiredAt))
   }
 
   const tModel = Date.now()

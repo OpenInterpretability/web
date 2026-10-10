@@ -6,8 +6,9 @@
  * keeps Ekbasis to a bounded share of the GPUs, whoever is calling:
  *
  *   - at most EKBASIS_MAX_INFLIGHT requests reach the model server at once (default 1);
- *   - after a request, its slot stays taken for tokens / EKBASIS_TOKENS_PER_SEC seconds (default 1,500 tokens/s), so
- *     the average rate of input tokens cannot exceed that, however the calls arrive.
+ *   - a request keeps its slot until tokens / EKBASIS_TOKENS_PER_SEC seconds (default 1,500 tokens/s) have passed since
+ *     it took it (or until it ends, if that is later), so the average rate of input tokens cannot exceed that, however
+ *     the calls arrive, and reaches it when the queue is full.
  *
  * Our own accounts (serverMetadata.internal: studies, benchmarks) also pass through a lane of their own, at most
  * EKBASIS_INTERNAL_TOKENS_PER_SEC (default 600) and one at a time, so they leave gaps in which customers get the model
@@ -57,7 +58,7 @@ async function take(key: string, limit: number, id: string, deadline: number, t0
     }
     if (Date.now() + delay > deadline) return "busy"
     await sleep(delay + Math.floor(Math.random() * 50))
-    delay = Math.min(delay * 1.5, 1000)
+    delay = Math.min(delay * 1.5, 300)
   }
 }
 
@@ -76,11 +77,12 @@ export async function acquireSlot(id: string, internal = false): Promise<Slot> {
   return { id: null, waitedMs: Date.now() - t0, busy: got === "busy" }
 }
 
-/** Free the slot after the request, keeping it taken for the cool-down its input tokens earn. */
-export async function releaseSlot(id: string, inputTokens: number, internal = false): Promise<void> {
+/** Free the slot after the request: it stays taken until the time its input tokens earn, counted from when it was
+ * taken (`acquiredAt`), has passed. */
+export async function releaseSlot(id: string, inputTokens: number, internal = false, acquiredAt = Date.now()): Promise<void> {
   const hold = async (key: string, perSec: number) => {
-    const cooldown = Math.min(MAX_COOLDOWN_MS, Math.round((1000 * Math.max(0, inputTokens)) / perSec))
-    if (cooldown > 0) await redis("ZADD", key, "XX", Date.now() + cooldown, id)
+    const until = acquiredAt + Math.min(MAX_COOLDOWN_MS, Math.round((1000 * Math.max(0, inputTokens)) / perSec))
+    if (until > Date.now()) await redis("ZADD", key, "XX", until, id)
     else await redis("ZREM", key, id)
   }
   try {
