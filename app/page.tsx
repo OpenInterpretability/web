@@ -48,7 +48,7 @@ function demoExamples(): DemoExample[] {
 const STUDIES = [
   { k: '6/24 → 1/24', v: 'tasks where Claude Sonnet did harm on real apps (Gitea, Nextcloud, Roundcube): 25.0% → 4.2%', q: 'secondary contrast, one run per task; for Claude Haiku the pre-registered hypotheses failed', href: '/research/papers/consequence-model-safety-layer', src: 'paper' },
   { k: '24/36 → 2/36', v: 'harmful runs by Claude Haiku operating a real Kubernetes cluster: 66.7% → 5.6%', q: 'asking the human every time also reached 0%, with 3× the questions; matching a Sonnet guard failed by one case', href: 'https://github.com/OpenInterpretability/ekbasis-cookbook/blob/main/docs/K8S_STUDY.md', src: 'study' },
-  { k: '24/60 → 0/60', v: 'harmful runs by Claude Sonnet on our demo apps; a placebo reminder: 22/60. Harm fell for all 5 models tested', q: 'apps built for the study, with consequences hidden from the agent', href: '/research/papers/consequence-model-safety-layer', src: 'paper' },
+  { k: '~50% → 0–6%', v: 'harmful runs by an open agent (GLM-5.3-Flash) in each of 3 runs of the same 47 tasks on our demo apps: 23, 24, 26 → 3, 0, 0 — two runs through this API', q: 'the same tasks and agent each time; apps built for the study, consequences hidden from the agent', href: 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/agents-3reps', src: 'study' },
   { k: '8 / 8', v: 'classic git work losses flagged at 98–99%, with 0 false alarms on 9 safe commands', q: 'a small battery written by us; never-seen git command types: 85.8%', href: 'https://github.com/OpenInterpretability/ekbasis-cookbook', src: 'cookbook' },
 ]
 

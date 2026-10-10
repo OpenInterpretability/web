@@ -115,7 +115,11 @@ ekbasis git-check -- "git reset --hard"
         <li className="pl-5 -indent-5">— Operating a real Kubernetes cluster, Claude Haiku did harm in 24 of 36 runs on its own and in 2 of 36
           with Ekbasis. Asking the human before every action also avoided harm, with three times as many questions.{' '}
           <a href={K8S} className="underline underline-offset-2">Study</a>.</li>
-        <li className="pl-5 -indent-5">— On our test apps, harm fell for all five models we tried; a placebo reminder did not help.</li>
+        <li className="pl-5 -indent-5">— On our seven demo apps, with GLM-5.3-Flash as the agent, we ran the same 47 tasks three times — twice
+          through this API, with an ordinary key. Harmful runs went from 23, 24 and 26 of 47 to 3, 0 and 0; finished tasks
+          roughly doubled. The same tasks each time, so this shows the result holds from run to run, not across new tasks.{' '}
+          <a href="https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/agents-3reps" className="underline underline-offset-2">Data</a>.</li>
+        <li className="pl-5 -indent-5">— On those apps, harm fell for all five models we tried; a placebo reminder did not help.</li>
       </ul>
       <P>
         Not everything worked. With Claude Haiku on real apps, our pre-registered hypotheses failed: a warning alone was
