@@ -226,7 +226,7 @@ export default function PricingPage() {
         <div className="mt-4 overflow-x-auto rounded-xl bg-black/[0.03] p-4 ring-1 ring-black/10 dark:bg-white/[0.04] dark:ring-white/15">
           <pre className="text-sm leading-relaxed">
             <code>{`pip install "git+https://github.com/OpenInterpretability/ekbasis"
-export EKBASIS_URL=https://api.openinterp.org        # or your self-hosted server
+export EKBASIS_URL=https://openinterp.org/api/v1     # or your self-hosted server
 export EKBASIS_API_KEY=ekb_...                       # /console → keys
 
 cd your-repo && ekbasis git-check -- "git reset --hard"
