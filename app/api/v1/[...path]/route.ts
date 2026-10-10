@@ -15,6 +15,7 @@ import { after } from "next/server"
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { newRequestId, recordEvent, type TelemetryEvent } from "@/lib/telemetry"
 import { debitCachedBalance, getBalance, getIdent, keyHash, putBalance, putIdent, type Ident } from "@/lib/gateway-cache"
+import { acquireSlot, releaseSlot } from "@/lib/gateway-limit"
 
 export const dynamic = "force-dynamic"
 
@@ -168,8 +169,27 @@ async function handler(request: Request) {
   }
 
   ev.rid = newRequestId()
+  const rid: string = ev.rid
+
+  // The model server shares its GPUs with another production service: a global limit (lib/gateway-limit) keeps every
+  // caller together to a bounded share. Waiting is part of the latency; a caller that cannot get a slot in time gets 429.
+  const slot = await acquireSlot(rid)
+  if (slot.waitedMs > 0) timing.push(`queue;dur=${slot.waitedMs}`)
+  if ("busy" in slot && slot.busy) {
+    const resp = json({ error: "busy: the model server is at its limit right now; retry in a few seconds" }, 429)
+    resp.headers.set("Retry-After", "5")
+    return done(resp, "busy (gateway limit)")
+  }
+  let releasedTokens: number | null = null
+  const release = (tokens: number) => {
+    if (slot.id === null || releasedTokens !== null) return
+    releasedTokens = tokens
+    after(() => releaseSlot(rid, tokens))
+  }
+
   const tModel = Date.now()
   let backendResp: Response
+  let respText: string
   try {
     backendResp = await fetch(`${BACKEND}${path}`, {
       method: "POST",
@@ -179,11 +199,11 @@ async function handler(request: Request) {
       },
       body: JSON.stringify(body),
     })
+    respText = await backendResp.text()
   } catch {
+    release(0)
     return done(json({ error: "the model server is unreachable" }, 503), "backend unreachable")
   }
-
-  const respText = await backendResp.text()
   let respObj: Record<string, unknown> = {}
   try {
     respObj = JSON.parse(respText) as Record<string, unknown>
@@ -198,6 +218,7 @@ async function handler(request: Request) {
   const usage = respObj.usage as { input_tokens?: number; output_tokens?: number } | undefined
   const inputTokens = Math.max(0, Math.round(usage?.input_tokens ?? 0))
   ev.tok = inputTokens
+  release(inputTokens)
   if (inputTokens > 0) {
     after(async () => {
       try {
