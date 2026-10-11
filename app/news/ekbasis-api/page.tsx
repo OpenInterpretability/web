@@ -7,7 +7,7 @@ const serif = localFont({ src: '../../fonts/source-serif-4-latin-wght-normal.wof
 export const metadata = {
   title: 'Introducing the Ekbasis API',
   description:
-    'Ekbasis is a consequence model: give it the state and the action your agent is about to take, and it returns a calibrated probability for what will happen. Available today at $0.04 per million input tokens.',
+    'Ekbasis is a consequence model: give it the state and the action your agent is about to take, and it returns a calibrated probability for what will happen. Available today at $0.30 per million input tokens.',
   openGraph: { type: 'article', title: 'Introducing the Ekbasis API', publishedTime: '2026-10-10' },
 }
 
@@ -153,7 +153,7 @@ ekbasis git-check -- "git reset --hard"
 
       <H2>Availability and pricing</H2>
       <P>
-        The Ekbasis API is available today. It costs $0.04 per million input tokens, with no charge for output, since
+        The Ekbasis API is available today. It costs $0.30 per million input tokens (launch price: $0.04), with no charge for output, since
         the model generates none; a typical check reads about 1,500 tokens. Credits are prepaid in USDC or USDT on
         Polygon, Arbitrum, Base or Ethereum, with no subscription and no minimum. The weights are open under Apache-2.0,
         and running them on your own hardware is free. The API logs request metadata to operate and bill the service; it

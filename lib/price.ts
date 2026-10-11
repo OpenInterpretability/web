@@ -4,7 +4,7 @@
  * affects how many tokens a new order buys.
  */
 
-export const DEFAULT_PRICE_PER_M = 0.04
+export const DEFAULT_PRICE_PER_M = 0.3
 export const MIN_PRICE_PER_M = 0.005
 export const MAX_PRICE_PER_M = 5
 /** Input tokens in a typical check (the figure every "per check" line uses). */

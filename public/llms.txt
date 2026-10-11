@@ -2,7 +2,7 @@
 
 > Independent lab for AI-agent safety: pre-registered research and open tools. Main product: Ekbasis, an open
 > consequence model that forecasts what an action will do before an agent runs it (typed questions, calibrated
-> probabilities, one forward pass). Hosted API at https://openinterp.org/api/v1 ($0.04 per 1M input tokens).
+> probabilities, one forward pass). Hosted API at https://openinterp.org/api/v1 ($0.30 per 1M input tokens).
 
 ## Ekbasis
 

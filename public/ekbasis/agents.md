@@ -34,7 +34,7 @@ human to click through warnings.
 | Auth | `Authorization: Bearer ekb_…` (env `EKBASIS_API_KEY`); keys at https://openinterp.org/console |
 | Decision endpoint | `POST {EKBASIS_URL}/v1/systemone` |
 | Health | `GET {EKBASIS_URL}/health` (no key needed) |
-| Price | $0.04 per 1M **input** tokens; output is never charged (nothing is generated) |
+| Price | $0.30 per 1M **input** tokens; output is never charged (nothing is generated) |
 | Self-hosted | open weights (Apache-2.0); same API on your own server, e.g. `EKBASIS_URL=http://127.0.0.1:8000` |
 
 Send a descriptive `User-Agent` (for example `my-agent/1.0`). The official client sends `ekbasis/<version>`.
