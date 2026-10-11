@@ -60,6 +60,15 @@ then `claude plugin install ekbasis@ekbasis`, and set `EKBASIS_API_KEY`. Or wire
 For any MCP client: `ekbasis-mcp` exposes `check_git_commands`, `predict_consequences` and `preflight_command`.
 Setup: https://github.com/OpenInterpretability/ekbasis-cookbook
 
+**Database migrations (client 0.1.12+):** `ekbasis migrate-check --base origin/main` forecasts whether new PostgreSQL
+migrations fail or lose data, from the schema built out of the base branch's migrations (and, optionally, planner
+statistics of a read-only replica); same exit codes. As a GitHub Action: https://openinterp.org/ekbasis/migration-guard
+(pre-registered on 184 new migrations: verdict right 87.5%, false alarms on safe ones 15.6%).
+
+**Agent steps (experimental):** `ekbasis.intent_check(user_request, events, action)` asks whether the next tool call
+serves the user or follows instructions from content the agent read. Use it to ask a person, not to block
+(https://github.com/OpenInterpretability/ekbasis/blob/main/docs/INTENT_CHECK.md).
+
 ## 4. The raw API (anything that is not a shell command)
 
 Request:

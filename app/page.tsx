@@ -90,6 +90,17 @@ ekbasis git-check -- "git reset --hard"
   -e EKBASIS_API_KEY=ekb_... -- ekbasis-mcp`,
   },
   {
+    icon: GitBranch,
+    title: 'Migration guard (GitHub Action)',
+    note: 'On every pull request: will its PostgreSQL migrations fail or lose data? One comment, before the merge.',
+    href: '/ekbasis/migration-guard',
+    code: `- uses: OpenInterpretability/ekbasis/actions/migration-guard@v0.1.12
+  with:
+    api-key: \${{ secrets.EKBASIS_API_KEY }}
+# Risky: …/05_add_visit_id — may fail on existing data (96%);
+#        nothing in the file would be applied`,
+  },
+  {
     icon: Code2,
     title: 'REST API',
     note: 'Any action, any language: describe the state, ask typed questions.',
@@ -216,7 +227,10 @@ export default async function HomePage() {
                 <w.icon className="h-5 w-5 text-brand-600 dark:text-brand-400" />
                 <h3 className="font-semibold">{w.title}</h3>
               </div>
-              <p className="mt-2 text-sm text-ink-900/65 dark:text-ink-50/65">{w.note}</p>
+              <p className="mt-2 text-sm text-ink-900/65 dark:text-ink-50/65">
+                {w.note}
+                {'href' in w && w.href ? <> <Link href={w.href} className="text-brand-600 underline underline-offset-2 dark:text-brand-400">How it works and what we measured →</Link></> : null}
+              </p>
               <pre className="mt-4 flex-1 overflow-x-auto rounded-xl bg-ink-950 p-4 text-[12.5px] leading-relaxed text-ink-50/90 ring-1 ring-white/10">
                 <code>{w.code}</code>
               </pre>
