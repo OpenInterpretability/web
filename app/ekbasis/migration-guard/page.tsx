@@ -10,8 +10,10 @@ export const metadata = {
     'A GitHub Action that foresees, before a pull request is merged, whether its PostgreSQL migrations fail or lose data. Pre-registered on 184 migrations it had never seen: verdict right 87.5% of the time, against 69.6% for linter-style rules.',
 }
 
-const DOCS = 'https://github.com/OpenInterpretability/ekbasis/blob/v0.1.14/docs/MIGRATION_GUARD.md'
+const DOCS = 'https://github.com/OpenInterpretability/ekbasis/blob/v0.1.16/docs/MIGRATION_GUARD.md'
 const STUDY = 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/migrations'
+const FW_STUDY = 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/migrations-frameworks'
+const REAL_STUDY = 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/migrations-real-incidents'
 
 const WORKFLOW = `# .github/workflows/migration-guard.yml
 name: migration guard
@@ -52,7 +54,7 @@ export default function MigrationGuard() {
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-24 pt-16 sm:pt-24">
       <p className="text-sm text-ink-900/55 dark:text-ink-50/55">
-        <Link href="/ekbasis" className="hover:underline">Ekbasis</Link> · client 0.1.14 · October 2026
+        <Link href="/ekbasis" className="hover:underline">Ekbasis</Link> · client 0.1.16 · October 2026
       </p>
       <h1 className={`mt-5 ${serif.className} text-[44px] font-normal leading-[1.08] tracking-tight sm:text-[52px]`}>
         Migration guard
@@ -135,6 +137,34 @@ export default function MigrationGuard() {
         code. On the migrations that look destructive, accuracy was 78.6% against 67.9% for the rules. The tables held
         synthetic rows, so results on real databases may differ.{' '}
         <a href={STUDY} className="underline underline-offset-2">Every result, the plans and the scripts</a>.
+      </P>
+
+      <H2>Alembic and Django</H2>
+      <P>
+        With <code>framework: alembic</code> or <code>framework: django</code>, the framework itself renders the SQL. The
+        pull request&apos;s code runs only inside a container with no network and no secrets; the API key is used in a
+        later step. A migration with code that is not SQL, such as a Django <code>RunPython</code>, cannot be foreseen:
+        it is listed in the comment for review by hand and does not fail the check, unless you set{' '}
+        <code>on-code: block</code>.
+      </P>
+      <P>
+        In a second pre-registered evaluation, on 571 migrations from five projects it had never seen, it answered 383;
+        the rest held code it cannot foresee. On those 383, its verdict was right 98.6% of the time for Alembic and 95.5%
+        for Django, against 77.3% and 82.6% for linter-style rules, with 1.6% and 2.4% false alarms. Alembic passed every
+        criterion, but with only 13 risky migrations among those it answered, so its numbers are less certain. Django
+        missed 6 of 34 risky migrations, below the recall we required, so Django support is marked experimental. Code it cannot foresee is
+        common: 45% of the Alembic migrations and 24% of the Django ones, and a good share of the real risk sits there;
+        counting it as missed, it caught 31% and 48% of all risky migrations.
+        A first evaluation, which blocked on that code, failed.{' '}
+        <a href={FW_STUDY} className="underline underline-offset-2">The plans, both results and the scripts</a>.
+      </P>
+
+      <H2>On real incidents</H2>
+      <P>
+        We also ran it on 25 migrations that caused real incidents in open-source projects, each checked as its pull
+        request stood. It flagged 9 for the right reason and missed 8; the most common miss is a new constraint that
+        existing rows violate. This was not a random sample, and an attempt to fix that miss with more facts did not help.{' '}
+        <a href={REAL_STUDY} className="underline underline-offset-2">Every case</a>.
       </P>
 
       <H2>Cost</H2>
