@@ -10,5 +10,6 @@ export async function GET(request: Request) {
   const since = new URL(request.url).searchParams.get("since")
   const events = await readStream(since && /^\d+-\d+$/.test(since) ? since : null, since ? 200 : 100)
   // Per-minute counts come from the stream itself (no per-minute counters are written: lib/telemetry).
-  return ajson({ events, minutes: await readMinutes(Date.now(), 60) })
+  const external = new URL(request.url).searchParams.get("external") === "1"
+  return ajson({ events, minutes: await readMinutes(Date.now(), 60, external) })
 }

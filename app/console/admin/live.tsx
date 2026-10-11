@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { api, Bars, Card, ErrorLine, Badge, fmtTok } from "./ui"
 
-type Ev = { t: number; uid: string | null; email: string | null; key: string | null; path: string; status: number; tok: number; ms: number; ip: string | null; country: string | null; err?: string }
+type Ev = { t: number; uid: string | null; email: string | null; key: string | null; path: string; status: number; tok: number; ms: number; ip: string | null; country: string | null; err?: string; int?: 1 }
 type LiveResp = { events: { id: string; e: Ev }[]; minutes: { t: number; req: number; tok: number; err: number }[] }
 
 export function Live() {
@@ -11,6 +11,8 @@ export function Live() {
   const [minutes, setMinutes] = useState<LiveResp["minutes"]>([])
   const [paused, setPaused] = useState(false)
   const [filter, setFilter] = useState("")
+  // Our own accounts (studies, benchmarks, the CI test repo) are flagged int=1 by the gateway since 10 Oct 2026.
+  const [hideInternal, setHideInternal] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const last = useRef<string | null>(null)
 
@@ -19,7 +21,10 @@ export function Live() {
     let alive = true
     const tick = async () => {
       try {
-        const d = await api<LiveResp>(`/api/admin/live${last.current ? `?since=${encodeURIComponent(last.current)}` : ""}`)
+        const q = new URLSearchParams()
+        if (last.current) q.set("since", last.current)
+        if (hideInternal) q.set("external", "1")
+        const d = await api<LiveResp>(`/api/admin/live${q.size ? `?${q}` : ""}`)
         if (!alive) return
         if (d.events.length) {
           last.current = d.events[d.events.length - 1].id
@@ -34,9 +39,11 @@ export function Live() {
     void tick()
     const t = setInterval(() => { void tick() }, 2000)
     return () => { alive = false; clearInterval(t) }
-  }, [paused])
+  }, [paused, hideInternal])
 
-  const shown = filter ? events.filter(({ e }) => [e.email, e.path, String(e.status), e.ip, e.key].some((x) => x?.toLowerCase().includes(filter.toLowerCase()))) : events
+  const visible = hideInternal ? events.filter(({ e }) => e.int !== 1) : events
+  const hidden = events.length - visible.length
+  const shown = filter ? visible.filter(({ e }) => [e.email, e.path, String(e.status), e.ip, e.key].some((x) => x?.toLowerCase().includes(filter.toLowerCase()))) : visible
   const lastMin = minutes[minutes.length - 1]
   const reqPerMin = minutes.slice(-5).reduce((a, m) => a + m.req, 0) / 5
 
@@ -62,6 +69,10 @@ export function Live() {
             </span>
           </div>
           <input value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Filter: email, path, status, IP, key" className="mt-3 w-full rounded-lg bg-transparent px-3 py-1.5 text-sm ring-1 ring-black/10 dark:ring-white/15" />
+          <label className="mt-3 flex items-center gap-2 text-xs text-ink-900/70 dark:text-ink-50/70">
+            <input type="checkbox" checked={hideInternal} onChange={(e) => setHideInternal(e.target.checked)} />
+            Hide internal accounts (studies, CI tests){hideInternal && hidden > 0 ? ` · ${hidden} hidden` : ""}
+          </label>
         </Card>
       </div>
       <div className="overflow-x-auto rounded-xl ring-1 ring-black/10 dark:ring-white/15">

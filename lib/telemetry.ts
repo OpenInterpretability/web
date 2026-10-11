@@ -98,8 +98,9 @@ export async function recordEvent(e: TelemetryEvent): Promise<void> {
   await pipeline(cmds)
 }
 
-/** Requests, tokens and errors per minute for the last `minutes`, from the stream (oldest first). */
-export async function readMinutes(now: number, minutes = 60): Promise<{ t: number; req: number; tok: number; err: number }[]> {
+/** Requests, tokens and errors per minute for the last `minutes`, from the stream (oldest first); `externalOnly` leaves
+ * out our own accounts (int=1). */
+export async function readMinutes(now: number, minutes = 60, externalOnly = false): Promise<{ t: number; req: number; tok: number; err: number }[]> {
   const start = Math.floor(now / 60_000) * 60_000 - (minutes - 1) * 60_000
   type Raw = [string, string[]][]
   const raw = (await redis<Raw>("XRANGE", "tel:stream", String(start), "+", "COUNT", 20000)) ?? []
@@ -107,6 +108,7 @@ export async function readMinutes(now: number, minutes = 60): Promise<{ t: numbe
   for (const [, fields] of raw) {
     const ev = JSON.parse(fields[fields.indexOf("j") + 1]) as TelemetryEvent
     if (ev.path === "/health" || ev.path === "/v1/health") continue
+    if (externalOnly && ev.int === 1) continue
     const i = Math.floor((ev.t - start) / 60_000)
     if (i < 0 || i >= minutes) continue
     out[i].req += 1
