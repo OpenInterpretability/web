@@ -27,8 +27,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@openinterp',
-    creator: '@openinterp',
     title: `Ekbasis — ${ekbasis.tagline}`,
     description: ekbasis.description,
   },
@@ -65,7 +63,7 @@ const jsonLd = {
       '@id': `${site.url}#org`,
       name: site.name,
       url: site.url,
-      sameAs: [site.github, 'https://huggingface.co/caiovicentino1', site.twitter],
+      sameAs: [site.github, 'https://huggingface.co/caiovicentino1'],
     },
   ],
 }

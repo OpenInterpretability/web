@@ -15,7 +15,6 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@openinterp',
     title: 'AgentGuard — the model-origin blind spot, closed',
     description: 'A defense-in-depth action firewall for tool-using agents, with a model-internal intent brake.',
   },

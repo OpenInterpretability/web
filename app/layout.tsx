@@ -72,8 +72,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@openinterp',
-    creator: '@openinterp',
     title: `${site.name} — ${site.tagline}`,
     description: site.description,
   },

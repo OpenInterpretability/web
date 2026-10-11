@@ -18,7 +18,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@openinterp',
     title: 'Open tools for AI-agent safety · OpenInterpretability',
     description: 'AgentGuard, Ekbasis, openinterp-mcp, ProbeBench and more — open source, measured, Apache-2.0.',
   },

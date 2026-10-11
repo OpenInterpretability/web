@@ -64,7 +64,6 @@ export function Footer() {
             <li><Link href="https://github.com/OpenInterpretability/notebooks" target="_blank" rel="noopener noreferrer" className="hover:text-brand-600">Notebooks</Link></li>
             <li><Link href="https://github.com/OpenInterpretability/cli" target="_blank" rel="noopener noreferrer" className="hover:text-brand-600">SDK (openinterp)</Link></li>
             <li><Link href={site.huggingface} target="_blank" rel="noopener noreferrer" className="hover:text-brand-600">HuggingFace</Link></li>
-            <li><Link href={site.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-brand-600">Twitter / X</Link></li>
           </ul>
         </div>
       </div>

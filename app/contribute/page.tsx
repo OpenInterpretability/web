@@ -96,7 +96,7 @@ const waysIn = [
     lines: [
       'Read the manifesto',
       'Open a Discussion with a question or idea',
-      'Share a Trace you found interesting on X tagging @openinterp',
+      'Share a Trace you found interesting',
       'Star the repos that helped you',
     ],
   },

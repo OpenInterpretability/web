@@ -33,8 +33,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@openinterp',
-    creator: '@openinterp',
     title: 'How to use Ekbasis',
     description: 'State + action + typed questions → calibrated answers. A guide for first-time users, with real outputs.',
   },

@@ -7,7 +7,6 @@ export const site = {
   url: 'https://openinterp.org',
   github: 'https://github.com/OpenInterpretability',
   huggingface: 'https://huggingface.co/caiovicentino1',
-  twitter: 'https://twitter.com/openinterp',
   discord: '#', // placeholder
   contact: 'hi@openinterp.org',
 }
