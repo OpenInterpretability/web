@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0        # the base branch's migrations build the schema
-      - uses: OpenInterpretability/ekbasis/actions/migration-guard@v0.1.12
+      - uses: OpenInterpretability/migration-guard@v1
         with:
           api-key: \${{ secrets.EKBASIS_API_KEY }}
           # db-stats-url: \${{ secrets.READ_REPLICA_URL }}   # optional: planner statistics only`
