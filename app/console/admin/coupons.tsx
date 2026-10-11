@@ -11,7 +11,7 @@ type Red = { uid: string; email: string | null; t: number; tokens: number }
 export function Coupons() {
   const [list, setList] = useState<C[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [tokens, setTokens] = useState("25000000")
+  const [tokens, setTokens] = useState("3333333")
   const [count, setCount] = useState("1")
   const [maxR, setMaxR] = useState("1")
   const [expires, setExpires] = useState("")
@@ -104,6 +104,7 @@ export function Coupons() {
                     <Btn onClick={() => { void patch(c.code, { active: !c.active }) }}>{c.active ? "Disable" : "Enable"}</Btn>
                     <Btn onClick={() => { setEditExp(c.code); setExpValue(c.expiresAt ? new Date(c.expiresAt).toISOString().slice(0, 10) : "") }}>Expires</Btn>
                     <Btn onClick={() => { const v = window.prompt("Uses per code (0 = unlimited)", String(c.maxRedemptions)); if (v !== null) void patch(c.code, { maxRedemptions: Number(v) }) }}>Limit</Btn>
+                    <Btn onClick={() => { const v = window.prompt(`Tokens per redemption from now on (${(price ? (1e6 / price).toLocaleString("en-US", { maximumFractionDigits: 0 }) : "?")} = $1 at today's price). Accounts that already redeemed keep what they got.`, String(c.tokens)); if (v !== null && /^\d+$/.test(v.trim()) && Number(v) > 0) void patch(c.code, { tokens: Number(v) }) }}>Tokens</Btn>
                     <Btn onClick={() => { void remove(c.code) }}>Delete</Btn>
                   </td>
                 </tr>
