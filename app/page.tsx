@@ -5,11 +5,19 @@ import {
 } from 'lucide-react'
 import examplesFile from '@/content/ekbasis-start-examples.json'
 import { ConsequenceDemo, type DemoExample } from '@/components/home/consequence-demo'
+import { getPricePerM } from '@/lib/pricing'
+import { formatPrice, perThousandChecksUsd } from '@/lib/price'
 
-export const metadata = {
-  title: 'Ekbasis API — know what an action will do before your agent runs it',
-  description:
-    'Ekbasis is an open consequence model. Send the state and the action; get calibrated probabilities for what happens — lost work, a failed payment, a leaked file — in one call. $0.04 per 1M input tokens, no output charge. Pay in USDC or USDT.',
+// The price is admin-editable (lib/pricing): re-render at most every minute, and at once after a change.
+export const revalidate = 60
+
+export async function generateMetadata() {
+  const price = formatPrice(await getPricePerM())
+  return {
+    title: 'Ekbasis API — know what an action will do before your agent runs it',
+    description:
+      `Ekbasis is an open consequence model. Send the state and the action; get calibrated probabilities for what happens — lost work, a failed payment, a leaked file — in one call. ${price} per 1M input tokens, no output charge. Pay in USDC or USDT.`,
+  }
 }
 
 type Rec = {
@@ -104,8 +112,9 @@ const USES = [
   { icon: Cloud, t: 'Cloud and infra', d: 'the wrong kubectl context, compose down -v on a volume with data, overwrites on S3' },
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
   const examples = demoExamples()
+  const pricePerM = await getPricePerM()
   return (
     <>
       {/* ===== Hero ===== */}
@@ -143,7 +152,7 @@ export default function HomePage() {
             </Link>
           </div>
           <p className="mt-5 text-sm text-ink-900/55 dark:text-ink-50/55">
-            $0.04 per 1M input tokens · no output charge · pay in USDC or USDT · sign in with GitHub, Google or email
+            {formatPrice(pricePerM)} per 1M input tokens · no output charge · pay in USDC or USDT · sign in with GitHub, Google or email
           </p>
         </div>
         <div className="relative mx-auto max-w-5xl px-6 pb-6">
@@ -245,9 +254,9 @@ export default function HomePage() {
         <div className="grid gap-6 rounded-2xl bg-gradient-to-br from-brand-600/10 via-transparent to-accent-500/10 p-8 ring-1 ring-brand-500/25 sm:p-10 lg:grid-cols-[1.1fr_1fr]">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700 dark:text-brand-300">Pricing</p>
-            <p className="mt-3 text-5xl font-semibold tracking-tight">$0.04 <span className="text-xl font-medium text-ink-900/55 dark:text-ink-50/55">per 1M input tokens</span></p>
+            <p className="mt-3 text-5xl font-semibold tracking-tight">{formatPrice(pricePerM)} <span className="text-xl font-medium text-ink-900/55 dark:text-ink-50/55">per 1M input tokens</span></p>
             <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">
-              No output charge: the model only reads. A check is about 1.5k tokens, so roughly $0.06 per 1,000 checks.
+              No output charge: the model only reads. A check is about 1,500 tokens, so roughly {perThousandChecksUsd(pricePerM)} per 1,000 checks.
             </p>
             <ul className="mt-5 space-y-2 text-sm">
               {[

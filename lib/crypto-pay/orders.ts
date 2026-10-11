@@ -8,11 +8,16 @@
  *   cp:credit:<orderId>             an order credits at most once
  * If the process dies between claiming a transfer and crediting, the order goes to "review" instead of
  * being credited twice: under-credit is fixable by hand, double-credit is not.
+ *
+ * The tokens an order buys are fixed when it is created, from the price at that moment (stored as pricePerM),
+ * so a price change never alters an open order: it is credited at its own price.
  */
 import { randomBytes, randomInt } from "crypto"
 import { NETWORKS, PACKS, TREASURY, TREASURY_DISPLAY, PAY_WINDOW_MS, SCAN_WINDOW_MS, DECIMALS, type NetworkId, type TokenId, type PackId } from "./config"
 import { blockNumber, transfersTo, transfersInTx, type TransferLog } from "./chain"
 import { setNX, getJSON, setJSON, redis, pipeline } from "./redis"
+import { getPricePerM } from "@/lib/pricing"
+import { tokensForUsd } from "@/lib/price"
 
 export type OrderStatus = "pending" | "paid" | "expired" | "review"
 
@@ -20,7 +25,8 @@ export type Order = {
   id: string
   userId: string
   packId: PackId
-  tokens: number
+  tokens: number // credited on payment; computed at creation from pricePerM
+  pricePerM?: number // USD per 1M input tokens when the order was created (absent on orders from before 2026-10)
   network: NetworkId
   token: TokenId
   tokenAddress: string
@@ -46,6 +52,7 @@ export async function createOrder(userId: string, packId: PackId, network: Netwo
   const tok = net.tokens[token]
   if (!tok) throw new Error(`${token} is not accepted on ${net.name}`)
   const pack = PACKS[packId]
+  const pricePerM = await getPricePerM({ fresh: true })
   const base = BigInt(pack.usd) * BigInt(10 ** DECIMALS)
   const id = randomBytes(12).toString("hex")
 
@@ -63,7 +70,8 @@ export async function createOrder(userId: string, packId: PackId, network: Netwo
     id,
     userId,
     packId,
-    tokens: pack.tokens,
+    tokens: tokensForUsd(pack.usd, pricePerM),
+    pricePerM,
     network,
     token,
     tokenAddress: tok.address,
@@ -220,6 +228,7 @@ export function publicOrder(o: Order) {
     id: o.id,
     packId: o.packId,
     tokens: o.tokens,
+    pricePerM: o.pricePerM ?? null,
     network: o.network,
     networkName: net.name,
     chainId: net.chainId,

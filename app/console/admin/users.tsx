@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react"
 import { Copy } from "lucide-react"
 import { api, Badge, Btn, Card, ErrorLine, Input, ago, fmt, fmtTok, usd, when } from "./ui"
+import { usePrice } from "./pricing"
+import { formatPrice } from "@/lib/price"
 
 type Row = {
   id: string; name: string | null; email: string | null; verified: boolean; signedUpAt: number; lastActiveAt: number
@@ -11,7 +13,7 @@ type Row = {
 type Detail = {
   user: Row
   keys: { id: string; description: string | null; lastFour: string; createdAt: number; expiresAt: number | null; revokedAt: number | null; valid: boolean }[]
-  orders: { id: string; packId: string; tokens: number; network: string; token: string; usd: number; status: string; createdAt: number; txHash: string | null }[]
+  orders: { id: string; packId: string; tokens: number; pricePerM: number | null; network: string; token: string; usd: number; status: string; createdAt: number; txHash: string | null }[]
   events: { t: number; path: string; status: number; tok: number; ms: number; err?: string }[]
   coupons: { code: string; t: number; tokens: number }[]
 }
@@ -102,6 +104,7 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
   const [suspendReason, setSuspendReason] = useState("")
   const [newKey, setNewKey] = useState<string | null>(null)
   const [confirmDelete, setConfirmDelete] = useState("")
+  const price = usePrice()
 
   const load = useCallback(async () => {
     try {
@@ -134,7 +137,7 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
       <div className="grid gap-4 md:grid-cols-3">
         <Card title="Balance">
           <p className={`text-3xl font-semibold tabular-nums ${u.balance !== null && u.balance < 0 ? "text-red-600" : ""}`}>{fmt(u.balance)}</p>
-          <p className="text-xs text-ink-900/55 dark:text-ink-50/55">input tokens · ≈ {usd(((u.balance ?? 0) / 1e6) * 0.04)}</p>
+          <p className="text-xs text-ink-900/55 dark:text-ink-50/55">input tokens · ≈ {usd(((u.balance ?? 0) / 1e6) * price)} at today's price</p>
           <div className="mt-4 space-y-2">
             <Input value={delta} onChange={(e) => setDelta(e.target.value.replace(/[^\d-]/g, ""))} placeholder="+25000000 or -1000000" className="w-full" />
             <Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="reason (goes to the audit log)" className="w-full" />
@@ -209,7 +212,7 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
             <tbody>
               {d.orders.map((o) => (
                 <tr key={o.id} className="border-t border-black/5 dark:border-white/10">
-                  <td className="py-1">{when(o.createdAt)}</td><td>{o.packId}</td><td>{usd(o.usd)} {o.token} · {o.network}</td>
+                  <td className="py-1">{when(o.createdAt)}</td><td>{o.packId}</td><td>{usd(o.usd)} {o.token} · {o.network}</td><td>{fmtTok(o.tokens)} tokens{o.pricePerM !== null ? ` @ ${formatPrice(o.pricePerM)}/1M` : ""}</td>
                   <td><Badge tone={o.status === "paid" ? "good" : o.status === "pending" ? "neutral" : "warn"}>{o.status}</Badge></td>
                 </tr>
               ))}

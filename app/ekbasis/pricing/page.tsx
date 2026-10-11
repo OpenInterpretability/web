@@ -2,33 +2,41 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, Server, KeyRound, Building2, Boxes, CreditCard, ShieldCheck, ArrowRight, Check, BookOpen } from 'lucide-react'
 import { site } from '@/lib/constants'
+import { getPricePerM } from '@/lib/pricing'
+import { compactTokens, formatPrice, perCheckUsd, perThousandChecksUsd, tokensForUsd, TOKENS_PER_CHECK } from '@/lib/price'
 
 const URL_ = `${site.url}/ekbasis/pricing`
 const COOKBOOK = 'https://github.com/OpenInterpretability/ekbasis-cookbook'
 
-export const metadata: Metadata = {
-  title: 'Ekbasis pricing — $0.04 per 1M input tokens, no output charges',
-  description:
-    'The consequence model for AI agents. Prepaid credits, no subscription: $0.04 per 1M input tokens (a check is ~1.5k tokens and generates 0). Self-host free forever under Apache-2.0. Enterprise on-prem and custom worlds.',
-  keywords: ['Ekbasis pricing', 'consequence model', 'agent guard', 'AI agent safety API', 'world model API', 'OpenInterp'],
-  alternates: { canonical: '/ekbasis/pricing' },
-  openGraph: {
-    type: 'website',
-    url: URL_,
-    siteName: site.name,
-    title: 'Ekbasis pricing — $0.04 per 1M input tokens',
-    description: 'Prepaid credits. No subscription. Self-host free forever under Apache-2.0.',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    site: '@openinterp',
-    creator: '@openinterp',
-    title: 'Ekbasis pricing — $0.04 per 1M input tokens',
-    description: 'Prepaid credits. No subscription. Self-host free forever.',
-  },
+// The price is admin-editable (lib/pricing): re-render at most every minute, and at once after a change.
+export const revalidate = 60
+
+export async function generateMetadata(): Promise<Metadata> {
+  const price = formatPrice(await getPricePerM())
+  return {
+    title: `Ekbasis pricing — ${price} per 1M input tokens, no output charges`,
+    description:
+      `The consequence model for AI agents. Prepaid credits, no subscription: ${price} per 1M input tokens (a check is ~1.5k tokens and generates 0). Self-host free forever under Apache-2.0. Enterprise on-prem and custom worlds.`,
+    keywords: ['Ekbasis pricing', 'consequence model', 'agent guard', 'AI agent safety API', 'world model API', 'OpenInterp'],
+    alternates: { canonical: '/ekbasis/pricing' },
+    openGraph: {
+      type: 'website',
+      url: URL_,
+      siteName: site.name,
+      title: `Ekbasis pricing — ${price} per 1M input tokens`,
+      description: 'Prepaid credits. No subscription. Self-host free forever under Apache-2.0.',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@openinterp',
+      creator: '@openinterp',
+      title: `Ekbasis pricing — ${price} per 1M input tokens`,
+      description: 'Prepaid credits. No subscription. Self-host free forever.',
+    },
+  }
 }
 
-const jsonLd = {
+const jsonLd = (pricePerM: number) => ({
   '@context': 'https://schema.org',
   '@graph': [
     {
@@ -39,7 +47,7 @@ const jsonLd = {
       brand: { '@type': 'Organization', '@id': `${site.url}#org`, name: site.name, url: site.url },
       offers: {
         '@type': 'Offer',
-        price: '0.04',
+        price: String(pricePerM),
         priceCurrency: 'USD',
         description: 'Per 1M input tokens. No output charges (the model generates none). Prepaid credits.',
         url: URL_,
@@ -54,16 +62,16 @@ const jsonLd = {
       sameAs: [site.github, 'https://huggingface.co/caiovicentino1', site.twitter],
     },
   ],
-}
+})
 
-const ways = [
+const ways = (pricePerM: number) => [
   {
     icon: Server,
     name: 'Hosted API',
-    price: '$0.04',
+    price: formatPrice(pricePerM),
     unit: 'per 1M input tokens',
     body: 'No output charges: a check is ~1.5k input tokens and the model generates none — the answer is read from the logits. Prepaid credits, no subscription, no minimum. Out of credits the guard fails closed (cannot foresee → treated as risky): it never silently turns off.',
-    note: '≈ $0.00006 per check · $0.06 per 1,000 checks',
+    note: `≈ ${perCheckUsd(pricePerM)} per check · ${perThousandChecksUsd(pricePerM)} per 1,000 checks`,
   },
   {
     icon: Boxes,
@@ -98,10 +106,12 @@ const numbers: { label: string; value: string; href?: string; hrefText?: string 
   { label: 'Confidence on ambiguous states', value: '0.59–0.84 — honest uncertainty, never a fake 0.99', href: `${COOKBOOK}/blob/main/docs/API.md`, hrefText: 'how to read it' },
 ]
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const pricePerM = await getPricePerM()
+  const starter = tokensForUsd(5, pricePerM)
   return (
     <main className="mx-auto max-w-5xl px-6 py-16">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(pricePerM)) }} />
       <Link
         href="/ekbasis"
         className="flex w-fit items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 mb-8"
@@ -124,16 +134,16 @@ export default function PricingPage() {
       <div className="mt-8 rounded-2xl bg-brand-500/5 p-6 ring-1 ring-brand-500/30 sm:p-8">
         <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
           <span className="text-5xl font-semibold tracking-tight tabular-nums text-brand-700 dark:text-brand-300 sm:text-6xl">
-            $0.04
+            {formatPrice(pricePerM)}
           </span>
           <span className="pb-1.5 text-lg text-ink-900/60 dark:text-ink-50/60">
             per 1M input tokens · no output charges
           </span>
         </div>
         <p className="mt-3 text-sm text-ink-900/70 dark:text-ink-50/70">
-          A check is ~1.5k input tokens → <strong className="tabular-nums">≈ $0.00006 per check</strong> (
-          <strong className="tabular-nums">$0.06 per 1,000 checks</strong>). A $5 credit pack buys{' '}
-          <strong className="tabular-nums">125M tokens ≈ 83,000 checks</strong>. Pay in{' '}
+          A check is about 1,500 input tokens → <strong className="tabular-nums">≈ {perCheckUsd(pricePerM)} per check</strong> (
+          <strong className="tabular-nums">{perThousandChecksUsd(pricePerM)} per 1,000 checks</strong>). A $5 credit pack buys{' '}
+          <strong className="tabular-nums">{compactTokens(starter)} tokens ≈ {(Math.floor(starter / TOKENS_PER_CHECK / 1000) * 1000).toLocaleString('en-US')} checks</strong>. Pay in{' '}
           <strong>USDC or USDT</strong> on Polygon, Arbitrum, Base or Ethereum. At typical API inference prices
           ($0.10–0.60/1M) the guard adds a small fraction to the bill; if you self-host your inference, the
           self-hosted guard costs zero.
@@ -157,7 +167,7 @@ export default function PricingPage() {
       <section className="mt-16">
         <h2 className="text-2xl font-semibold tracking-tight">Four ways to run it</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {ways.map((w) => (
+          {ways(pricePerM).map((w) => (
             <div key={w.name} className="rounded-xl p-5 ring-1 ring-black/10 dark:ring-white/15">
               <div className="flex items-center gap-2">
                 <w.icon className="h-4 w-4 text-brand-600 dark:text-brand-400" />

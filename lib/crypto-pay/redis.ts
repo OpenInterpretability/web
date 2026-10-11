@@ -20,6 +20,21 @@ export async function redis<T = unknown>(...command: (string | number)[]): Promi
   return d.result as T
 }
 
+/**
+ * GET through Next's data cache (REST GET form, so the fetch is cacheable): for values public pages read
+ * on every render. Invalidate with revalidateTag(tag) after writing the key.
+ */
+export async function getCached(key: string, revalidate: number, tags: string[]): Promise<string | null> {
+  if (!URL_ || !TOKEN) throw new Error("payments store not configured")
+  const r = await fetch(`${URL_}/get/${encodeURIComponent(key)}`, {
+    headers: { Authorization: `Bearer ${TOKEN}` },
+    next: { revalidate, tags },
+  })
+  const d = (await r.json()) as { result?: string | null; error?: string }
+  if (!r.ok || d.error) throw new Error(`redis: ${d.error ?? r.status}`)
+  return d.result ?? null
+}
+
 /** SET key value NX [EX seconds] — true only for the first writer. This is the double-credit guard. */
 export async function setNX(key: string, value: string, exSeconds?: number): Promise<boolean> {
   const args: (string | number)[] = ["SET", key, value, "NX"]

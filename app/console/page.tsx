@@ -5,6 +5,8 @@ import { getHexclaveServerApp } from "@/hexclave/server"
 import { SignedOut } from "./signed-out"
 import { KeysPanel } from "./keys-panel"
 import { CreditsPanel } from "./credits-panel"
+import { getPricePerM } from "@/lib/pricing"
+import { formatPrice } from "@/lib/price"
 
 export const dynamic = "force-dynamic"
 
@@ -22,7 +24,7 @@ export default async function ConsolePage() {
       </main>
     )
   }
-  const admin = await currentAdmin().catch(() => null)
+  const [admin, pricePerM] = await Promise.all([currentAdmin().catch(() => null), getPricePerM()])
   return (
     <main className="mx-auto max-w-5xl px-6 py-16">
       <Link
@@ -66,9 +68,9 @@ export default async function ConsolePage() {
             <CreditCard className="h-5 w-5 text-brand-600 dark:text-brand-400" /> Credits
           </h2>
           <p className="mt-2 text-sm text-ink-900/60 dark:text-ink-50/60">
-            Credit packs buy input tokens at $0.04/1M, paid in USDC or USDT. A check is ~1.5k tokens. Credits never expire.
+            Credit packs buy input tokens at {formatPrice(pricePerM)}/1M, paid in USDC or USDT. A check is ~1.5k tokens. Credits never expire.
           </p>
-          <CreditsPanel />
+          <CreditsPanel pricePerM={pricePerM} />
         </section>
 
         <section>

@@ -8,10 +8,15 @@ import { site } from '@/lib/constants'
 import { ekbasis } from '@/lib/ekbasis-data'
 import { CopyButton } from '@/components/copy-button'
 import recorded from '@/content/ekbasis-start-examples.json'
+import { getPricePerM } from '@/lib/pricing'
+import { formatPrice, perCheckUsd, perThousandChecksUsd } from '@/lib/price'
 
 const URL_ = `${site.url}/ekbasis/start`
 const COOKBOOK = 'https://github.com/OpenInterpretability/ekbasis-cookbook'
 const HOSTED = 'https://openinterp.org/api/v1'
+
+// The "What it costs" section shows the admin-editable price (lib/pricing).
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'How to use Ekbasis — getting started with the consequence model',
@@ -432,7 +437,8 @@ function H2({ id, children }: { id: string; children: React.ReactNode }) {
   )
 }
 
-export default function EkbasisStartPage() {
+export default async function EkbasisStartPage() {
+  const pricePerM = await getPricePerM()
   const mm = ex('money_transfer_fail')
   const mmAns = mm.response.answers!.q
   const py = ex('python_client')
@@ -888,8 +894,8 @@ export default function EkbasisStartPage() {
       <section className="mt-16">
         <H2 id="cost">What it costs</H2>
         <p className="mt-3 text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
-          <strong>$0.04 per 1M input tokens</strong>, no output charges (it generates none), prepaid credits, no subscription. Pricing
-          assumes ~1.5k input tokens for a git-guard check, <strong>≈ $0.00006 per check</strong> ($0.06 per 1,000); the requests on this page used{' '}
+          <strong>{formatPrice(pricePerM)} per 1M input tokens</strong>, no output charges (it generates none), prepaid credits, no subscription. Pricing
+          assumes ~1.5k input tokens for a git-guard check, <strong>≈ {perCheckUsd(pricePerM)} per check</strong> ({perThousandChecksUsd(pricePerM)} per 1,000); the requests on this page used{' '}
           {range(tokens, (x) => x.toLocaleString('en-US'))} input tokens each; every response reports <code>usage.input_tokens</code>. Self-hosting is free under Apache-2.0.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">

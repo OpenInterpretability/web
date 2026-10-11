@@ -3,6 +3,7 @@
 import { Fragment, useCallback, useEffect, useState } from "react"
 import { Copy } from "lucide-react"
 import { api, Badge, Btn, Card, ErrorLine, Input, fmtTok, when } from "./ui"
+import { usePrice } from "./pricing"
 
 type C = { code: string; tokens: number; maxRedemptions: number; expiresAt: number | null; active: boolean; note: string; createdAt: number; createdBy: string; redemptions: number }
 type Red = { uid: string; email: string | null; t: number; tokens: number }
@@ -22,6 +23,7 @@ export function Coupons() {
   const [editExp, setEditExp] = useState<string | null>(null)
   const [expValue, setExpValue] = useState("")
   const [reds, setReds] = useState<Red[]>([])
+  const price = usePrice()
 
   const load = useCallback(async () => {
     try { setList((await api<{ coupons: C[] }>("/api/admin/coupons")).coupons); setError(null) } catch (e) { setError(e instanceof Error ? e.message : String(e)) }
@@ -55,7 +57,7 @@ export function Coupons() {
       <ErrorLine error={error} />
       <Card title="Create coupons">
         <div className="grid gap-3 md:grid-cols-4">
-          <label className="text-xs">Tokens per redemption<Input value={tokens} onChange={(e) => setTokens(e.target.value.replace(/\D/g, ""))} className="mt-1 w-full" /><span className="text-ink-900/50 dark:text-ink-50/50">{fmtTok(Number(tokens))} ≈ ${((Number(tokens) / 1e6) * 0.04).toFixed(2)}</span></label>
+          <label className="text-xs">Tokens per redemption<Input value={tokens} onChange={(e) => setTokens(e.target.value.replace(/\D/g, ""))} className="mt-1 w-full" /><span className="text-ink-900/50 dark:text-ink-50/50">{fmtTok(Number(tokens))} ≈ ${((Number(tokens) / 1e6) * price).toFixed(2)} at today's price</span></label>
           <label className="text-xs">How many codes<Input value={count} onChange={(e) => setCount(e.target.value.replace(/\D/g, ""))} className="mt-1 w-full" disabled={!!code} /><span className="text-ink-900/50 dark:text-ink-50/50">up to 500 at once</span></label>
           <label className="text-xs">Uses per code<Input value={maxR} onChange={(e) => setMaxR(e.target.value.replace(/\D/g, ""))} className="mt-1 w-full" /><span className="text-ink-900/50 dark:text-ink-50/50">0 = unlimited · 1 per account always</span></label>
           <label className="text-xs">Expires (optional)<Input type="date" value={expires} onChange={(e) => setExpires(e.target.value)} className="mt-1 w-full" /></label>

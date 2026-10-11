@@ -33,7 +33,7 @@ export async function GET(request: Request, { params }: Ctx) {
       revokedAt: k.manuallyRevokedAt instanceof Date ? k.manuallyRevokedAt.getTime() : null,
       valid: k.isValid(),
     })),
-    orders: orders.map((o) => ({ id: o.id, packId: o.packId, tokens: o.tokens, network: o.network, token: o.token, usd: Number(o.units) / 1e6, status: o.status, createdAt: o.createdAt, txHash: o.txHash ?? null })),
+    orders: orders.map((o) => ({ id: o.id, packId: o.packId, tokens: o.tokens, pricePerM: o.pricePerM ?? null, network: o.network, token: o.token, usd: Number(o.units) / 1e6, status: o.status, createdAt: o.createdAt, txHash: o.txHash ?? null })),
     events: (events ?? []).map((e) => JSON.parse(e)),
     coupons: (coupons ?? []).map((c) => JSON.parse(c)),
   })

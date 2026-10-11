@@ -6,6 +6,7 @@ import { Live } from "./live"
 import { Users } from "./users"
 import { Coupons } from "./coupons"
 import { Orders } from "./orders"
+import { Pricing } from "./pricing"
 import { Audit } from "./audit"
 import { Study } from "./study"
 
@@ -15,6 +16,7 @@ const TABS = [
   { id: "users", label: "Users" },
   { id: "coupons", label: "Coupons" },
   { id: "orders", label: "Orders" },
+  { id: "pricing", label: "Pricing" },
   { id: "study", label: "Study" },
   { id: "audit", label: "Audit log" },
 ] as const
@@ -41,6 +43,7 @@ export function AdminApp() {
         {tab === "users" && <Users />}
         {tab === "coupons" && <Coupons />}
         {tab === "orders" && <Orders />}
+        {tab === "pricing" && <Pricing />}
         {tab === "study" && <Study />}
         {tab === "audit" && <Audit />}
       </div>

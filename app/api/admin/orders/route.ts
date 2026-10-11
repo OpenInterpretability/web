@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   await Promise.all([...new Set(orders.map((o) => o.userId))].map(async (uid) => emails.set(uid, (await app.getUser(uid).catch(() => null))?.primaryEmail ?? null)))
   return ajson({
     orders: orders.map((o) => ({
-      id: o.id, userId: o.userId, email: emails.get(o.userId) ?? null, packId: o.packId, tokens: o.tokens,
+      id: o.id, userId: o.userId, email: emails.get(o.userId) ?? null, packId: o.packId, tokens: o.tokens, pricePerM: o.pricePerM ?? null,
       network: o.network, token: o.token, amount: Number(o.units) / 1e6, status: o.status, createdAt: o.createdAt,
       payBy: o.payBy, txHash: o.txHash ?? null, explorerUrl: o.txHash ? `${NETWORKS[o.network].explorer}${o.txHash}` : null,
     })),

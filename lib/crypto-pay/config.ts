@@ -82,11 +82,14 @@ export const NETWORKS: Record<NetworkId, Network> = {
   },
 }
 
-/** Packs: price in USD (= token units / 1e6, both stablecoins have 6 decimals here) and the input tokens they buy. */
+/**
+ * Packs: price in USD (= token units / 1e6, both stablecoins have 6 decimals here). The input tokens a pack buys
+ * are not fixed: createOrder computes them from the live price (lib/pricing) and stores them on the order.
+ */
 export const PACKS = {
-  "pack-5": { usd: 5, tokens: 125_000_000, name: "Starter" },
-  "pack-20": { usd: 20, tokens: 500_000_000, name: "Team" },
-  "pack-50": { usd: 50, tokens: 1_250_000_000, name: "Business" },
+  "pack-5": { usd: 5, name: "Starter" },
+  "pack-20": { usd: 20, name: "Team" },
+  "pack-50": { usd: 50, name: "Business" },
 } as const
 export type PackId = keyof typeof PACKS
 

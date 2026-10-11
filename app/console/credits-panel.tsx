@@ -4,11 +4,13 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useUser } from "@hexclave/next"
 import QRCode from "qrcode"
 import { Wallet, Copy, Check, ExternalLink, Loader2, X, Smartphone, Ticket } from "lucide-react"
+import { compactChecks, compactTokens, formatPrice, tokensForUsd } from "@/lib/price"
 
+// Tokens per pack follow the live price; the order fixes them at creation (the server computes them, not this list).
 const PACKS = [
-  { id: "pack-5", name: "Starter", usd: 5, tokens: "125M tokens ≈ 83k checks" },
-  { id: "pack-20", name: "Team", usd: 20, tokens: "500M tokens ≈ 333k checks" },
-  { id: "pack-50", name: "Business", usd: 50, tokens: "1.25B tokens ≈ 833k checks" },
+  { id: "pack-5", name: "Starter", usd: 5 },
+  { id: "pack-20", name: "Team", usd: 20 },
+  { id: "pack-50", name: "Business", usd: 50 },
 ] as const
 
 const NETWORKS = [
@@ -22,6 +24,7 @@ type PublicOrder = {
   id: string
   packId: string
   tokens: number
+  pricePerM: number | null
   network: string
   networkName: string
   chainId: number
@@ -77,7 +80,7 @@ function PaymentQR({ uri }: { uri: string }) {
   return <div className="h-44 w-44 shrink-0 rounded-lg bg-white p-2 ring-1 ring-black/10" dangerouslySetInnerHTML={{ __html: svg }} />
 }
 
-export function CreditsPanel() {
+export function CreditsPanel({ pricePerM }: { pricePerM: number }) {
   const user = useUser()
   const [balance, setBalance] = useState<number | null>(null)
   const [pack, setPack] = useState<string | null>(null)
@@ -213,6 +216,9 @@ export function CreditsPanel() {
               <p className="mt-1 text-xs text-ink-900/60 dark:text-ink-50/60">
                 {order.tokenLabel} · pay within {mm}:{ss} · credited after {order.confirmations} confirmations
               </p>
+              <p className="mt-1 text-xs text-ink-900/60 dark:text-ink-50/60">
+                Buys {order.tokens.toLocaleString()} input tokens{order.pricePerM !== null ? ` at ${formatPrice(order.pricePerM)}/1M` : ""}, fixed for this order.
+              </p>
             </div>
             <button
               onClick={() => setOrder(null)}
@@ -304,7 +310,7 @@ export function CreditsPanel() {
               <span className="text-sm font-semibold">{p.name}</span>
             </div>
             <p className="mt-2 text-xl font-semibold tabular-nums">${p.usd}</p>
-            <p className="mt-1 text-xs text-ink-900/50 dark:text-ink-50/50">{p.tokens}</p>
+            <p className="mt-1 text-xs text-ink-900/50 dark:text-ink-50/50">{compactTokens(tokensForUsd(p.usd, pricePerM))} tokens ≈ {compactChecks(tokensForUsd(p.usd, pricePerM))} checks</p>
             <p className="mt-2 text-xs font-medium text-brand-600 dark:text-brand-400">Pay with USDC or USDT</p>
           </button>
         ))}

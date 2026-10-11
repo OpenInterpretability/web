@@ -1,11 +1,15 @@
 import { ImageResponse } from 'next/og'
+import { getPricePerM } from '@/lib/pricing'
+import { formatPrice } from '@/lib/price'
 
-export const runtime = 'edge'
+// Node runtime (not edge) so the image can be regenerated like the pages that show the admin-editable price.
+export const revalidate = 60
 export const alt = 'OpenInterpretability — Know what an action will do before your agent runs it.'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 export default async function Image() {
+  const price = formatPrice(await getPricePerM())
   return new ImageResponse(
     (
       <div
@@ -84,7 +88,7 @@ export default async function Image() {
               lineHeight: 1.3,
             }}
           >
-            Ekbasis API — a consequence model: calibrated probabilities for what an action will do, in one call. $0.04 per 1M input tokens · open weights · Apache-2.0.
+            {`Ekbasis API — a consequence model: calibrated probabilities for what an action will do, in one call. ${price} per 1M input tokens · open weights · Apache-2.0.`}
           </div>
         </div>
 

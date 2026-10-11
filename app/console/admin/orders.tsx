@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { ExternalLink } from "lucide-react"
-import { api, Badge, Btn, ErrorLine, usd, when } from "./ui"
+import { api, Badge, Btn, ErrorLine, fmtTok, usd, when } from "./ui"
+import { formatPrice } from "@/lib/price"
 
-type O = { id: string; userId: string; email: string | null; packId: string; tokens: number; network: string; token: string; amount: number; status: string; createdAt: number; payBy: number; txHash: string | null; explorerUrl: string | null }
+type O = { id: string; userId: string; email: string | null; packId: string; tokens: number; pricePerM: number | null; network: string; token: string; amount: number; status: string; createdAt: number; payBy: number; txHash: string | null; explorerUrl: string | null }
 
 export function Orders() {
   const [list, setList] = useState<O[]>([])
@@ -41,11 +42,11 @@ export function Orders() {
           <button key={s} onClick={() => setStatus(s)} className={`rounded-lg px-2.5 py-1 text-xs ring-1 ${status === s ? "bg-brand-500/10 ring-brand-500/60" : "ring-black/10 dark:ring-white/15"}`}>{s || "all"}</button>
         ))}
       </div>
-      <p className="text-xs text-ink-900/55 dark:text-ink-50/55">"review" = a transfer was claimed but the credit was not confirmed: check the user's balance before crediting by hand.</p>
+      <p className="text-xs text-ink-900/55 dark:text-ink-50/55">"review" = a transfer was claimed but the credit was not confirmed: check the user's balance before crediting by hand. Tokens are fixed at order creation, at the price shown (no price = before the price became editable, $0.04).</p>
       <div className="overflow-x-auto rounded-xl ring-1 ring-black/10 dark:ring-white/15">
         <table className="w-full min-w-[1000px] text-sm">
           <thead className="bg-black/[0.03] text-left text-xs text-ink-900/60 dark:bg-white/[0.04] dark:text-ink-50/60">
-            <tr><th className="px-3 py-2">Created</th><th className="px-3 py-2">Buyer</th><th className="px-3 py-2">Pack</th><th className="px-3 py-2">Amount</th><th className="px-3 py-2">Status</th><th className="px-3 py-2">Transaction</th><th className="px-3 py-2"></th></tr>
+            <tr><th className="px-3 py-2">Created</th><th className="px-3 py-2">Buyer</th><th className="px-3 py-2">Pack</th><th className="px-3 py-2">Tokens</th><th className="px-3 py-2">Amount</th><th className="px-3 py-2">Status</th><th className="px-3 py-2">Transaction</th><th className="px-3 py-2"></th></tr>
           </thead>
           <tbody>
             {list.map((o) => (
@@ -53,6 +54,7 @@ export function Orders() {
                 <td className="px-3 py-2 text-xs whitespace-nowrap">{when(o.createdAt)}</td>
                 <td className="px-3 py-2">{o.email ?? o.userId}</td>
                 <td className="px-3 py-2">{o.packId}</td>
+                <td className="px-3 py-2 text-xs whitespace-nowrap" title={o.tokens.toLocaleString("en-US")}>{fmtTok(o.tokens)}{o.pricePerM !== null ? <span className="text-ink-900/50 dark:text-ink-50/50"> @ {formatPrice(o.pricePerM)}/1M</span> : null}</td>
                 <td className="px-3 py-2 font-mono text-xs">{o.amount.toFixed(6)} {o.token} · {o.network}</td>
                 <td className="px-3 py-2"><Badge tone={o.status === "paid" ? "good" : o.status === "review" ? "bad" : o.status === "expired" ? "neutral" : "warn"}>{o.status}</Badge></td>
                 <td className="px-3 py-2 text-xs">{o.explorerUrl ? <a href={o.explorerUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-brand-600 dark:text-brand-400">{o.txHash?.slice(0, 10)}… <ExternalLink className="h-3 w-3" /></a> : "—"}</td>
@@ -63,7 +65,7 @@ export function Orders() {
                 </td>
               </tr>
             ))}
-            {list.length === 0 && <tr><td colSpan={7} className="px-3 py-6 text-center text-ink-900/50 dark:text-ink-50/50">No orders.</td></tr>}
+            {list.length === 0 && <tr><td colSpan={8} className="px-3 py-6 text-center text-ink-900/50 dark:text-ink-50/50">No orders.</td></tr>}
           </tbody>
         </table>
       </div>
