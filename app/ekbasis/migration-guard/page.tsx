@@ -10,9 +10,12 @@ export const metadata = {
     'A GitHub Action that foresees, before a pull request is merged, whether its PostgreSQL migrations fail or lose data. Pre-registered on 184 migrations it had never seen: verdict right 87.5% of the time, against 69.6% for linter-style rules.',
 }
 
-const DOCS = 'https://github.com/OpenInterpretability/ekbasis/blob/v0.1.16/docs/MIGRATION_GUARD.md'
+const DOCS = 'https://github.com/OpenInterpretability/ekbasis/blob/v0.1.19/docs/MIGRATION_GUARD.md'
 const STUDY = 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/migrations'
 const FW_STUDY = 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/migrations-frameworks'
+const CUT_STUDY = 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/migrations-schema-cut'
+const LONG_STUDY = 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/long-context'
+const RAILS_STUDY = 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/migrations-rails'
 const REAL_STUDY = 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/migrations-real-incidents'
 
 const WORKFLOW = `# .github/workflows/migration-guard.yml
@@ -54,7 +57,7 @@ export default function MigrationGuard() {
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-24 pt-16 sm:pt-24">
       <p className="text-sm text-ink-900/55 dark:text-ink-50/55">
-        <Link href="/ekbasis" className="hover:underline">Ekbasis</Link> · client 0.1.16 · October 2026
+        <Link href="/ekbasis" className="hover:underline">Ekbasis</Link> · client 0.1.19 · October 2026
       </p>
       <h1 className={`mt-5 ${serif.className} text-[44px] font-normal leading-[1.08] tracking-tight sm:text-[52px]`}>
         Migration guard
@@ -139,6 +142,17 @@ export default function MigrationGuard() {
         <a href={STUDY} className="underline underline-offset-2">Every result, the plans and the scripts</a>.
       </P>
 
+      <P>
+        The model sees the part of the schema the migration reaches: the tables it touches in full, each table linked to
+        them by a foreign key in one line, the views that read them, their triggers with the functions they call, and the
+        sequences, enums and domains involved. In a pre-registered test on 184 migrations this was right more often than
+        the earlier name-matching state with replica statistics (89.7% against 88.0%), and as often without them, with
+        fewer false alarms and about a quarter fewer input tokens.{' '}
+        <a href={CUT_STUDY} className="underline underline-offset-2">The study</a>. States up to about 64,000 tokens are
+        read; a separate pre-registered test found no loss in accuracy up to that length.{' '}
+        <a href={LONG_STUDY} className="underline underline-offset-2">Long-state test</a>.
+      </P>
+
       <H2>Alembic and Django</H2>
       <P>
         With <code>framework: alembic</code> or <code>framework: django</code>, the framework itself renders the SQL. The
@@ -155,7 +169,10 @@ export default function MigrationGuard() {
         missed 6 of 34 risky migrations, below the recall we required, so Django support is marked experimental. Code it cannot foresee is
         common: 45% of the Alembic migrations and 24% of the Django ones, and a good share of the real risk sits there;
         counting it as missed, it caught 31% and 48% of all risky migrations.
-        A first evaluation, which blocked on that code, failed.{' '}
+        A first evaluation, which blocked on that code, failed. Rails is experimental too: in its own pre-registered
+        test its verdict was right 88.6% of the time against 60.7% for the rules, but its reason was right on 33 of 40
+        risky migrations, below our 85% target.{' '}
+        <a href={RAILS_STUDY} className="underline underline-offset-2">Rails study</a>.{' '}
         <a href={FW_STUDY} className="underline underline-offset-2">The plans, both results and the scripts</a>.
       </P>
 
