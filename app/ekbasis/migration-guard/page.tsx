@@ -10,7 +10,7 @@ export const metadata = {
     'A GitHub Action that foresees, before a pull request is merged, whether its PostgreSQL migrations fail or lose data. Pre-registered on 184 migrations it had never seen: verdict right 87.5% of the time, against 69.6% for linter-style rules.',
 }
 
-const DOCS = 'https://github.com/OpenInterpretability/ekbasis/blob/v0.1.13/docs/MIGRATION_GUARD.md'
+const DOCS = 'https://github.com/OpenInterpretability/ekbasis/blob/v0.1.14/docs/MIGRATION_GUARD.md'
 const STUDY = 'https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/migrations'
 
 const WORKFLOW = `# .github/workflows/migration-guard.yml
@@ -52,7 +52,7 @@ export default function MigrationGuard() {
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-24 pt-16 sm:pt-24">
       <p className="text-sm text-ink-900/55 dark:text-ink-50/55">
-        <Link href="/ekbasis" className="hover:underline">Ekbasis</Link> · client 0.1.13 · October 2026
+        <Link href="/ekbasis" className="hover:underline">Ekbasis</Link> · client 0.1.14 · October 2026
       </p>
       <h1 className={`mt-5 ${serif.className} text-[44px] font-normal leading-[1.08] tracking-tight sm:text-[52px]`}>
         Migration guard
@@ -102,7 +102,7 @@ export default function MigrationGuard() {
         <code>{WORKFLOW}</code>
       </pre>
       <p className="mt-3 text-sm text-ink-900/60 dark:text-ink-50/60">
-        Supports PostgreSQL SQL migrations from Prisma, Diesel, golang-migrate and plain <code>*.sql</code> folders.{' '}
+        Supports PostgreSQL SQL migrations from Prisma, Diesel, golang-migrate, goose and plain <code>*.sql</code> folders.{' '}
         <a href={DOCS} className="underline underline-offset-2">Documentation</a>. An API key is free to create at{' '}
         <Link href="/console" className="underline underline-offset-2">/console</Link>.
       </p>
