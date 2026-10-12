@@ -14,7 +14,7 @@
 import { after } from "next/server"
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { newRequestId, recordEvent, type TelemetryEvent } from "@/lib/telemetry"
-import { debitCachedBalance, getBalance, getIdent, keyHash, putBalance, putIdent, type Ident } from "@/lib/gateway-cache"
+import { debitCachedBalance, getBalance, getIdent, invalidateUser, keyHash, putBalance, putIdent, type Ident } from "@/lib/gateway-cache"
 import { acquireSlot, releaseSlot } from "@/lib/gateway-limit"
 import { isInternalAccount } from "@/lib/admin"
 
@@ -111,8 +111,10 @@ async function handler(request: Request) {
   const hash = keyHash(apiKey)
   let ident: Ident | null = null
   let balance: number | null = null
+  let identStale = false
   try {
-    ident = await getIdent(hash)
+    const c = await getIdent(hash)
+    if (c) ({ ident, stale: identStale } = c)
   } catch {
     ident = null
   }
@@ -133,7 +135,23 @@ async function handler(request: Request) {
     })
     timing.push(`auth;desc="hexclave";dur=${Date.now() - tAuth}`)
   } else {
-    timing.push(`auth;desc="cache";dur=${Date.now() - tAuth}`)
+    timing.push(`auth;desc="${identStale ? "cache-stale" : "cache"}";dur=${Date.now() - tAuth}`)
+    if (identStale) {
+      // Past its fresh time: answer from the cache, read Hexclave again after the response (lib/gateway-cache).
+      after(async () => {
+        try {
+          const user = await app.getUser({ apiKey })
+          if (!user || user.isRestricted) {
+            if (ident) await invalidateUser(ident.uid)
+            return
+          }
+          await putIdent(hash, { uid: user.id, email: user.primaryEmail, restricted: user.isRestricted, internal: isInternalAccount(user) })
+          await putBalance(user.id, (await user.getItem("tokens")).quantity)
+        } catch (e) {
+          console.warn("[ekbasis gateway] revalidation failed:", e)
+        }
+      })
+    }
   }
   const uid = ident.uid
   ev.uid = uid
@@ -142,8 +160,10 @@ async function handler(request: Request) {
 
   if (balance === null) {
     const tBal = Date.now()
+    let balStale = false
     try {
-      balance = await getBalance(uid)
+      const c = await getBalance(uid)
+      if (c) ({ balance, stale: balStale } = c)
     } catch {
       balance = null
     }
@@ -159,7 +179,17 @@ async function handler(request: Request) {
       })
       timing.push(`bal;desc="hexclave";dur=${Date.now() - tBal}`)
     } else {
-      timing.push(`bal;desc="cache";dur=${Date.now() - tBal}`)
+      timing.push(`bal;desc="${balStale ? "cache-stale" : "cache"}";dur=${Date.now() - tBal}`)
+      if (balStale && !identStale) {
+        // The identity revalidation above already re-reads the balance.
+        after(async () => {
+          try {
+            await putBalance(uid, (await app.getItem({ itemId: "tokens", userId: uid })).quantity)
+          } catch (e) {
+            console.warn("[ekbasis gateway] balance revalidation failed:", e)
+          }
+        })
+      }
     }
   }
   if (balance <= 0) return done(json({ error: "payment required: buy a credit pack at /console" }, 402), "no balance")
