@@ -259,6 +259,7 @@ cd your-repo && ekbasis git-check -- "git reset --hard"
         </ul>
         <p className="mt-6 text-sm text-ink-900/60 dark:text-ink-50/60">
           Questions and enterprise: <a className="underline underline-offset-2" href={`mailto:${site.contact}`}>{site.contact}</a>
+          {' '}· <Link className="underline underline-offset-2" href="/ekbasis/api-policies">API limits, data and versions</Link>
           {' '}· Papers:{' '}
           <a className="underline underline-offset-2" href="https://doi.org/10.5281/zenodo.23146970">Look When Unsure, Check When Sure</a> ·{' '}
           <a className="underline underline-offset-2" href="https://doi.org/10.5281/zenodo.23197341">When Does a Consequence Model Make AI Agents Safer?</a>

@@ -41,6 +41,10 @@ function publicModel(text: string): string {
 
 const SURFACE_RE = /^[a-z0-9][a-z0-9_.-]{0,31}$/
 
+// The model the hosted API serves (one at a time; a change is announced 14 days before, /ekbasis/api-policies).
+const MODEL_ID = process.env.EKBASIS_PUBLIC_MODEL || "ekbasis-27b-int4-v1.3"
+const MODEL_WEIGHTS = process.env.EKBASIS_PUBLIC_WEIGHTS || "caiovicentino1/Ekbasis-27B-INT4"
+
 async function handler(request: Request) {
   const t0 = Date.now()
   const path = new URL(request.url).pathname.replace(/^\/api\/v1/, "") || "/"
@@ -75,6 +79,12 @@ async function handler(request: Request) {
 
   // `ekbasis health` (GET /health) is a setup check: answered without a key or credits, never metered.
   if (request.method === "GET") {
+    if (path === "/v1/models" || path === "/models") {
+      return Response.json(
+        { object: "list", data: [{ id: MODEL_ID, object: "model", owned_by: "openinterp", weights: MODEL_WEIGHTS }] },
+        { headers: { "Cache-Control": "public, max-age=300", "X-Ekbasis-Model": MODEL_ID } },
+      )
+    }
     if (path !== "/health" && path !== "/v1/health") return json({ error: "not found" }, 404)
     try {
       const r = await fetch(`${BACKEND}/health`, {
@@ -275,6 +285,7 @@ async function handler(request: Request) {
         "Content-Type": backendResp.headers.get("content-type") ?? "application/json",
         "Cache-Control": "private, no-store",
         "X-Ekbasis-Metered-Tokens": String(inputTokens),
+        "X-Ekbasis-Model": MODEL_ID,
         "Server-Timing": timing.join(", "),
       },
     }),
