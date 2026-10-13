@@ -347,6 +347,55 @@ export default function EkbasisPage() {
         <p className="mt-4 text-sm text-ink-900/55 dark:text-ink-50/55">{lookWhenUnsure.note}</p>
       </section>
 
+      <section id="check-a-plan" className="mt-16 scroll-mt-24">
+        <h2 className="text-2xl font-semibold tracking-tight">Check a plan before your agent runs it</h2>
+        <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">
+          Agents act in batches: several tool calls, a script, a pipeline. Ekbasis forecasts every step of the batch from
+          the state as it is now and says how far it is safe to go: run it all, or run the first steps and look at the
+          real state before the risky one.
+        </p>
+        <div className="mt-6 rounded-xl ring-1 ring-black/10 dark:ring-white/15 p-6">
+          <pre className="text-sm overflow-x-auto"><code>{`# Python: pip install ekbasis
+from ekbasis import Ekbasis, check_plan, harms
+pc = check_plan(Ekbasis(), rules, state, actions, harms(), request="Free some disk space on the server.")
+# pc.ok -> run everything; otherwise run actions[:pc.safe], read the state again, check the rest
+
+// TypeScript: npm install ekbasis
+const pc = await checkPlan(new Ekbasis(), rules, state, actions, harms(), { request: "Free some disk space on the server." });
+
+# Any harness: exit 0 run all, 2 stop before step N, 3 cannot foresee
+ekbasis plan-check --rules @rules.txt --state @state.txt --request "Free some disk space on the server." "du -sh *" "rm -rf cache/*"`}</code></pre>
+        </div>
+        <p className="mt-6 text-ink-900/70 dark:text-ink-50/70">
+          In a pre-registered study, an agent (Claude Haiku 5.5) ran multi-step pipelines on a real Kubernetes cluster,
+          12 of 18 tasks with a hidden harm. The same chain guard was run with Ekbasis and with a large general LLM
+          (GLM-5.3) as the judge:
+        </p>
+        <Table
+          columns={['', 'no guard', 'Ekbasis as the judge', 'GLM-5.3 as the judge']}
+          rows={[
+            ['Harmful runs (of 24)', '9', '0', '0'],
+            ['Checking time per run (median)', '—', '22 s', '357 s'],
+            ['Cost per run', '—', '$0.045', '$0.44 at Claude Sonnet 5.5 prices'],
+            ['Judge calls with no usable answer', '—', '0 of 274', '51 of 386'],
+            ['Tasks completed (of 24)', '6', '10', '14'],
+          ]}
+        />
+        <p className="mt-4 text-ink-900/70 dark:text-ink-50/70">
+          The same protection, about 16× faster and 10× cheaper, and it always answered: a guard that runs before every
+          batch has to be fast and cheap enough to stay on. One agent, one domain, 108 runs; the GLM arm completed more
+          tasks (not a tested question); one statistical correction, declared.{' '}
+          <a className="underline underline-offset-2" href="https://github.com/OpenInterpretability/ekbasis-cookbook/blob/main/studies/k8s-chain/PUBLIC_REPORT.md">
+            The study, its data and the script that recomputes it
+          </a>
+          {' '}·{' '}
+          <a className="underline underline-offset-2" href="https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/recipes/check-a-plan">
+            Recipe: wire it to your agent in five minutes
+          </a>
+          .
+        </p>
+      </section>
+
       <section className="mt-16">
         <h2 className="text-2xl font-semibold tracking-tight">Speed and cost</h2>
         <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">{speed.caption}</p>
