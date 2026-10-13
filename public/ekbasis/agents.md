@@ -76,7 +76,11 @@ output; then read the real state again and check the remaining steps) or **3** (
 `check_plan(client, rules, state, actions, harms(), request=...)` (Python) or `checkPlan(...)` (TypeScript,
 `npm install ekbasis`). `harms()` are four yes/no questions (data lost, outage, deletes not asked for, breaks later)
 about harm the user's request does **not** ask for, so always pass the request. Never run a step that is still
-flagged on the real state without the human. Recipe:
+flagged on the real state without the human. For a whole task, `run_plan(client, rules, actions, harms(), observe,
+execute, request=...)` (TypeScript `runPlan`) runs this loop for you: check every step from the real state, run the
+safe ones, read the state again, check the rest, stop before a step still flagged. This is "look when unsure" for a
+chain: do not forecast a long chain blind, and do not stop after every step; look only where the forecast is flagged or
+its confidence is below 0.9. Recipe:
 https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/recipes/check-a-plan
 
 **Agent steps (experimental):** `ekbasis.intent_check(user_request, events, action)` asks whether the next tool call

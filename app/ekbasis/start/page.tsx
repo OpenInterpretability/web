@@ -217,6 +217,7 @@ const TOC = [
   ['state', 'Writing a good state'],
   ['types', 'Question types'],
   ['reading', 'Reading the answer'],
+  ['chains', 'Chains of actions'],
   ['examples', 'Examples by domain'],
   ['limits', 'Strong and weak'],
   ['cost', 'Cost'],
@@ -311,6 +312,28 @@ const PLAN_CLI = `ekbasis plan-check --rules @rules.txt --state @state.txt \\
 
 const PLAN_OUT = `Ekbasis: STOP BEFORE STEP 3  it flags data_lost, unasked_deletes, breaks_later (p = 0.97): rm -rf /srv/shop/uploads/*
   run steps 1-2 now, then look at the real state and check the rest`
+
+const RUN_PLAN_PY = `from ekbasis import Ekbasis, harms, run_plan
+
+run = run_plan(Ekbasis(), RULES, actions, harms(),
+               observe=read_state,      # how things stand now, as text (you write it)
+               execute=run_actions,     # runs some actions on the real system (you write it)
+               request="Free some disk space on the server.")
+# checks every step from the real state, runs the safe ones, reads the state again,
+# checks the rest; stops before a step that is still flagged on the real state
+print(run.done, run.stopped)`
+
+const RUN_PLAN_OUT = `  ran: du -sh /srv/shop/*
+  ran: rm -rf /srv/shop/cache/*
+stopped before step 3: Ekbasis flags data_lost, unasked_deletes, breaks_later
+  -> ask the user or take a safer way`
+
+const CHAIN_USE: [string, string][] = [
+  ['One action', 'client.ask with the action in the state (sections above)'],
+  ['A batch you are about to run (tool calls, a script, a pipeline)', 'check_plan / checkPlan, or ekbasis plan-check from any harness: run all, or run the first N and look'],
+  ['A whole task, acting and looking as you go', 'run_plan / runPlan: the loop below, with your observe and execute'],
+  ['Claude Code', 'the hook; with EKBASIS_SHELL_GUARD=1 and EKBASIS_CHAIN=1 a flagged multi-command line also says which command to split before'],
+]
 
 const HTTP: [string, string][] = [
   ['200', 'answers, plus usage.input_tokens (what you are billed for)'],
@@ -852,6 +875,52 @@ export default async function EkbasisStartPage() {
             wrap
           />
         </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- chains */}
+      <section className="mt-16">
+        <H2 id="chains">Chains of actions: look when unsure</H2>
+        <p className="mt-3 text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
+          Agents rarely take one action. They run several in a row, and each one changes the state the next one acts on.
+          Ekbasis can forecast a whole chain from the state as it is now, but the further it looks ahead, the more a
+          small surprise early on can change everything after it. The answer is not to guess the whole chain blind, nor to
+          stop and check after every step: it is to <strong>look only when unsure</strong>.
+        </p>
+        <ol className="mt-5 space-y-3 text-ink-900/75 dark:text-ink-50/75 leading-relaxed list-decimal pl-5">
+          <li><strong>Forecast every step of the chain</strong> from the state as it is now (each prefix: step 1, steps 1–2, steps 1–3 ...; asked in parallel).</li>
+          <li><strong>Run the confident, harmless steps</strong> as one batch: every forecast says no harm, with confidence ≥ 0.9.</li>
+          <li><strong>Stop at the first step that is flagged or uncertain</strong>, and <strong>read the real state</strong> (the files, the cluster, the account).</li>
+          <li><strong>Check the rest again from the real state.</strong> A step still flagged does not run: ask the person, or take a safer way.</li>
+        </ol>
+        <p className="mt-4 text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
+          The confidence is what makes this work: on a state that decides the outcome it reads ~0.99, and it drops when
+          something the forecast depends on is missing or the chain has drifted, which is exactly when looking pays off.
+          Where the answer must be exact (a total crossing a limit, a command that fails by a known rule), check it in code
+          as well: confident errors exist, and confidence alone does not catch them.
+        </p>
+        <Code label="python · run_plan does the loop (TypeScript: runPlan)" code={RUN_PLAN_PY} />
+        <Code label="output (real: the cookbook recipe on the hosted API)" code={RUN_PLAN_OUT} />
+        <h3 className="mt-8 text-lg font-semibold">Which tool for which job</h3>
+        <div className="mt-3 overflow-x-auto rounded-xl ring-1 ring-black/10 dark:ring-white/15">
+          <table className="w-full text-sm">
+            <tbody>
+              {CHAIN_USE.map(([a, b]) => (
+                <tr key={a} className="border-t first:border-t-0 border-black/5 dark:border-white/10 align-top">
+                  <td className="px-4 py-2 font-medium">{a}</td>
+                  <td className="px-4 py-2 text-ink-900/70 dark:text-ink-50/70">{b}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-4 text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
+          Measured: on Kubernetes pipelines with a hidden harm, this loop took an agent from 9 harmful runs in 24 to 0, the
+          same protection as a large LLM judge <strong>at about one-eighth of the cost</strong>, 4–16× faster, and it always
+          answered.{' '}
+          <Link className="underline underline-offset-2" href="/ekbasis#check-a-plan">Results</Link> ·{' '}
+          <a className="underline underline-offset-2" href={`${COOKBOOK}/tree/main/recipes/check-a-plan`}>recipe: wire it to your agent in five minutes</a> ·{' '}
+          <a className="underline underline-offset-2" href={`${COOKBOOK}/blob/main/studies/k8s-chain/PUBLIC_REPORT.md`}>the studies and their data</a>.
+        </p>
       </section>
 
       {/* ---------------------------------------------------------------- examples */}
