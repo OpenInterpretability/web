@@ -17,6 +17,7 @@ import { newRequestId, recordEvent, type TelemetryEvent } from "@/lib/telemetry"
 import { debitCachedBalance, getBalance, getIdent, invalidateUser, keyHash, putBalance, putIdent, type Ident } from "@/lib/gateway-cache"
 import { acquireSlot, releaseSlot } from "@/lib/gateway-limit"
 import { isInternalAccount } from "@/lib/admin"
+import { OPENAPI } from "@/lib/openapi"
 
 export const dynamic = "force-dynamic"
 export const maxDuration = 300 // internal accounts may wait up to 120 s for the model server (lib/gateway-limit)
@@ -31,12 +32,34 @@ function json(obj: unknown, status: number) {
 /**
  * Gateway errors: `error` stays the human-readable message (existing clients read it), `code` is stable and meant
  * for code (missing_api_key, invalid_api_key, account_suspended, insufficient_credits, rate_limited, not_found,
- * sessions_unavailable, model_unavailable, backend_not_configured), `retryable` says whether the same request may succeed
+ * sessions_unavailable, invalid_request, model_unavailable, backend_not_configured), `retryable` says whether the same request may succeed
  * later. Errors from the model server itself (400 on a malformed question) are passed through unchanged.
  */
 const RETRYABLE = new Set(["rate_limited", "model_unavailable", "backend_not_configured"])
 function fail(status: number, code: string, message: string) {
   return json({ error: message, code, retryable: RETRYABLE.has(code) }, status)
+}
+
+/**
+ * A /v1/systemone body the model would answer meaninglessly (and bill for): refused before it reaches the model. The
+ * model reads a question only from `instructions`; a question without it got one same answer whatever it asked.
+ */
+function invalidQuestion(body: Record<string, unknown>): string | null {
+  const hasImages = Array.isArray(body.images) && body.images.length > 0
+  if (typeof body.state !== "string" || (!body.state.trim() && !hasImages)) return "state must be a non-empty string"
+  const qs = body.questions
+  if (!qs || typeof qs !== "object" || Array.isArray(qs) || !Object.keys(qs).length)
+    return 'questions must be a non-empty object: {"name": {"type": "noul", "instructions": "...?"}}'
+  for (const [name, q] of Object.entries(qs as Record<string, unknown>)) {
+    const o = (q ?? {}) as Record<string, unknown>
+    if (typeof q !== "object" || Array.isArray(q)) return `question ${name} must be an object with "type" and "instructions"`
+    if (!["noul", "choice", "score"].includes(String(o.type))) return `question ${name}: type must be noul, choice or score`
+    if (typeof o.instructions !== "string" || !o.instructions.trim()) {
+      const hint = ["question", "prompt", "text", "query"].find((k) => k in o)
+      return `question ${name} has no "instructions"` + (hint ? ` (it has "${hint}": the model reads only "instructions")` : "")
+    }
+  }
+  return null
 }
 
 /** The backend reports its model directory; customers only need the model name. */
@@ -90,6 +113,9 @@ async function handler(request: Request) {
 
   // `ekbasis health` (GET /health) is a setup check: answered without a key or credits, never metered.
   if (request.method === "GET") {
+    if (path === "/openapi.json" || path === "/v1/openapi.json") {
+      return Response.json(OPENAPI, { headers: { "Cache-Control": "public, max-age=300", "Access-Control-Allow-Origin": "*" } })
+    }
     if (path === "/v1/models" || path === "/models") {
       return Response.json(
         { object: "list", data: [{ id: MODEL_ID, object: "model", owned_by: "openinterp", weights: MODEL_WEIGHTS }] },
@@ -220,6 +246,10 @@ async function handler(request: Request) {
     body = (await request.json()) as Record<string, unknown>
   } catch {
     body = {}
+  }
+  if (path === "/v1/systemone") {
+    const bad = invalidQuestion(body)
+    if (bad) return done(fail(400, "invalid_request", bad), "invalid request")
   }
 
   ev.rid = newRequestId()
