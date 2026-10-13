@@ -914,9 +914,10 @@ export default async function EkbasisStartPage() {
           </table>
         </div>
         <p className="mt-4 text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
-          Measured: on Kubernetes pipelines with a hidden harm, this loop took an agent from 9 harmful runs in 24 to 0, the
-          same protection as a large LLM judge <strong>at about one-eighth of the cost</strong>, 4–16× faster, and it always
-          answered.{' '}
+          Measured (pre-registered): on Kubernetes pipelines with a hidden harm, this loop took an agent from 9 harmful runs
+          in 24 to 0, the same protection as a large LLM judge <strong>at about one-eighth of the cost</strong>, 4–16× faster.
+          It held with a stronger agent (Claude Sonnet 5.5: 15 → 0, tasks finished 7 → 22) and on PostgreSQL pipelines
+          (16 → 6, tasks finished 4 → 11).{' '}
           <Link className="underline underline-offset-2" href="/ekbasis#check-a-plan">Results</Link> ·{' '}
           <a className="underline underline-offset-2" href={`${COOKBOOK}/tree/main/recipes/check-a-plan`}>recipe: wire it to your agent in five minutes</a> ·{' '}
           <a className="underline underline-offset-2" href={`${COOKBOOK}/blob/main/studies/k8s-chain/PUBLIC_REPORT.md`}>the studies and their data</a>.

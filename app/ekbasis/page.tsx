@@ -162,8 +162,8 @@ export default function EkbasisPage() {
           The same protection as a large LLM judge, at about one-eighth of the cost.
         </span>{' '}
         <span className="text-ink-900/70 dark:text-ink-50/70">
-          Pre-registered, on agents running Kubernetes pipelines: harmful runs 9 of 24 → 0, $0.045–0.06 per run vs
-          $0.44–0.47, 4–16× faster.
+          Pre-registered, on agents running pipelines: harmful runs 9 of 24 → 0 (Kubernetes), 15 → 0 with a stronger
+          agent, 16 → 6 on PostgreSQL; $0.045–0.06 per run vs $0.44–0.47, 4–16× faster.
         </span>{' '}
         <span className="text-brand-700 dark:text-brand-300 font-medium whitespace-nowrap">See the results →</span>
       </a>
@@ -400,7 +400,14 @@ ekbasis plan-check --rules @rules.txt --state @state.txt --request "Free some di
           one pass without generating a single token. It is also 4–16× faster (depending on whether the large LLM also works in
           parallel) and always answered (the LLM left 13–18% of its forecasts unanswered). A guard that runs before every
           batch has to be cheap and fast enough to stay on. Task completion: no detectable difference (pre-registered in the
-          second study). One agent, one domain, 180 runs; one statistical correction in the first study, declared.{' '}
+          second study). One statistical correction in the first study, declared.
+        </p>
+        <p className="mt-4 text-ink-900/70 dark:text-ink-50/70">
+          <strong className="text-ink-900 dark:text-ink-50">It holds for another agent and another domain</strong>{' '}
+          (pre-registered): with Claude Sonnet 5.5 as the agent, harmful runs fell from 15 of 24 to 0 and finished tasks
+          rose from 7 to 22; on PostgreSQL maintenance pipelines, harm fell from 16 to 6 of 24 (the 6 are the three tasks
+          the pre-registration said the guard misses) and finished tasks rose from 4 to 11. The guard does not only block:
+          it shows the safe way, and the agent gets more of its work done. Tasks written by us, simulated users.{' '}
           <a className="underline underline-offset-2" href="https://github.com/OpenInterpretability/ekbasis-cookbook/blob/main/studies/k8s-chain/PUBLIC_REPORT.md">
             The study, its data and the script that recomputes it
           </a>
