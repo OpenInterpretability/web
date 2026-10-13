@@ -18,6 +18,7 @@ import { debitCachedBalance, getBalance, getIdent, invalidateUser, keyHash, putB
 import { acquireSlot, releaseSlot } from "@/lib/gateway-limit"
 import { isInternalAccount } from "@/lib/admin"
 import { OPENAPI } from "@/lib/openapi"
+import { redis } from "@/lib/crypto-pay/redis"
 import { latestClients } from "@/lib/client-versions"
 
 export const dynamic = "force-dynamic"
@@ -75,6 +76,15 @@ function publicModel(text: string): string {
 }
 
 const SURFACE_RE = /^[a-z0-9][a-z0-9_.-]{0,31}$/
+
+/** True for the first caller in 30 s (a Redis SET NX): one Hexclave revalidation per key, not one per concurrent call. */
+async function revalidateOnce(lock: string): Promise<boolean> {
+  try {
+    return (await redis<string | null>("SET", lock, "1", "NX", "EX", 30)) === "OK"
+  } catch {
+    return false   // no Redis: skip the revalidation; the 15-minute cache expiry still bounds staleness
+  }
+}
 
 // The model the hosted API serves (one at a time; a change is announced 14 days before, /ekbasis/api-policies).
 const MODEL_ID = process.env.EKBASIS_PUBLIC_MODEL || "ekbasis-27b-int4-v1.3"
@@ -184,8 +194,9 @@ async function handler(request: Request) {
     timing.push(`auth;desc="hexclave";dur=${Date.now() - tAuth}`)
   } else {
     timing.push(`auth;desc="${identStale ? "cache-stale" : "cache"}";dur=${Date.now() - tAuth}`)
-    if (identStale) {
-      // Past its fresh time: answer from the cache, read Hexclave again after the response (lib/gateway-cache).
+    if (identStale && (await revalidateOnce(`gw:reval:${hash}`))) {
+      // Past its fresh time: answer from the cache, read Hexclave again after the response (lib/gateway-cache). One
+      // revalidation per key every 30 s: concurrent calls on a stale key used to each start their own.
       after(async () => {
         try {
           const user = await app.getUser({ apiKey })
@@ -228,7 +239,7 @@ async function handler(request: Request) {
       timing.push(`bal;desc="hexclave";dur=${Date.now() - tBal}`)
     } else {
       timing.push(`bal;desc="${balStale ? "cache-stale" : "cache"}";dur=${Date.now() - tBal}`)
-      if (balStale && !identStale) {
+      if (balStale && !identStale && (await revalidateOnce(`gw:revalbal:${uid}`))) {
         // The identity revalidation above already re-reads the balance.
         after(async () => {
           try {

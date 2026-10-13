@@ -15,8 +15,29 @@ export const metadata = {
   description: "Your API keys, prepaid credits and usage for the Ekbasis consequence model.",
 }
 
+const SLOW = Symbol("slow")
+
+/** The sign-in provider (Hexclave) sometimes answers slowly or rate-limits: never leave the page spinning. */
+async function userOrSlow(ms = 8000) {
+  const timer = new Promise<typeof SLOW>((resolve) => setTimeout(() => resolve(SLOW), ms))
+  return Promise.race([getHexclaveServerApp().getUser().catch(() => null), timer])
+}
+
 export default async function ConsolePage() {
-  const user = await getHexclaveServerApp().getUser().catch(() => null)
+  const user = await userOrSlow()
+  if (user === SLOW) {
+    return (
+      <main className="mx-auto max-w-xl px-6 py-24 text-center">
+        <h1 className="text-2xl font-semibold tracking-tight">The sign-in service is slow right now</h1>
+        <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">
+          Your keys and credits are safe, and the API keeps answering. Reload in a few seconds.
+        </p>
+        <a href="/console" className="mt-6 inline-flex rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700">
+          Reload the console
+        </a>
+      </main>
+    )
+  }
   if (!user) {
     return (
       <main className="px-6 py-16 sm:py-24">
