@@ -247,7 +247,8 @@ async function handler(request: Request) {
   } catch {
     body = {}
   }
-  if (path === "/v1/systemone") {
+  // Validation disabled 2026-10-13 01:30 UTC: it refused valid requests from existing clients (see invalidQuestion).
+  if (path === "/v1/systemone" && process.env.EKBASIS_VALIDATE === "1") {
     const bad = invalidQuestion(body)
     if (bad) return done(fail(400, "invalid_request", bad), "invalid request")
   }
