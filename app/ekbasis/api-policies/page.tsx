@@ -72,7 +72,8 @@ export default function ApiPoliciesPage() {
       <h1 className="mt-4 text-4xl sm:text-5xl font-semibold tracking-tight text-balance">API policies</h1>
       <p className="mt-5 text-lg text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
         What the hosted API at <code className={code}>openinterp.org/api/v1</code> limits, keeps and changes. Self-hosting
-        the open weights involves none of this: nothing leaves your machine.
+        the open weights involves none of this: nothing leaves your machine. Uptime, latency and daily quality, measured
+        from outside: <Link className="underline underline-offset-2" href="/ekbasis/status">API status</Link>.
       </p>
 
       <section className="mt-14">
