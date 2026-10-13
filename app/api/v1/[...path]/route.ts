@@ -18,6 +18,7 @@ import { debitCachedBalance, getBalance, getIdent, invalidateUser, keyHash, putB
 import { acquireSlot, releaseSlot } from "@/lib/gateway-limit"
 import { isInternalAccount } from "@/lib/admin"
 import { OPENAPI } from "@/lib/openapi"
+import { latestClients } from "@/lib/client-versions"
 
 export const dynamic = "force-dynamic"
 export const maxDuration = 300 // internal accounts may wait up to 120 s for the model server (lib/gateway-limit)
@@ -320,6 +321,7 @@ async function handler(request: Request) {
     })
   }
 
+  const latest = await latestClients()
   return done(
     new Response(publicModel(respText), {
       status: backendResp.status,
@@ -329,6 +331,8 @@ async function handler(request: Request) {
         "X-Ekbasis-Metered-Tokens": String(inputTokens),
         "X-Ekbasis-Model": MODEL_ID,
         "Server-Timing": timing.join(", "),
+        ...(latest.python ? { "X-Ekbasis-Latest-Python": latest.python } : {}),
+        ...(latest.js ? { "X-Ekbasis-Latest-Js": latest.js } : {}),
       },
     }),
     backendResp.ok ? undefined : typeof respObj.error === "string" ? respObj.error.slice(0, 200) : `backend ${backendResp.status}`,
