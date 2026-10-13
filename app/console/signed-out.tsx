@@ -3,10 +3,16 @@
 import Link from "next/link"
 import { useHexclaveApp } from "@hexclave/next"
 import { KeyRound, LogIn, BookOpen, Terminal } from "lucide-react"
+import { useEffect } from "react"
 
 /** What /console shows before sign-in: what you get here and one obvious button. */
 export function SignedOut() {
   const app = useHexclaveApp()
+  useEffect(() => {
+    try {
+      sessionStorage.removeItem("oi:signedIn") // the navbar's cached "signed in" (components/navbar.tsx)
+    } catch {}
+  }, [])
   return (
     <div className="mx-auto max-w-3xl text-center">
       <span className="chip bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-brand-500/30 ring-inset">EKBASIS API · CONSOLE</span>

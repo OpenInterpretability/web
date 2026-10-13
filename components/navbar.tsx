@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { site } from '@/lib/constants'
 import { Github, KeyRound, Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ThemeToggle } from '@/components/theme-toggle'
 
 // Product-first navigation: the Ekbasis API leads; the lab and its research stay one click away.
@@ -35,8 +35,42 @@ const tertiaryNav = [
   { href: '/docs', label: 'Docs' },
 ]
 
+// Whether the visitor is signed in, asked once after load (/api/session) and kept for 5 minutes in this tab, so the
+// pages stay static and the navbar does not call the server on every navigation.
+const SESSION_KEY = 'oi:signedIn'
+const SESSION_TTL_MS = 5 * 60_000
+
+function useSignedIn(): boolean {
+  const [signedIn, setSignedIn] = useState(false)
+  useEffect(() => {
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(SESSION_KEY) ?? 'null') as { v: boolean; t: number } | null
+      if (cached && Date.now() - cached.t < SESSION_TTL_MS) {
+        setSignedIn(cached.v)
+        return
+      }
+    } catch {}
+    let live = true
+    fetch('/api/session', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : { signedIn: false }))
+      .then((d: { signedIn?: boolean }) => {
+        if (!live) return
+        setSignedIn(Boolean(d.signedIn))
+        try {
+          sessionStorage.setItem(SESSION_KEY, JSON.stringify({ v: Boolean(d.signedIn), t: Date.now() }))
+        } catch {}
+      })
+      .catch(() => {})
+    return () => {
+      live = false
+    }
+  }, [])
+  return signedIn
+}
+
 export function Navbar() {
   const [open, setOpen] = useState(false)
+  const signedIn = useSignedIn()
   return (
     <header className="sticky top-0 z-40 w-full border-b border-black/5 dark:border-white/10 bg-ink-50/80 dark:bg-ink-950/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
@@ -93,14 +127,14 @@ export function Navbar() {
             href="/console"
             className="hidden sm:inline-flex items-center rounded-lg px-3 py-1.5 text-sm font-medium text-ink-900/75 hover:bg-black/5 hover:text-ink-900 dark:text-ink-50/75 dark:hover:bg-white/5 dark:hover:text-ink-50 transition-colors"
           >
-            Sign in
+            {signedIn ? 'Console' : 'Sign in'}
           </Link>
           <Link
             href="/console"
             className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
           >
             <KeyRound className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Get API key</span>
+            <span className="hidden sm:inline">{signedIn ? 'Your API keys' : 'Get API key'}</span>
             <span className="sm:hidden">API key</span>
           </Link>
           <button
@@ -126,7 +160,7 @@ export function Navbar() {
                 onClick={() => setOpen(false)}
                 className="py-2 text-sm font-semibold text-brand-600 dark:text-brand-400"
               >
-                Sign in · get your API key
+                {signedIn ? 'Console · your API keys' : 'Sign in · get your API key'}
               </Link>
               {primaryNav.map((item) => (
                 <Link
