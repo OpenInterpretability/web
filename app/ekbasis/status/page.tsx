@@ -28,7 +28,7 @@ const SUITES: { key: string; name: string; what: string }[] = [
   { key: 'intent', name: 'Agent intent', what: 'agent steps from the published-attack replay' },
 ]
 
-const pct = (x: number) => `${x.toFixed(x >= 99.95 || x === 0 ? 0 : 2)}%`
+const pct = (x: number) => `${x.toFixed(x >= 99.95 || x === 0 ? 0 : 1)}%`
 const fmtMs = (x: number | null) => (x === null ? '—' : x >= 1000 ? `${(x / 1000).toFixed(2)} s` : `${Math.round(x)} ms`)
 const quant = (xs: number[], q: number) => {
   if (!xs.length) return null
@@ -292,7 +292,7 @@ export default async function StatusPage() {
                     </tbody>
                   </table>
                 </div>
-                <p className={`mt-2 text-xs ${muted}`}>Each cell: right · confident errors per 100. With 100 questions a suite, a few points of change from day to day is noise.</p>
+                <p className={`mt-2 text-xs ${muted}`}>Each cell: right · confident errors per 100. The questions are the same every day and the model answers them deterministically, so a number moves only when something changed: the model, the server or the gateway. The first run used more questions, so it differs.</p>
               </>
             )}
           </>
