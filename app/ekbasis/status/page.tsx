@@ -32,8 +32,11 @@ const pct = (x: number) => `${x.toFixed(x >= 99.95 || x === 0 ? 0 : 2)}%`
 const fmtMs = (x: number | null) => (x === null ? '—' : x >= 1000 ? `${(x / 1000).toFixed(2)} s` : `${Math.round(x)} ms`)
 const quant = (xs: number[], q: number) => {
   if (!xs.length) return null
+  // Linear interpolation between the closest ranks (the usual definition: the median of two values is their mean).
   const s = [...xs].sort((a, b) => a - b)
-  return s[Math.min(s.length - 1, Math.floor(q * s.length))]
+  const r = q * (s.length - 1)
+  const lo = Math.floor(r)
+  return s[lo] + (s[Math.min(lo + 1, s.length - 1)] - s[lo]) * (r - lo)
 }
 const ago = (t: string, now: number) => {
   const m = Math.round((now - Date.parse(t)) / 60000)
