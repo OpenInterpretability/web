@@ -407,7 +407,11 @@ ekbasis plan-check --rules @rules.txt --state @state.txt --request "Free some di
           (pre-registered): with Claude Sonnet 5.5 as the agent, harmful runs fell from 15 of 24 to 0 and finished tasks
           rose from 7 to 22; on PostgreSQL maintenance pipelines, harm fell from 16 to 6 of 24 (the 6 are the three tasks
           the pre-registration said the guard misses) and finished tasks rose from 4 to 11. The guard does not only block:
-          it shows the safe way, and the agent gets more of its work done. Tasks written by us, simulated users.{' '}
+          it shows the safe way, and the agent gets more of its work done.{' '}
+          <strong className="text-ink-900 dark:text-ink-50">An agent given only our guide for agents</strong> (
+          <a className="underline underline-offset-2" href="/ekbasis/agents.md">agents.md</a>, with its list of where hidden
+          consequences live) and the CLI, with no automatic guard, did as well as the guard in code: harm 16 → 4 of 24, tasks
+          finished 6 → 18. Tasks written by us, simulated users.{' '}
           <a className="underline underline-offset-2" href="https://github.com/OpenInterpretability/ekbasis-cookbook/blob/main/studies/k8s-chain/PUBLIC_REPORT.md">
             The study, its data and the script that recomputes it
           </a>
