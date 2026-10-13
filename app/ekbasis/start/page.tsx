@@ -213,7 +213,7 @@ function ExampleCard({ e, longState, highlight }: { e: Example; longState?: bool
 const TOC = [
   ['what', 'What it is'],
   ['mental-model', 'The mental model'],
-  ['quickstart', '3 ways to use it'],
+  ['quickstart', '4 ways to use it'],
   ['state', 'Writing a good state'],
   ['types', 'Question types'],
   ['reading', 'Reading the answer'],
@@ -291,11 +291,33 @@ const DOS = [
   ['Separate rules, state and actions', 'The client helper world_state(rules, state, actions) writes the layout the model was trained on. To make a rule count, repeat it right before the question with recap() (the client docs measure the gain).'],
 ]
 
+const PLAN_PY = `from ekbasis import Ekbasis, check_plan, harms
+
+rules = ("A Linux server running a web shop. rm -rf deletes files permanently; there is no trash "
+         "and no backup unless one is made. systemctl stop takes a service offline until started again.")
+state = ("/srv/shop/uploads holds 40 GB of customer photos. /srv/shop/cache holds 2 GB of thumbnails "
+         "that the shop rebuilds on demand. shop.service is serving customers now.")
+actions = ["du -sh /srv/shop/*", "rm -rf /srv/shop/cache/*", "rm -rf /srv/shop/uploads/*", "df -h"]
+
+pc = check_plan(Ekbasis(), rules, state, actions, harms(), request="Free some disk space on the server.")
+if pc.ok:
+    run(actions)
+else:
+    run(actions[:pc.safe])   # then read the real state again and check actions[pc.safe:]`
+
+const PLAN_CLI = `ekbasis plan-check --rules @rules.txt --state @state.txt \\
+  --request "Free some disk space on the server." \\
+  "du -sh /srv/shop/*" "rm -rf /srv/shop/cache/*" "rm -rf /srv/shop/uploads/*" "df -h"`
+
+const PLAN_OUT = `Ekbasis: STOP BEFORE STEP 3  it flags data_lost, unasked_deletes, breaks_later (p = 0.97): rm -rf /srv/shop/uploads/*
+  run steps 1-2 now, then look at the real state and check the rest`
+
 const HTTP: [string, string][] = [
   ['200', 'answers, plus usage.input_tokens (what you are billed for)'],
   ['401', 'no key, or an invalid or revoked key'],
   ['402', 'out of credits: buy more in the console'],
   ['403', 'the account is restricted'],
+  ['429', 'the shared model server is full after a 20 s wait: retry after the Retry-After header (5 s)'],
   ['422', 'the request cannot be read, e.g. a state over ~32k tokens (the reason is in the body)'],
   ['503', 'the model server is unreachable'],
 ]
@@ -569,9 +591,9 @@ export default async function EkbasisStartPage() {
 
       {/* ---------------------------------------------------------------- quickstart */}
       <section className="mt-16">
-        <H2 id="quickstart">Three ways to use it, fastest first</H2>
+        <H2 id="quickstart">Four ways to use it, fastest first</H2>
         <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">
-          All three use the same hosted endpoint and key. Get the key in the{' '}
+          All four use the same hosted endpoint and key. Get the key in the{' '}
           <Link className="underline underline-offset-2" href="/console">console</Link> (sign in, create a key, buy credits).
         </p>
 
@@ -621,8 +643,9 @@ export default async function EkbasisStartPage() {
             <Code label="~/.claude/settings.json" code={HOOK_JSON} />
             <p className="mt-3 text-xs text-ink-900/55 dark:text-ink-50/55">
               <code>EKBASIS_GUARD_MODE=deny</code> blocks instead of asking; <code>EKBASIS_SHELL_GUARD=1</code> also checks non-git lines that change
-              files (prototype). On top of the model the hook adds a rule layer for committed work (e.g. <code>git branch -D</code> of a branch with
-              unique commits). When it cannot foresee, it asks.
+              files (prototype), and with it <code>EKBASIS_CHAIN=1</code> says, for a flagged line of several commands, which command is the
+              first risky one and how to split the line (since 0.1.29). On top of the model the hook adds a rule layer for committed work (e.g.{' '}
+              <code>git branch -D</code> of a branch with unique commits). When it cannot foresee, it asks.
             </p>
             <p className="mt-4 text-sm text-ink-900/70 dark:text-ink-50/70">
               <strong>MCP (any MCP client).</strong> Three tools: <code>check_git_commands</code>, <code>predict_consequences</code> (your own
@@ -636,7 +659,7 @@ export default async function EkbasisStartPage() {
           </div>
 
           <div className="min-w-0 rounded-2xl p-5 sm:p-6 ring-1 ring-black/10 dark:ring-white/15">
-            <h3 className="flex items-center gap-2 text-xl font-semibold"><Code2 className="h-5 w-5 text-brand-600 dark:text-brand-400" /> c · Python, for your own app</h3>
+            <h3 className="flex items-center gap-2 text-xl font-semibold"><Code2 className="h-5 w-5 text-brand-600 dark:text-brand-400" /> c · Python or TypeScript, for your own app</h3>
             <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70">
               <code>client.ask(state, questions)</code> sends every question about one state in one request. The helpers write
               the question dicts for you: <code>yes_no</code>, <code>choice</code>, <code>number</code>, and <code>world_state</code> for the
@@ -646,8 +669,32 @@ export default async function EkbasisStartPage() {
             <Code label={`output (real, ${py.client_latency_s} s)`} code={py.stdout ?? ''} />
             <p className="mt-3 text-xs text-ink-900/55 dark:text-ink-50/55">
               Each answer has <code>.value</code> (True/False or the chosen label), <code>.confidence</code>, <code>.probabilities</code> and,
-              for yes/no, <code>.p_yes</code>. Errors raise <code>CannotJudge</code> (a subclass of <code>ekbasis.EkbasisError</code>): catch it and treat the action as risky. Any language
-              works: it is one JSON POST (see the curl under every example below).
+              for yes/no, <code>.p_yes</code>. Errors raise <code>CannotJudge</code> (a subclass of <code>ekbasis.EkbasisError</code>): catch it and treat the action as risky.{' '}
+              <strong>TypeScript / JavaScript:</strong> <code>npm install ekbasis</code> (Node 18+, Deno, Bun, browsers; ESM or CommonJS) has the same
+              requests and layouts: <code>new Ekbasis().ask(state, questions)</code>, <code>yesNo</code>, <code>choice</code>, <code>worldState</code>. Any
+              other language: it is one JSON POST (see the curl under every example below, and the{' '}
+              <a className="underline underline-offset-2" href="/api/v1/openapi.json">OpenAPI description</a>).
+            </p>
+          </div>
+
+          <div className="min-w-0 rounded-2xl p-5 sm:p-6 ring-1 ring-black/10 dark:ring-white/15">
+            <h3 className="flex items-center gap-2 text-xl font-semibold"><Bot className="h-5 w-5 text-brand-600 dark:text-brand-400" /> d · Check a plan before your agent runs it</h3>
+            <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70">
+              Agents act in batches: several tool calls, a script, a pipeline. Give Ekbasis the whole batch and the user&apos;s request: it
+              forecasts every step from the state as it is now and says how far it is safe to go. Run everything, or run the first steps,
+              read the real state again, and check the rest (look when unsure). The preset questions (<code>harms()</code>: data lost, outage,
+              deletes not asked for, breaks later) ask about harm the request does <em>not</em> ask for.
+            </p>
+            <Code label="python (TypeScript: checkPlan, same arguments)" code={PLAN_PY} />
+            <Code label="terminal · any harness or CI" code={PLAN_CLI} />
+            <Code label="output (real, hosted API, 2026-10-13) · exit 2" code={PLAN_OUT} />
+            <p className="mt-3 text-xs text-ink-900/55 dark:text-ink-50/55">
+              Exit 0: run every step · 2: run the first N, then look before the next · 3: cannot foresee (treat as risky). Without the
+              third step the same check exits 0; with <code>systemctl stop shop</code> first it stops at step 1 (outage, p = 0.97). Measured
+              cost of this check: 4 requests, 4,680 input tokens. In a pre-registered Kubernetes study this guard took an agent from 9
+              harmful runs in 24 to 0, as safe as a large LLM judge and about 16× faster:{' '}
+              <Link className="underline underline-offset-2" href="/ekbasis#check-a-plan">results</Link> ·{' '}
+              <a className="underline underline-offset-2" href={`${COOKBOOK}/tree/main/recipes/check-a-plan`}>recipe</a>.
             </p>
           </div>
         </div>
@@ -775,7 +822,10 @@ export default async function EkbasisStartPage() {
         <p className="mt-2 text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
           With no key, no credits or no server, the client tools answer <strong>cannot foresee</strong> (exit 3), which they treat as
           risky. A guard that runs out of credits never silently turns into “everything is fine”. In your own code, do the same:
-          any non-200 means “do not proceed unattended”.
+          any non-200 means “do not proceed unattended”. Every gateway error also has a stable <code>code</code> (e.g.{' '}
+          <code>insufficient_credits</code>, <code>rate_limited</code>) and <code>retryable</code>, so your code need not read the message.
+          Limits and what is kept: <Link className="underline underline-offset-2" href="/ekbasis/api-policies">API policies</Link> · live uptime
+          and daily quality: <Link className="underline underline-offset-2" href="/ekbasis/status">API status</Link>.
         </p>
         <div className="mt-4 grid gap-4 lg:grid-cols-2 [&>*]:min-w-0">
           <div className="overflow-x-auto rounded-xl ring-1 ring-black/10 dark:ring-white/15">

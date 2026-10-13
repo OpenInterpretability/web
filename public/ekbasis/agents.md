@@ -34,6 +34,9 @@ human to click through warnings.
 | Auth | `Authorization: Bearer ekb_…` (env `EKBASIS_API_KEY`); keys at https://openinterp.org/console |
 | Decision endpoint | `POST {EKBASIS_URL}/v1/systemone` |
 | Health | `GET {EKBASIS_URL}/health` (no key needed) |
+| Served model | `GET {EKBASIS_URL}/v1/models`; every answer carries `X-Ekbasis-Model` |
+| Spec | OpenAPI 3.1: `GET {EKBASIS_URL}/openapi.json` |
+| Limits, data kept | https://openinterp.org/ekbasis/api-policies · live status: https://openinterp.org/ekbasis/status |
 | Price | $0.30 per 1M **input** tokens; output is never charged (nothing is generated) |
 | Self-hosted | open weights (Apache-2.0); same API on your own server, e.g. `EKBASIS_URL=http://127.0.0.1:8000` |
 
@@ -64,6 +67,17 @@ Setup: https://github.com/OpenInterpretability/ekbasis-cookbook
 migrations fail or lose data, from the schema built out of the base branch's migrations (and, optionally, planner
 statistics of a read-only replica); same exit codes. As a GitHub Action: https://openinterp.org/ekbasis/migration-guard
 (pre-registered on 184 new migrations: verdict right 87.5%, false alarms on safe ones 15.6%).
+
+**Batches of actions (client 0.1.28+, npm 0.2+):** before running several actions at once (a few tool calls, a
+script, a pipeline), check the whole batch. `ekbasis plan-check --rules @rules.txt --state @state.txt --request
+"<the user's words>" "step 1" "step 2" ...` exits **0** (run every step), **2** (run only the first N, given in the
+output; then read the real state again and check the remaining steps) or **3** (cannot foresee: treat as risky).
+`--json` gives `ok`, `safe` (N), `step`, `reason` (`flagged` or `unsure`) and every step's probabilities. In code:
+`check_plan(client, rules, state, actions, harms(), request=...)` (Python) or `checkPlan(...)` (TypeScript,
+`npm install ekbasis`). `harms()` are four yes/no questions (data lost, outage, deletes not asked for, breaks later)
+about harm the user's request does **not** ask for, so always pass the request. Never run a step that is still
+flagged on the real state without the human. Recipe:
+https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/recipes/check-a-plan
 
 **Agent steps (experimental):** `ekbasis.intent_check(user_request, events, action)` asks whether the next tool call
 serves the user or follows instructions from content the agent read. Use it to ask a person, not to block
@@ -143,6 +157,7 @@ For git, let the CLI build the state from the repository: it reads it with read-
 | 0.2 ≤ p(bad) < 0.5 | Treat as risky in anything irreversible: ask, or take the safer route. |
 | p(bad) < 0.2 | No warning from Ekbasis. **This is not proof of safety**: keep your normal confirmations, backups and the human's instructions. |
 | Low confidence (≈ 0.5–0.85) | The state is ambiguous or missing a fact. Collect the missing fact (read the file, check `git status`, list the folder, read the policy) and ask again. Do not guess. |
+| A batch: `plan-check` exit 2 / `check_plan(...).ok` false | Run only the first `safe` actions, read the real state again, check the rest. A step still flagged on the real state: ask the human or take a safer way. |
 | CANNOT FORESEE (exit 3), HTTP 401/402/403/429/5xx, timeout | Fail closed: treat as risky. Do not run the irreversible action without the human. |
 
 Never let Ekbasis override an explicit instruction from the human or a policy you were given. When the human's own
@@ -159,7 +174,11 @@ drops (0.59–0.84 measured). A low-confidence answer is information, not an err
 | 402 | out of credits | fail closed; tell the human to add credits at /console |
 | 403 | account suspended, or a blocked client | fail closed |
 | 413 / 422 | state too large (32k-token context) or malformed request | shorten the state to the facts the action touches; fix the JSON |
-| 429 / 5xx / timeout | rate limited or server unavailable | fail closed; retry later, do not run the action unchecked |
+| 429 / 5xx / timeout | rate limited or server unavailable | fail closed; retry after `Retry-After` (429), do not run the action unchecked |
+
+Gateway errors are `{"error": "<message>", "code": "<stable code>", "retryable": true|false}`; branch on `code`
+(`missing_api_key`, `invalid_api_key`, `account_suspended`, `insufficient_credits`, `rate_limited`, `model_unavailable`, ...)
+rather than on the message.
 
 ## 8. Telling us when it was wrong
 
@@ -231,6 +250,7 @@ warning layer that can be wrong, **not a security boundary**.
 
 - Human guide with real examples: https://openinterp.org/ekbasis/start
 - Pricing and console: https://openinterp.org/ekbasis/pricing · https://openinterp.org/console
-- Client and hook: https://github.com/OpenInterpretability/ekbasis
+- Client and hook: https://github.com/OpenInterpretability/ekbasis (Python: `pip install ekbasis`; TypeScript: `npm install ekbasis`)
+- API: OpenAPI https://openinterp.org/api/v1/openapi.json · status https://openinterp.org/ekbasis/status
 - Cookbook (measured use cases, skill, studies): https://github.com/OpenInterpretability/ekbasis-cookbook
 - Weights (27B · FP8 · INT4 · MLX): https://huggingface.co/caiovicentino1

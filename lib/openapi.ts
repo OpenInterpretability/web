@@ -187,21 +187,33 @@ export const OPENAPI = {
     schemas: {
       Error: errorSchema,
       Question: {
+        description:
+          "The model reads the question only from `instructions`. Several answer shapes are accepted, as below; they are " +
+          "the forms the clients and the guide use.",
         oneOf: [
           {
             title: "Yes/no",
             type: "object",
             required: ["type", "instructions"],
-            properties: { type: { const: "noul" }, instructions: { type: "string", minLength: 1, description: "The question. The model reads only this field." } },
+            properties: {
+              type: { enum: ["noul", "boolean"], description: "\"boolean\" is accepted as the same type." },
+              instructions: { type: "string", minLength: 1, description: "The question. The model reads only this field." },
+              criteria: {
+                type: "object",
+                properties: { true: { type: "string" }, false: { type: "string" } },
+                description: "Optional: what yes and no mean, in a few words each.",
+              },
+            },
           },
           {
             title: "Choice",
             type: "object",
-            required: ["type", "instructions", "criteria"],
+            required: ["type", "instructions"],
             properties: {
               type: { const: "choice" },
               instructions: { type: "string", minLength: 1 },
-              criteria: { type: "object", minProperties: 2, additionalProperties: { type: "string" }, description: "label → short description of that answer." },
+              options: { type: "array", minItems: 2, items: { type: "string" }, description: "The possible answers (use this or criteria)." },
+              criteria: { type: "object", minProperties: 2, additionalProperties: { type: "string" }, description: "label → short description of that answer (use this or options)." },
             },
           },
           {
@@ -211,7 +223,13 @@ export const OPENAPI = {
             properties: {
               type: { const: "score" },
               instructions: { type: "string", minLength: 1 },
-              criteria: { type: "array", minItems: 2, items: { type: "string" }, description: "The possible values, in order (e.g. [\"0\", \"1\", \"2\", \"3\"])." },
+              criteria: {
+                description: "The possible values in order: value → description (e.g. {\"0\": \"none\", \"3\": \"all three\"}), or a list of values.",
+                oneOf: [
+                  { type: "object", minProperties: 2, additionalProperties: { type: "string" } },
+                  { type: "array", minItems: 2, items: { type: "string" } },
+                ],
+              },
             },
           },
         ],
@@ -230,7 +248,7 @@ export const OPENAPI = {
         type: "object",
         required: ["type", "confidence"],
         properties: {
-          type: { enum: ["noul", "choice", "score"] },
+          type: { enum: ["noul", "boolean", "choice", "score"] },
           confidence: { type: "number", description: "Probability of the chosen answer." },
           probability: { type: "number", description: "noul: probability of yes." },
           noul: { type: "number", description: "noul: same as probability (kept for older clients)." },
