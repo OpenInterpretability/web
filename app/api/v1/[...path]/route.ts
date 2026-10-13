@@ -28,6 +28,17 @@ function json(obj: unknown, status: number) {
   return Response.json(obj, { status, headers: { "Cache-Control": "private, no-store" } })
 }
 
+/**
+ * Gateway errors: `error` stays the human-readable message (existing clients read it), `code` is stable and meant
+ * for code (missing_api_key, invalid_api_key, account_suspended, insufficient_credits, rate_limited, not_found,
+ * sessions_unavailable, model_unavailable, backend_not_configured), `retryable` says whether the same request may succeed
+ * later. Errors from the model server itself (400 on a malformed question) are passed through unchanged.
+ */
+const RETRYABLE = new Set(["rate_limited", "model_unavailable", "backend_not_configured"])
+function fail(status: number, code: string, message: string) {
+  return json({ error: message, code, retryable: RETRYABLE.has(code) }, status)
+}
+
 /** The backend reports its model directory; customers only need the model name. */
 function publicModel(text: string): string {
   try {
@@ -75,7 +86,7 @@ async function handler(request: Request) {
     return resp
   }
 
-  if (!BACKEND) return done(json({ error: "backend not configured yet" }, 503), "no backend")
+  if (!BACKEND) return done(fail(503, "backend_not_configured", "backend not configured yet"), "no backend")
 
   // `ekbasis health` (GET /health) is a setup check: answered without a key or credits, never metered.
   if (request.method === "GET") {
@@ -85,7 +96,7 @@ async function handler(request: Request) {
         { headers: { "Cache-Control": "public, max-age=300", "X-Ekbasis-Model": MODEL_ID } },
       )
     }
-    if (path !== "/health" && path !== "/v1/health") return json({ error: "not found" }, 404)
+    if (path !== "/health" && path !== "/v1/health") return fail(404, "not_found", "not found")
     try {
       const r = await fetch(`${BACKEND}/health`, {
         cache: "no-store",
@@ -94,7 +105,7 @@ async function handler(request: Request) {
       })
       return new Response(publicModel(await r.text()), { status: r.status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } })
     } catch {
-      return json({ error: "the model server is unreachable" }, 503)
+      return fail(503, "model_unavailable", "the model server is unreachable")
     }
   }
 
@@ -103,14 +114,14 @@ async function handler(request: Request) {
   // sessions remain available on self-hosted servers.
   if (path.startsWith("/v1/sessions")) {
     return done(
-      json({ error: "sessions are not available on the hosted API: send the full state to /v1/systemone (read_once for several questions); self-hosted servers support sessions" }, 404),
+      fail(404, "sessions_unavailable", "sessions are not available on the hosted API: send the full state to /v1/systemone (read_once for several questions); self-hosted servers support sessions"),
       "sessions blocked",
     )
   }
 
   const auth = request.headers.get("authorization") ?? ""
   const apiKey = auth.replace(/^Bearer\s+/i, "").trim()
-  if (!apiKey) return done(json({ error: "unauthorized: send the Authorization: Bearer header" }, 401), "no key")
+  if (!apiKey) return done(fail(401, "missing_api_key", "unauthorized: send the Authorization: Bearer header"), "no key")
   ev.key = apiKey.slice(-4)
 
   // Who the key belongs to and the balance: from the short-lived cache when possible (lib/gateway-cache),
@@ -130,7 +141,7 @@ async function handler(request: Request) {
   }
   if (!ident) {
     const user = await app.getUser({ apiKey })
-    if (!user) return done(json({ error: "unauthorized: invalid or revoked API key" }, 401), "invalid key")
+    if (!user) return done(fail(401, "invalid_api_key", "unauthorized: invalid or revoked API key"), "invalid key")
     ident = { uid: user.id, email: user.primaryEmail, restricted: user.isRestricted, internal: isInternalAccount(user) }
     balance = (await user.getItem("tokens")).quantity
     const cached: Ident = ident
@@ -166,7 +177,7 @@ async function handler(request: Request) {
   const uid = ident.uid
   ev.uid = uid
   ev.email = ident.email
-  if (ident.restricted) return done(json({ error: "forbidden: this account is suspended" }, 403), "restricted")
+  if (ident.restricted) return done(fail(403, "account_suspended", "forbidden: this account is suspended"), "restricted")
 
   if (balance === null) {
     const tBal = Date.now()
@@ -202,7 +213,7 @@ async function handler(request: Request) {
       }
     }
   }
-  if (balance <= 0) return done(json({ error: "payment required: buy a credit pack at /console" }, 402), "no balance")
+  if (balance <= 0) return done(fail(402, "insufficient_credits", "payment required: buy a credit pack at /console"), "no balance")
 
   let body: Record<string, unknown> = {}
   try {
@@ -221,7 +232,7 @@ async function handler(request: Request) {
   const slot = await acquireSlot(rid, internal)
   if (slot.waitedMs > 0) timing.push(`queue;dur=${slot.waitedMs}`)
   if ("busy" in slot && slot.busy) {
-    const resp = json({ error: "busy: the model server is at its limit right now; retry in a few seconds" }, 429)
+    const resp = fail(429, "rate_limited", "busy: the model server is at its limit right now; retry in a few seconds")
     resp.headers.set("Retry-After", "5")
     return done(resp, "busy (gateway limit)")
   }
@@ -248,7 +259,7 @@ async function handler(request: Request) {
     respText = await backendResp.text()
   } catch {
     release(0)
-    return done(json({ error: "the model server is unreachable" }, 503), "backend unreachable")
+    return done(fail(503, "model_unavailable", "the model server is unreachable"), "backend unreachable")
   }
   let respObj: Record<string, unknown> = {}
   try {
