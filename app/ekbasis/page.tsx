@@ -154,6 +154,19 @@ export default function EkbasisPage() {
         <strong>calibrated probability</strong>, in <strong>one forward pass</strong> (~0.1 s, no generated text).
         Trained on <strong>real executions</strong>, so it knows what actions do, not what an agent believes they do.
       </p>
+      <a
+        href="#check-a-plan"
+        className="mt-5 block max-w-2xl rounded-xl bg-brand-500/5 p-4 ring-1 ring-brand-500/30 hover:bg-brand-500/10 transition-colors"
+      >
+        <span className="font-semibold text-ink-900 dark:text-ink-50">
+          The same protection as a large LLM judge, at about one-eighth of the cost.
+        </span>{' '}
+        <span className="text-ink-900/70 dark:text-ink-50/70">
+          Pre-registered, on agents running Kubernetes pipelines: harmful runs 9 of 24 → 0, $0.045–0.06 per run vs
+          $0.44–0.47, 4–16× faster.
+        </span>{' '}
+        <span className="text-brand-700 dark:text-brand-300 font-medium whitespace-nowrap">See the results →</span>
+      </a>
       <p className="mt-3 text-sm text-ink-900/50 dark:text-ink-50/50">{ekbasis.status}</p>
 
       <div className="mt-6 flex flex-wrap gap-3">
