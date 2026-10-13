@@ -2,7 +2,7 @@
  * Public status data of the hosted Ekbasis API, written by the ekbasis-ops repository (GitHub Actions, measuring from
  * outside our infrastructure) through POST /api/ops/ingest and read by /ekbasis/status.
  *
- *   st:probe      list of probe records, newest first, last 30 days at one probe per 10 min (4,500 kept)
+ *   st:probe      list of probe records, newest first, last 30 days at one probe an hour (4,500 kept, room for manual ones)
  *   st:score      list of daily scorecard records, newest first (400 kept)
  *   st:seen:<t>   dedupe of a record by its timestamp (35 days)
  *

@@ -1,6 +1,6 @@
 /**
- * Status probe run by a Vercel cron job (vercel.json, every 10 minutes), next to the GitHub Actions probe of
- * ekbasis-ops, whose schedule can run late or not at all. It asks the hosted API the same small question as
+ * Status probe run by a Vercel cron job (vercel.json, once an hour). The GitHub Actions probe of ekbasis-ops is
+ * manual only (its schedule never fired, and private-repo minutes are billed). It asks the hosted API the same small question as
  * ekbasis-ops/probe.py, through the public URL (gateway + model, end to end), and stores the result for
  * /ekbasis/status. Authenticated by CRON_SECRET (Vercel sends it as a Bearer header). Records only measurements.
  */
