@@ -10,7 +10,7 @@
  */
 import { pipeline, redis } from "@/lib/crypto-pay/redis"
 
-export type Probe = { t: string; ok: boolean; status: number | null; ms: number; timing?: Record<string, number>; model?: string; right?: boolean; error?: string }
+export type Probe = { t: string; ok: boolean; status: number | null; ms: number; timing?: Record<string, number>; model?: string; right?: boolean; error?: string; src?: string }
 export type Suite = { n: number; answered: number; failed: number; accuracy: number; confident_errors_per_100: number; ece: number; brier: number; p50_ms: number; p90_ms: number; tokens_per_check: number }
 export type Score = {
   t: string
@@ -33,6 +33,7 @@ function cleanProbe(r: Record<string, unknown>): Probe | null {
     model: typeof r.model === "string" ? r.model.slice(0, 64) : undefined,
     right: typeof r.right === "boolean" ? r.right : undefined,
     error: typeof r.error === "string" ? r.error.slice(0, 64) : undefined,
+    src: r.src === "vercel" ? "vercel" : "github",
   }
 }
 

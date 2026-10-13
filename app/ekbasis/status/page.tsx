@@ -148,8 +148,9 @@ export default async function StatusPage() {
       <section className="mt-14">
         <h2 className={h2}>Is it up, and how fast?</h2>
         <p className={`mt-2 text-sm ${muted}`}>
-          A probe asks one small yes/no question every {OPS_EVERY_MIN} minutes from GitHub Actions (the schedule can run late,
-          so a window may hold fewer probes than {Math.round((24 * 60) / OPS_EVERY_MIN)} a day; the count is shown).
+          A probe asks one small yes/no question every {OPS_EVERY_MIN} minutes, through the public URL, from two places outside
+          the GPU servers: a Vercel cron job and GitHub Actions (whose schedule can run late or skip). A window may hold fewer
+          probes than {Math.round((24 * 60) / OPS_EVERY_MIN)} a day; the count is shown.
           Time is end to end from the caller, including the network.
           {first && ` Measuring since ${first}.`}
         </p>
