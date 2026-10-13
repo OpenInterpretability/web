@@ -692,7 +692,7 @@ export default async function EkbasisStartPage() {
               Exit 0: run every step · 2: run the first N, then look before the next · 3: cannot foresee (treat as risky). Without the
               third step the same check exits 0; with <code>systemctl stop shop</code> first it stops at step 1 (outage, p = 0.97). Measured
               cost of this check: 4 requests, 4,680 input tokens. In a pre-registered Kubernetes study this guard took an agent from 9
-              harmful runs in 24 to 0, as safe as a large LLM judge and about 16× faster:{' '}
+              harmful runs in 24 to 0, as safe as a large LLM judge and 4–16× faster:{' '}
               <Link className="underline underline-offset-2" href="/ekbasis#check-a-plan">results</Link> ·{' '}
               <a className="underline underline-offset-2" href={`${COOKBOOK}/tree/main/recipes/check-a-plan`}>recipe</a>.
             </p>
