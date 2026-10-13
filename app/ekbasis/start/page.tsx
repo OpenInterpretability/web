@@ -21,7 +21,7 @@ export const revalidate = 60
 export const metadata: Metadata = {
   title: 'How to use Ekbasis — getting started with the consequence model',
   description:
-    'A first-time guide to Ekbasis: what a consequence model is (not a chatbot), how to describe a state, the three question types, how to read calibrated probabilities, and copy-paste examples with the real answers.',
+    'A first-time guide to Ekbasis: where to start (check a plan before an agent changes production, the git guard for coding agents), how to write a state and test your rules on known cases, the three question types, and copy-paste examples with the real answers.',
   keywords: ['Ekbasis', 'getting started', 'consequence model', 'world model', 'git guard', 'Claude Code hook', 'MCP', 'agent safety', 'API'],
   alternates: { canonical: '/ekbasis/start' },
   openGraph: {
@@ -29,12 +29,12 @@ export const metadata: Metadata = {
     url: URL_,
     siteName: site.name,
     title: 'How to use Ekbasis',
-    description: 'State + action + typed questions → calibrated answers. A guide for first-time users, with real outputs.',
+    description: 'Check a plan before your agent runs it, test your rules on known cases, read calibrated answers. A first-time guide with real outputs.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How to use Ekbasis',
-    description: 'State + action + typed questions → calibrated answers. A guide for first-time users, with real outputs.',
+    description: 'Check a plan before your agent runs it, test your rules on known cases, read calibrated answers. A first-time guide with real outputs.',
   },
 }
 

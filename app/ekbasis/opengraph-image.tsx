@@ -42,9 +42,9 @@ export default async function Image() {
             What happens if I run this?
           </div>
           <div style={{ display: 'flex', marginTop: 28, fontSize: 30, color: '#d4d4d8', gap: 36 }}>
-            <span>An open world model for agents</span>
+            <span>Same protection as a large LLM judge</span>
             <span>·</span>
-            <span>a model that foresees</span>
+            <span>about 1/8 of the cost</span>
           </div>
         </div>
       </div>

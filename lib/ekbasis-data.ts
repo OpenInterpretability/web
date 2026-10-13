@@ -13,7 +13,7 @@ export const ekbasis = {
   category: 'An open world model for agents',
   motto: 'Not a model that thinks. Not a model that judges. A model that foresees.',
   description:
-    'Ekbasis is an open world model for agents: given the current state and an action, it predicts what the action will do — will this lose work? will it fail? what will X be? — as calibrated, typed answers, in one forward pass (~0.1 s). Not a model that thinks, nor one that judges: a model that foresees. Trained on real executions; the consequence layer for AgentGuard.',
+    'Ekbasis checks what an agent is about to do before it runs: the same protection as a large LLM judge at about one-eighth of the cost, 4–16× faster. In pre-registered studies of agents running pipelines, harmful runs went 9 of 24 → 0 (Kubernetes) and 16 → 6 (PostgreSQL). An open consequence model: calibrated answers in one forward pass, $0.30 per 1M input tokens, nothing generated.',
   license: 'Apache-2.0',
   links: {
     github: 'https://github.com/OpenInterpretability/ekbasis',
