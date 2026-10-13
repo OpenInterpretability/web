@@ -169,6 +169,7 @@ batch touches, and put what you find in the state as plain sentences (with the n
 | Triggers and what their functions do | `SELECT tgname, pg_get_triggerdef(oid) FROM pg_trigger WHERE tgrelid = 'T'::regclass AND NOT tgisinternal;` then `SELECT pg_get_functiondef(tgfoid) ...` | a trigger can change or delete rows elsewhere |
 | Child tables (inheritance or partitions) | `SELECT inhrelid::regclass FROM pg_inherits WHERE inhparent = 'T'::regclass;` | DELETE/UPDATE without ONLY also act on the children |
 | How many rows the WHERE matches, and which | `SELECT count(*) FROM T WHERE <the same condition>;` plus a breakdown of the columns that matter (e.g. `count(*) FILTER (WHERE auto_renew)`) | a WHERE broader than the request is the most common harm |
+| **Flags on the rows the WHERE matches** (added after the self-check study: the one check agents skipped) | `SELECT count(*) FILTER (WHERE legal_hold), count(*) FILTER (WHERE auto_renew) FROM T WHERE <the same condition>;` for every boolean column of T | a flag such as legal hold, auto-renew or archived often means "do not touch these rows" |
 | Data in a column you will drop or shorten | `SELECT count(*) FROM T WHERE col IS NOT NULL;` / `SELECT count(*) FROM T WHERE length(col) > N;` | the user may believe it is empty or short |
 
 Add the PostgreSQL rules the outcome depends on (autocommit per statement, no undo) to the rules.
