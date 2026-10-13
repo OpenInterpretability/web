@@ -42,7 +42,15 @@ human to click through warnings.
 
 Send a descriptive `User-Agent` (for example `my-agent/1.0`). The official client sends `ekbasis/<version>`.
 
-## 3. The fastest path: the CLI guard (git and shell)
+## 3. The fastest path: the CLI
+
+| You are about to | Use |
+|---|---|
+| Run production changes: `kubectl`, SQL, deploys, commands on servers over `ssh`, killing processes | `ekbasis plan-check` with a rules file about the system (below, **Batches of actions**), the facts from section 5b in the state, and the rules file tested with `--cases` |
+| Run git commands that may lose work | `ekbasis git-check` or the Claude Code hook: it reads the repository, you write no state |
+
+Most of the value is in the first row. `shell-check` is a prototype: as an always-on hook it asks too often, and a
+guard that asks too often teaches people to click through.
 
 ```bash
 pip install ekbasis
@@ -80,7 +88,12 @@ flagged on the real state without the human. For a whole task, `run_plan(client,
 execute, request=...)` (TypeScript `runPlan`) runs this loop for you: check every step from the real state, run the
 safe ones, read the state again, check the rest, stop before a step still flagged. This is "look when unsure" for a
 chain: do not forecast a long chain blind, and do not stop after every step; look only where the forecast is flagged or
-its confidence is below 0.9. Recipe:
+its confidence is below 0.9. **Test the rules file before relying on it, and after every edit (client 0.1.38+):**
+`ekbasis plan-check --rules @rules.txt --cases cases.jsonl --compare last.json` runs known cases, one JSON object per
+line (`name`, `state`, `request`, `actions`, `expect`: `"ok"`, `"stop"` or `{"stop_by": N}`): past incidents must
+stop in time, routine plans must pass. It prints `PASS`, `MISS`, `LATE` or `FALSE ALARM` per case, exits 2 when one
+is off, and `--compare` marks each case whose decision changed since the last run. A rules file that stops the routine
+work will be switched off; one that misses an incident gives false comfort. Recipe:
 https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/recipes/check-a-plan
 
 **Agent steps (experimental):** `ekbasis.intent_check(user_request, events, action)` asks whether the next tool call
@@ -182,6 +195,22 @@ Add the PostgreSQL rules the outcome depends on (autocommit per statement, no un
 | Which pods a Service routes to, and how many are ready | `kubectl get svc S -n NS -o jsonpath='{.spec.selector}'` and `kubectl get endpoints S -n NS` | relabeling or scaling can leave a serving Service with no pods |
 | Who else uses a ConfigMap, Secret or claim | `kubectl get deploy,sts,cronjob -n NS -o yaml` and search for the name | deleting it breaks the next restart of another workload |
 | Whose object it is | labels and annotations such as team / owner, `ownerReferences` | another team's object is not yours to delete |
+
+**Servers and processes** (for each `ssh HOST '...'`, `kill`, `systemctl stop|restart`, `docker stop|rm`): the
+command text never says who depends on the process; the state must.
+
+| Look for | Command (read-only) | Why |
+|---|---|---|
+| What the PID or unit is | `ssh HOST 'ps -o pid,user,rss,args -p PID'`, `systemctl status UNIT` | `kill 912` reads the same whether 912 is a stray script or the only database |
+| Who depends on it | the service map, `ss -tnp` on the host (who is connected), the load balancer's health page | a process with clients takes them down with it |
+| How many copies serve | the load balancer's healthy members, `kubectl get endpoints`, replicas in the deploy config | restarting one of two is routine; restarting the only one is an outage |
+| How it stops | `kill -9` (no cleanup; a database restarts with crash recovery) versus `kill` / `systemctl stop` (graceful) | the same target, a different harm |
+| What runs on the host besides it | `ssh HOST 'ps aux --sort=-rss | head'` | the host you meant to clean may also run something shared |
+
+Put the answers in the state as sentences ("db1 runs PostgreSQL, the only database, no replica; pid 912"). Measured on
+the hosted API with those facts: `ssh db1 'sudo kill -9 912'` stops (a serving service goes down, 97%), and
+`ssh web1 'sudo systemctl restart api'` passes because web2 keeps serving. Without them, the model can only guess.
+Example: https://github.com/OpenInterpretability/ekbasis/tree/main/examples/plan-check-servers
 
 **Anything else:** look for what the action touches that you cannot see in its text: backups or copies (do they
 exist, are they current?), links and shares (who else sees it?), schedules and jobs that read it later, limits and
