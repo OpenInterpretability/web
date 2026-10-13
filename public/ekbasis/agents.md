@@ -153,6 +153,39 @@ the outcome.
 
 For git, let the CLI build the state from the repository: it reads it with read-only git commands.
 
+### 5b. Where hidden consequences live: what to read before you write the state
+
+You cannot state a hidden consequence you have not looked for. The harm an agent causes is usually in something the
+command text does not show. Before a batch that changes data, **run these read-only checks** for every object the
+batch touches, and put what you find in the state as plain sentences (with the numbers). Then check the batch with
+`ekbasis plan-check` (or `check_plan` / `checkPlan`) and follow its answer.
+
+**PostgreSQL** (for each table a DELETE, UPDATE, TRUNCATE, DROP or ALTER touches; `T` is the table):
+
+| Look for | Query (read-only) | Why |
+|---|---|---|
+| Is it a table or a view? Its comment | `SELECT relkind, obj_description(oid) FROM pg_class WHERE relname = 'T';` and, for a view, `SELECT pg_get_viewdef('T'::regclass);` | a DELETE on a view deletes the rows of its base table; comments often say who still uses the table |
+| Foreign keys pointing at it, and what they do | `SELECT conrelid::regclass, confdeltype FROM pg_constraint WHERE contype = 'f' AND confrelid = 'T'::regclass;` (c = CASCADE, n = SET NULL, a/r = fail), then count the dependent rows the statement would reach | CASCADE deletes rows in other tables; SET NULL erases references; TRUNCATE ... CASCADE empties every referencing table |
+| Triggers and what their functions do | `SELECT tgname, pg_get_triggerdef(oid) FROM pg_trigger WHERE tgrelid = 'T'::regclass AND NOT tgisinternal;` then `SELECT pg_get_functiondef(tgfoid) ...` | a trigger can change or delete rows elsewhere |
+| Child tables (inheritance or partitions) | `SELECT inhrelid::regclass FROM pg_inherits WHERE inhparent = 'T'::regclass;` | DELETE/UPDATE without ONLY also act on the children |
+| How many rows the WHERE matches, and which | `SELECT count(*) FROM T WHERE <the same condition>;` plus a breakdown of the columns that matter (e.g. `count(*) FILTER (WHERE auto_renew)`) | a WHERE broader than the request is the most common harm |
+| Data in a column you will drop or shorten | `SELECT count(*) FROM T WHERE col IS NOT NULL;` / `SELECT count(*) FROM T WHERE length(col) > N;` | the user may believe it is empty or short |
+
+Add the PostgreSQL rules the outcome depends on (autocommit per statement, no undo) to the rules.
+
+**Kubernetes** (for each object the batch deletes, scales, relabels or replaces):
+
+| Look for | Command (read-only) | Why |
+|---|---|---|
+| Volumes behind a claim and their reclaim policy | `kubectl get pvc -n NS -o wide` and `kubectl get pv <volume> -o jsonpath='{.spec.persistentVolumeReclaimPolicy}'` | deleting a claim whose volume is `Delete` erases its data |
+| Which pods a Service routes to, and how many are ready | `kubectl get svc S -n NS -o jsonpath='{.spec.selector}'` and `kubectl get endpoints S -n NS` | relabeling or scaling can leave a serving Service with no pods |
+| Who else uses a ConfigMap, Secret or claim | `kubectl get deploy,sts,cronjob -n NS -o yaml` and search for the name | deleting it breaks the next restart of another workload |
+| Whose object it is | labels and annotations such as team / owner, `ownerReferences` | another team's object is not yours to delete |
+
+**Anything else:** look for what the action touches that you cannot see in its text: backups or copies (do they
+exist, are they current?), links and shares (who else sees it?), schedules and jobs that read it later, limits and
+balances. If you do not know where to look, say so in the state: a low confidence answer is your cue to look.
+
 ## 6. Decision rules for agents
 
 | Answer | What to do |
