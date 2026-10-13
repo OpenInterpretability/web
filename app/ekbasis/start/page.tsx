@@ -666,8 +666,10 @@ export default async function EkbasisStartPage() {
             <Code label="~/.claude/settings.json" code={HOOK_JSON} />
             <p className="mt-3 text-xs text-ink-900/55 dark:text-ink-50/55">
               <code>EKBASIS_GUARD_MODE=deny</code> blocks instead of asking; <code>EKBASIS_SHELL_GUARD=1</code> also checks non-git lines that change
-              files (prototype), and with it <code>EKBASIS_CHAIN=1</code> says, for a flagged line of several commands, which command is the
-              first risky one and how to split the line (since 0.1.29). On top of the model the hook adds a rule layer for committed work (e.g.{' '}
+              files (prototype), and with it a flagged line of several commands says which command is the first risky one and how to
+              split the line (on by default since 0.1.37). For lines of git commands the hook also runs them on a copy of the
+              repository, so failures and lost work come from git itself, not a forecast (on by default since 0.1.37 where it fits
+              in 8 s; <code>EKBASIS_GIT_COPY=0</code> turns it off). On top of the model the hook adds a rule layer for committed work (e.g.{' '}
               <code>git branch -D</code> of a branch with unique commits). When it cannot foresee, it asks.
             </p>
             <p className="mt-4 text-sm text-ink-900/70 dark:text-ink-50/70">
