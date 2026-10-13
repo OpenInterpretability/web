@@ -185,7 +185,7 @@ export default async function StatusPage() {
         <h2 className={h2}>Is it right?</h2>
         <p className={`mt-2 text-sm ${muted}`}>
           Every day the same fixed questions from the published test sets, none of them in the training data, are sent to
-          the production API (100 per suite) by the{' '}
+          the production API (100 per suite; the first run, made from our own machine before the daily job existed, used 300–400) by the{' '}
           <a className="underline underline-offset-2" href={SCORECARD_URL}>open scorecard</a>, which anyone can run against
           their own endpoint. A confident error is a wrong answer given with 90% confidence or more: the kind a guard
           cannot catch by asking when unsure. ECE is how far the stated confidence is from the observed accuracy (0 is
