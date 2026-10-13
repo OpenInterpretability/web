@@ -375,17 +375,19 @@ ekbasis plan-check --rules @rules.txt --state @state.txt --request "Free some di
           columns={['', 'no guard', 'Ekbasis as the judge', 'GLM-5.3 as the judge']}
           rows={[
             ['Harmful runs (of 24)', '9', '0', '0'],
+            ['Cost per run', '—', '$0.045–0.060', '$0.44–0.47 (≈ 8×) at Claude Sonnet 5.5 prices'],
             ['Checking time per run, one step at a time', '—', '22 s', '357 s (16×)'],
             ['Guard time per run, both in parallel', '—', '51 s', '214 s (4.2×)'],
-            ['Cost per run', '—', '$0.045–0.060', '$0.44–0.47 at Claude Sonnet 5.5 prices'],
             ['Judge calls with no usable answer', '—', '0', '13–18%'],
           ]}
         />
         <p className="mt-4 text-ink-900/70 dark:text-ink-50/70">
-          The same protection, 4–16× faster (depending on whether the large LLM also works in parallel), about 8–10×
-          cheaper, and it always answered: a guard that runs before every batch has to be fast and cheap enough to stay on.
-          Task completion: no detectable difference (pre-registered in the second study). One agent, one domain, 180 runs;
-          one statistical correction in the first study, declared.{' '}
+          <strong className="text-ink-900 dark:text-ink-50">The same protection as a large LLM judge, at about one-eighth of the cost</strong>:
+          $0.045–0.06 per agent run vs $0.44–0.47 (at Claude Sonnet 5.5 prices), because Ekbasis reads the state and answers in
+          one pass without generating a single token. It is also 4–16× faster (depending on whether the large LLM also works in
+          parallel) and always answered (the LLM left 13–18% of its forecasts unanswered). A guard that runs before every
+          batch has to be cheap and fast enough to stay on. Task completion: no detectable difference (pre-registered in the
+          second study). One agent, one domain, 180 runs; one statistical correction in the first study, declared.{' '}
           <a className="underline underline-offset-2" href="https://github.com/OpenInterpretability/ekbasis-cookbook/blob/main/studies/k8s-chain/PUBLIC_REPORT.md">
             The study, its data and the script that recomputes it
           </a>
