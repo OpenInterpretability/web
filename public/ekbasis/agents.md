@@ -48,7 +48,7 @@ Send a descriptive `User-Agent` (for example `my-agent/1.0`). The official clien
 |---|---|
 | Run production changes: `kubectl`, SQL, deploys, commands on servers over `ssh`, killing processes | `ekbasis plan-check` with a rules file about the system (below, **Batches of actions**), the facts from section 5b in the state, and the rules file tested with `--cases` |
 | Run git commands that may lose work | `ekbasis git-check` or the Claude Code hook: it reads the repository, you write no state |
-| Watch another agent's actions (it may work against the user: leak a secret, switch off a check, plant bad code) | the MONITOR questions: `monitor()` in Python or TypeScript, or `plan-check --harm security --harm sabotage --harm off_task` with the user's task as `--request` |
+| Watch another agent's actions (it may work against the user: leak a secret, switch off a check, plant bad code) | the MONITOR questions: `monitor()` in Python or TypeScript, or `plan-check --harm security --harm sabotage --harm off_task` with the user's task as `--request`; in Claude Code, `ekbasis-monitor-hook` on every tool call (client 0.1.40; plugin: `EKBASIS_MONITOR=1`) |
 
 Most of the value is in the first row. `shell-check` is a prototype: as an always-on hook it asks too often, and a
 guard that asks too often teaches people to click through.
