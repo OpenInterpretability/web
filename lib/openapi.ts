@@ -98,7 +98,7 @@ export const OPENAPI = {
             headers: { "Retry-After": { schema: { type: "integer" } } },
             content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } },
           },
-          "503": err("The model server is unreachable."),
+          "503": err("The model server is unreachable or could not answer right now (code model_unavailable, retryable)."),
         },
       },
     },

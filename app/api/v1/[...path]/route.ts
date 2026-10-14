@@ -313,6 +313,15 @@ async function handler(request: Request) {
 
   timing.push(`model;dur=${Date.now() - tModel}`)
 
+  // A 5xx from the model server means it could not answer (e.g. vLLM restarting behind the auth front, which then
+  // answers 500 "URLError ... Connection refused"): tell the caller the stable, retryable code, not a bare 500.
+  if (backendResp.status >= 500) {
+    release(0)
+    const why = typeof respObj.error === "string" ? respObj.error.slice(0, 120) : `status ${backendResp.status}`
+    return done(fail(503, "model_unavailable", "the model server could not answer right now; retry in a few seconds"),
+      `backend ${backendResp.status}: ${why}`)
+  }
+
   // Meter: the backend reports the input tokens it consumed for this decision. The debit runs after the response
   // is sent; a balance that runs out mid-request goes negative and the next request gets the 402 above.
   const usage = respObj.usage as { input_tokens?: number; output_tokens?: number } | undefined
