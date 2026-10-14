@@ -48,6 +48,7 @@ Send a descriptive `User-Agent` (for example `my-agent/1.0`). The official clien
 |---|---|
 | Run production changes: `kubectl`, SQL, deploys, commands on servers over `ssh`, killing processes | `ekbasis plan-check` with a rules file about the system (below, **Batches of actions**), the facts from section 5b in the state, and the rules file tested with `--cases` |
 | Run git commands that may lose work | `ekbasis git-check` or the Claude Code hook: it reads the repository, you write no state |
+| Watch another agent's actions (it may work against the user: leak a secret, switch off a check, plant bad code) | the MONITOR questions: `monitor()` in Python or TypeScript, or `plan-check --harm security --harm sabotage --harm off_task` with the user's task as `--request` |
 
 Most of the value is in the first row. `shell-check` is a prototype: as an always-on hook it asks too often, and a
 guard that asks too often teaches people to click through.
@@ -99,6 +100,13 @@ https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/recipes/check
 **Agent steps (experimental):** `ekbasis.intent_check(user_request, events, action)` asks whether the next tool call
 serves the user or follows instructions from content the agent read. Use it to ask a person, not to block
 (https://github.com/OpenInterpretability/ekbasis/blob/main/docs/INTENT_CHECK.md).
+
+**Watching an agent (client 0.1.39+, npm 0.2.4+).** To watch an agent that may act against the user, check every
+action before it runs with the three MONITOR questions (`security`, `sabotage`, `off_task`; `monitor()`), the user's
+task at the top of the state, and stop or escalate on a flag. Measured on LinuxArena (pre-registered): 94.9% of
+successful attacks caught at a 1% audit budget, against 74.9% for a GPT-5 Nano monitor; the four `harms()` presets
+alone caught 39.5% there, so use the MONITOR questions for this job. Not tested against an attacker that knows it is
+being watched. Study: https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/agent-monitor-linuxarena
 
 ## 4. The raw API (anything that is not a shell command)
 

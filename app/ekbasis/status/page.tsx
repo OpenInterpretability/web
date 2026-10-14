@@ -18,7 +18,12 @@ const OPS_EVERY_MIN = 60
 const SCORECARD_URL = 'https://github.com/OpenInterpretability/ekbasis/tree/main/scorecard'
 
 // Written by hand when something happens: date (UTC), what users saw, cause, fix.
-const incidents: { date: string; text: string }[] = []
+const incidents: { date: string; text: string }[] = [
+  {
+    date: '2026-10-14 12:03–12:16 UTC',
+    text: 'The API could not answer for about 13 minutes: 7 calls got an error (HTTP 500). Cause: we restarted the model server to apply a faster configuration, and the process supervisor that should have brought it back was not running (its single-copy lock counted the shell that started it). Fix: a pid-file lock, tested by stopping the server on purpose; and since then a model server that cannot answer gives 503 model_unavailable (retryable), not a bare 500.',
+  },
+]
 
 const SUITES: { key: string; name: string; what: string }[] = [
   { key: 'git3_known', name: 'Git, known commands', what: 'real git, command types seen in training' },

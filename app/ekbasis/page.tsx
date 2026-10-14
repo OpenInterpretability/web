@@ -423,6 +423,28 @@ ekbasis plan-check --rules @rules.txt --state @state.txt --request "Free some di
         </p>
       </section>
 
+      <section id="monitor" className="mt-16 scroll-mt-24">
+        <h2 className="text-2xl font-semibold tracking-tight">Watching an agent that may act against you</h2>
+        <p className="mt-3 text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
+          In a pre-registered test on LinuxArena, a public benchmark where an AI agent does real work on Linux systems
+          while some runs also pursue a hidden harmful goal (exfiltrate a secret, plant malware), Ekbasis checked every
+          action before it ran. It was never trained on sabotage. At a 1% audit budget it caught{' '}
+          <strong>94.9% of the successful attacks</strong>, against <strong>74.9%</strong> for the benchmark&apos;s
+          GPT-5 Nano monitor, and 91.5% when the threshold came from honest runs of the attacking agent itself. Next to
+          Nano it adds 19.6 points. On hand-made sabotage it beat Nano but not Claude Opus nor a simple length baseline,
+          and no attacker that knows Ekbasis is watching was tested: a monitor is a layer next to sandboxing and least
+          privilege, not containment.
+        </p>
+        <p className="mt-3 text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
+          The three questions that did the work are in the client: <code>ekbasis.monitor()</code> (Python 0.1.39,
+          TypeScript 0.2.4), or <code>ekbasis plan-check --harm security --harm sabotage --harm off_task</code>.{' '}
+          <a className="underline underline-offset-2" href="https://github.com/OpenInterpretability/ekbasis-cookbook/tree/main/studies/agent-monitor-linuxarena">
+            Report, sealed code and scores
+          </a>
+          .
+        </p>
+      </section>
+
       <section className="mt-16">
         <h2 className="text-2xl font-semibold tracking-tight">Speed and cost</h2>
         <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">{speed.caption}</p>
