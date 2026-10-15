@@ -131,10 +131,15 @@ Response: `{ "access_token", "token_type": "Bearer", "expires_in": 86400, "scope
 
 ## Step 6 — Use the access_token
 
+The API base is `https://openinterp.org/api/v1` (the `resource`); its paths are in the OpenAPI document. For example:
+
 ```http
-POST https://openinterp.org/api/v1/systemone
+POST https://openinterp.org/api/v1/v1/systemone
 Authorization: Bearer <access_token>
 Content-Type: application/json
+
+{ "state": "A Linux shell in a project folder. notes.txt does not exist.",
+  "questions": { "fails": { "type": "noul", "instructions": "Will the command `cat notes.txt` fail?" } } }
 ```
 
 The access_token is an ordinary Ekbasis API key: with the Python client, `EKBASIS_URL=https://openinterp.org/api/v1 EKBASIS_API_KEY=<access_token>`. The account pays per input token from prepaid credits: `402 insufficient_credits` means the user has to add credits at https://openinterp.org/console — tell them; do not retry. API reference: https://openinterp.org/api/v1/openapi.json
