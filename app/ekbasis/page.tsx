@@ -3,9 +3,10 @@ import Link from 'next/link'
 import { ArrowLeft, GitBranch, ExternalLink, Database, ShieldCheck, Boxes, CreditCard, BookOpen } from 'lucide-react'
 import { site } from '@/lib/constants'
 import {
-  ekbasis, skopos, gitComparison, realRepo, longChains, planning, speed, routing, injection, limits, kinds, builds, lookWhenUnsure,
+  ekbasis, gitComparison, realRepo, longChains, planning, speed, routing, injection, limits, kinds, builds, lookWhenUnsure,
   checkWhenSure, client015, client016, withAgents,
 } from '@/lib/ekbasis-data'
+import { skoposBanner as skopos, skoposBuilds } from '@/lib/skopos-data'
 
 const URL_ = `${site.url}/ekbasis`
 
@@ -207,7 +208,7 @@ export default function EkbasisPage() {
         </ul>
         <p className="mt-3 text-sm text-ink-900/60 dark:text-ink-50/60">
           The rest of this page reports Ekbasis-27B unless marked.{' '}
-          <a className="underline underline-offset-2" href={skopos.link}>Model card</a> ·{' '}
+          <a className="underline underline-offset-2" href={skopos.link}>What changed</a> ·{' '}
           <a className="underline underline-offset-2" href={skopos.dataset}>Data</a>
         </p>
       </section>
@@ -557,7 +558,7 @@ claude mcp add --scope user ekbasis -e EKBASIS_URL=http://127.0.0.1:8000 -- ekba
         <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">
           {skopos.name}: each card shows its quality against bf16 on the same evaluation.
         </p>
-        <Table columns={skopos.builds.columns} rows={skopos.builds.rows} />
+        <Table columns={skoposBuilds.columns} rows={skoposBuilds.rows} />
         <p className="mt-6 text-ink-900/70 dark:text-ink-50/70">{builds.caption}</p>
         <Table columns={builds.columns} rows={builds.rows} />
       </section>
