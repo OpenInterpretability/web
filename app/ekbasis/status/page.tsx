@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 // Re-rendered when a measurement arrives (/api/ops/ingest), and at least every 5 minutes.
 export const revalidate = 300
 
-const MODEL = process.env.EKBASIS_PUBLIC_MODEL || 'ekbasis-27b-int4-v1.3'
+const MODEL = process.env.EKBASIS_PUBLIC_MODEL || 'ekbasis-skopos-27b-int4-v1.3'
 const OPS_EVERY_MIN = 60
 const SCORECARD_URL = 'https://github.com/OpenInterpretability/ekbasis/tree/main/scorecard'
 

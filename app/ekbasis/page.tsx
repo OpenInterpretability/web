@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowLeft, GitBranch, ExternalLink, Database, ShieldCheck, Boxes, CreditCard, BookOpen } from 'lucide-react'
 import { site } from '@/lib/constants'
 import {
-  ekbasis, gitComparison, realRepo, longChains, planning, speed, routing, injection, limits, kinds, builds, lookWhenUnsure,
+  ekbasis, skopos, gitComparison, realRepo, longChains, planning, speed, routing, injection, limits, kinds, builds, lookWhenUnsure,
   checkWhenSure, client015, client016, withAgents,
 } from '@/lib/ekbasis-data'
 
@@ -194,6 +194,23 @@ export default function EkbasisPage() {
           <ExternalLink className="h-4 w-4" /> Pre-registration
         </a>
       </div>
+
+      <section className="mt-12 rounded-xl p-5 ring-1 ring-brand-500/30 bg-brand-500/5">
+        <h2 className="text-2xl font-semibold tracking-tight">
+          New: <a className="underline underline-offset-4" href={skopos.link}>{skopos.name}</a>
+        </h2>
+        <p className="mt-3 text-ink-900/75 dark:text-ink-50/75 leading-relaxed">{skopos.summary}</p>
+        <ul className="mt-3 space-y-2 text-ink-900/75 dark:text-ink-50/75 list-disc pl-5">
+          {skopos.results.map((r) => (
+            <li key={r}>{r}</li>
+          ))}
+        </ul>
+        <p className="mt-3 text-sm text-ink-900/60 dark:text-ink-50/60">
+          The rest of this page reports Ekbasis-27B unless marked.{' '}
+          <a className="underline underline-offset-2" href={skopos.link}>Model card</a> ·{' '}
+          <a className="underline underline-offset-2" href={skopos.dataset}>Data</a>
+        </p>
+      </section>
 
       <section className="mt-16">
         <h2 className="text-3xl font-semibold tracking-tight text-balance">{ekbasis.motto}</h2>
@@ -537,7 +554,11 @@ claude mcp add --scope user ekbasis -e EKBASIS_URL=http://127.0.0.1:8000 -- ekba
 
       <section className="mt-16">
         <h2 className="text-2xl font-semibold tracking-tight">Pick the build that fits your machine</h2>
-        <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">{builds.caption}</p>
+        <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">
+          {skopos.name}: each card shows its quality against bf16 on the same evaluation.
+        </p>
+        <Table columns={skopos.builds.columns} rows={skopos.builds.rows} />
+        <p className="mt-6 text-ink-900/70 dark:text-ink-50/70">{builds.caption}</p>
         <Table columns={builds.columns} rows={builds.rows} />
       </section>
 

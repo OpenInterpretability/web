@@ -116,11 +116,16 @@ export default function ApiPoliciesPage() {
           <li>
             The hosted API serves <strong>one model at a time</strong>, named by{' '}
             <code className={code}>GET /api/v1/v1/models</code> and by the <code className={code}>X-Ekbasis-Model</code>{' '}
-            header on every answer. Today: <code className={code}>ekbasis-27b-int4-v1.3</code> (weights{' '}
+            header on every answer. Today: <code className={code}>ekbasis-skopos-27b-int4-v1.3</code> (weights{' '}
+            <a className="underline underline-offset-2" href="https://huggingface.co/caiovicentino1/Ekbasis-Skopos-27B-INT4">
+              caiovicentino1/Ekbasis-Skopos-27B-INT4
+            </a>
+            ), since ⟨swap date: at least 14 days after the notice⟩; before it, <code className={code}>ekbasis-27b-int4-v1.3</code> (weights{' '}
             <a className="underline underline-offset-2" href="https://huggingface.co/caiovicentino1/Ekbasis-27B-INT4">
               caiovicentino1/Ekbasis-27B-INT4
             </a>
-            ). Record the header next to the decisions you log if you need to know later which model made them.
+            ). The thresholds certified by <code className={code}>ekbasis.verify</code> (certified mode) were fit on
+            Ekbasis-27B; they are not certified for the new model until they are fit again. Record the header next to the decisions you log if you need to know later which model made them.
           </li>
           <li>
             <strong>Before the served model changes</strong>, the new version and its scorecard (accuracy, confident

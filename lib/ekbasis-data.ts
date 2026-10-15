@@ -17,13 +17,36 @@ export const ekbasis = {
   license: 'Apache-2.0',
   links: {
     github: 'https://github.com/OpenInterpretability/ekbasis',
-    model: 'https://huggingface.co/caiovicentino1/Ekbasis-27B',
+    model: 'https://huggingface.co/caiovicentino1/Ekbasis-Skopos-27B',   // the recommended version; Ekbasis-27B stays at modelPrevious
+    modelPrevious: 'https://huggingface.co/caiovicentino1/Ekbasis-27B',
     dataset: 'https://huggingface.co/datasets/caiovicentino1/ekbasis-data',
     paper: 'https://doi.org/10.5281/zenodo.23146970' as string | null, // "Look When Unsure, Check When Sure" (Zenodo)
     prereg: 'https://github.com/OpenInterpretability/ekbasis/blob/main/PREREG_release_eval.md',
     agentguard: '/agentguard',
   },
-  status: 'Every number on this page was measured on the exact release weights; the release evaluation was pre-registered.',
+  status: 'Every number on this page was measured on the exact release weights of Ekbasis-27B unless it is marked Skopos; both release evaluations were pre-registered.',
+}
+
+/** Ekbasis-Skopos-27B (⟨release date⟩), the next version: numbers written by release_skopos/docs/stage_docs.py from the
+ *  release's results files (RELEASE_EVAL_SKOPOS.md and the model card have each one with its source). */
+export const skopos = {
+  name: 'Ekbasis-Skopos-27B',
+  released: '⟨release date⟩',
+  link: 'https://huggingface.co/caiovicentino1/Ekbasis-Skopos-27B',
+  dataset: 'https://huggingface.co/datasets/caiovicentino1/ekbasis-skopos-data',
+  summary:
+    'Skopos (the lookout) is Ekbasis-27B trained further on what actions actually did: shell, git, SQLite, PostgreSQL and Python scenarios executed in sandboxes, real git sequences of 4–16 commands, and command lines and Python test traces from two public datasets. Same prompt, readout, API and client.',
+  results: [
+    "Measured against Ekbasis-27B on the same items: false alarms of the git guard 26/799 instead of 49/799 on command types it never trained on, and 27 instead of 37 of 863 on known types.",
+    "World families it never saw: +1.6 points [+0.7, +2.5] on 3,014 fresh answers the actions change.",
+    "Confident errors (wrong at ≥ 0.9) 3.3 per 100 instead of 6.2 on 2,500 held-out items, INT4 as served (most of them from generators it was trained on).",
+    "In-distribution (unseen seeds), executed factory scenarios from the generators it was trained on: 94.0% instead of 88.4%; the gains on new kinds of actions are the smaller ones above.",
+    "A limit: in world families it never saw it is wrong about as often as Ekbasis-27B, but more often with confidence 0.9 or more (4.49 vs 3.75 per 100); check confident answers there.",
+  ],
+  builds: {
+    columns: ['Build', 'Size', 'Runs on', 'Against bf16'],
+    rows: [["Ekbasis-Skopos-27B (bf16)", "54.7 GB", "GPUs with 80 GB", "the reference"], ["Ekbasis-Skopos-27B-FP8", "30.4 GB", "GPUs with 48 GB", "quantization gate passed: same answer as bf16 on 98.6%"], ["Ekbasis-Skopos-27B-INT4", "18.6 GB", "GPUs with 32 GB", "quantization gate passed: same answer as bf16 on 97.4%"]],
+  },
 }
 
 /** 240 git questions on repositories built and executed in a sandbox (120 command types seen in training, 120 never
@@ -142,7 +165,7 @@ export const injection = {
 /** The released builds: every one that works ships, so each machine runs what fits (quality against bf16 in each card). */
 export const builds = {
   caption:
-    'Every build that works is released, so each machine runs the one that fits. Each card shows its quality against bf16 on the same evaluation (the gate was pre-registered); speeds on one RTX PRO 6000; GPU sizes tested by capping vLLM memory and checking the answers match.',
+    'Ekbasis-27B, the previous version: every build that works is released, so each machine runs the one that fits. Each card shows its quality against bf16 on the same evaluation (the gate was pre-registered); speeds on one RTX PRO 6000; GPU sizes tested by capping vLLM memory and checking the answers match.',
   columns: ['Build', 'Size', 'Runs on', 'Speed', 'Against bf16'],
   rows: [
     ['Ekbasis-27B (bf16)', '51 GB', 'GPUs with 80 GB', '0.09 s per check · 23 checks/s', 'the reference'],
