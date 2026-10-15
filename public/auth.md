@@ -114,7 +114,7 @@ Content-Type: application/json
 { "claim_token": "clm_...", "email": "user@example.com" }
 ```
 
-It returns a `claim_attempt` block of the same shape; show the new code and link and resume polling. `410 claim_expired` means the 24-hour registration window closed: restart at Step 3.
+It returns a `claim_attempt` block of the same shape; show the new code and link and resume polling. `410 claim_expired` means the registration is over (its 24-hour window closed, or 5 codes were issued without a confirmation): restart at Step 3.
 
 ## Step 5 — Exchange the assertion
 
