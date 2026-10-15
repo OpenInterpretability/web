@@ -39,7 +39,10 @@ function json(obj: unknown, status: number) {
  */
 const RETRYABLE = new Set(["rate_limited", "model_unavailable", "backend_not_configured"])
 function fail(status: number, code: string, message: string) {
-  return json({ error: message, code, retryable: RETRYABLE.has(code) }, status)
+  const r = json({ error: message, code, retryable: RETRYABLE.has(code) }, status)
+  // auth.md Step 1: a 401 points agents at the Protected Resource Metadata (RFC 9728), from which they can register.
+  if (status === 401) r.headers.set("WWW-Authenticate", 'Bearer resource_metadata="https://openinterp.org/.well-known/oauth-protected-resource"')
+  return r
 }
 
 /**
