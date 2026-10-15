@@ -17,7 +17,7 @@ const ERRORS: Record<string, string> = {
   invalid: "This link is no longer valid — it may have been used, replaced by a newer one, or expired. Ask your agent for a new code.",
   expired: "This code has expired. Ask your agent for a fresh code.",
   too_many: "Too many wrong codes. Ask your agent to start again.",
-  wrong_account: "You are signed in with a different email than the one the agent registered.",
+  wrong_account: "You are signed in with a different email than the one the agent registered. Sign in with that email, or ask the agent to register again with yours.",
   done: "This request was already confirmed.",
   wrong: "That code is not right. Check the 6 digits your agent showed you and try again.",
 }
@@ -116,7 +116,8 @@ export default async function ClaimPage({ searchParams }: { searchParams: Promis
         </h1>
         <p className="mt-4 text-ink-900/70 dark:text-ink-50/70">
           You are signed in as <code>{email || "an account without a verified email"}</code>, but the agent asked for{" "}
-          <code>{masked}</code>. Sign out (top right) and sign in with that email, then open this link again.
+          <code>{masked}</code>. Sign out (top right) and sign in with that email, then open this link again, or ask the agent to
+          register again with the email you are signed in with.
         </p>
       </Shell>
     )

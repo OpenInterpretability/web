@@ -262,6 +262,12 @@ async function handler(request: Request) {
   } catch {
     body = {}
   }
+  // Always on: a body without questions can never be answered (the model server fails on it with "max() iterable
+  // argument is empty"), so it never reaches the model or takes a slot. Only this case; the rest stays behind the flag.
+  const qs = body.questions
+  if (path === "/v1/systemone" && (!qs || typeof qs !== "object" || Array.isArray(qs) || !Object.keys(qs).length))
+    return done(fail(400, "invalid_request", 'questions must be a non-empty object: {"name": {"type": "noul", "instructions": "...?"}}'),
+      "invalid request (no questions)")
   // Validation disabled 2026-10-13 01:30 UTC: it refused valid requests from existing clients (see invalidQuestion).
   if (path === "/v1/systemone" && process.env.EKBASIS_VALIDATE === "1") {
     const bad = invalidQuestion(body)
