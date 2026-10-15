@@ -36,6 +36,8 @@ export const skopos = {
     "code": "https://github.com/OpenInterpretability/ekbasis",
     "report": "https://github.com/OpenInterpretability/ekbasis/blob/main/RELEASE_EVAL_SKOPOS.md",
     "prereg": "https://github.com/OpenInterpretability/ekbasis/tree/main/prereg_skopos",
+    "results": "https://github.com/OpenInterpretability/ekbasis/tree/main/results_skopos",
+    "lineage": "https://github.com/OpenInterpretability/ekbasis/blob/main/training/skopos/run_lineage_skopos.sh",
     "ekbasis27b": "https://huggingface.co/caiovicentino1/Ekbasis-27B"
   },
   "releaseDate": null,
