@@ -14,7 +14,7 @@
  * Codes and tokens are stored only as SHA-256 hashes; plaintext is returned once. The service never emails a code.
  */
 import { createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from "crypto"
-import { getJSON, redis, setJSON, underLimit } from "@/lib/crypto-pay/redis"
+import { getJSON, redis, setJSON, setNX, underLimit } from "@/lib/crypto-pay/redis"
 import { invalidateUser } from "@/lib/gateway-cache"
 import { getHexclaveServerApp } from "@/hexclave/server"
 
@@ -52,7 +52,9 @@ export type Reg = {
   userId?: string
   claimedAt?: number
   lastPollAt?: number
-  keyId?: string
+  keyId?: string // the live key (the newest); undefined after the agent revoked it (RFC 7009)
+  keyIds?: string[] // every key ever issued to this registration
+  ownRevoked?: string[] // keys this service revoked itself (RFC 7009 or rotation): not the user's kill switch
   jti?: string
   ip?: string | null
   ua?: string | null
@@ -233,34 +235,73 @@ export async function issueKey(reg: Reg): Promise<{ token: string; expiresIn: nu
   const expiresAt = new Date(now() + ACCESS_TTL_S * 1000)
   const key = await user.createApiKey({ description: `Agent via auth.md (${reg.id.slice(0, 12)})`, expiresAt })
   reg.keyId = key.id
+  reg.keyIds = [...(reg.keyIds ?? []), key.id]
   await redis("SET", `aa:tok:${sha256(key.value)}`, JSON.stringify({ reg: reg.id, uid: user.id, keyId: key.id }), "EX", ACCESS_TTL_S + 3600)
   return { token: key.value, expiresIn: ACCESS_TTL_S }
 }
 
-/** The user revoked this registration's key in the console: the registration is dead (the kill switch). */
-export async function keyRevokedByUser(reg: Reg): Promise<boolean> {
-  if (!reg.keyId || !reg.userId) return false
-  const user = await getHexclaveServerApp().getUser(reg.userId)
-  if (!user) return true
-  const keys = await user.listApiKeys()
-  const k = keys.find((x) => x.id === reg.keyId)
-  return Boolean(k && k.manuallyRevokedAt)
+/** Revokes one of the registration's keys on the service's own account: marked first (and saved), so a concurrent
+ *  renewal never reads this revocation as the user's kill switch. The caller saves `reg` afterwards. */
+export async function revokeOwnKey(reg: Reg, keyId: string): Promise<void> {
+  if (!reg.ownRevoked?.includes(keyId)) reg.ownRevoked = [...(reg.ownRevoked ?? []), keyId]
+  if (reg.keyId === keyId) reg.keyId = undefined
+  await putReg(reg)
+  const user = reg.userId ? await getHexclaveServerApp().getUser(reg.userId) : null
+  const key = user ? (await user.listApiKeys()).find((k) => k.id === keyId) : undefined
+  if (key && !key.manuallyRevokedAt) await key.revoke()
+  if (reg.userId) await invalidateUser(reg.userId)
 }
 
+/**
+ * The kill switch: the user revoked ANY key of this registration in the console (not only the newest: an older key
+ * may still be live). Then every other live key of the registration is revoked too, and the registration is dead.
+ */
+export async function keyRevokedByUser(reg: Reg): Promise<boolean> {
+  const ids = reg.keyIds ?? (reg.keyId ? [reg.keyId] : [])
+  if (!ids.length || !reg.userId) return false
+  const user = await getHexclaveServerApp().getUser(reg.userId)
+  if (!user) return true
+  const mine = (await user.listApiKeys()).filter((k) => ids.includes(k.id))
+  const own = new Set(reg.ownRevoked ?? [])
+  if (!mine.some((k) => k.manuallyRevokedAt && !own.has(k.id))) return false
+  for (const k of mine) if (!k.manuallyRevokedAt) await k.revoke()
+  await invalidateUser(reg.userId)
+  return true
+}
+
+/**
+ * One writer at a time per registration (renewal, RFC 7009 revocation): concurrent ones could lose a key from keyIds
+ * (out of reach of rotation and of the kill switch) or an ownRevoked mark (then read as the user's kill switch).
+ * Returns null when the lock could not be taken within ~5 s.
+ */
+export async function withRegLock<T>(regId: string, fn: () => Promise<T>): Promise<T | null> {
+  const lock = `aa:lock:${regId}`
+  let locked = false
+  for (let i = 0; i < 10 && !(locked = await setNX(lock, "1", 30)); i++) await new Promise((r) => setTimeout(r, 500))
+  if (!locked) return null
+  try {
+    return await fn()
+  } finally {
+    await redis("DEL", lock)
+  }
+}
+
+/** RFC 7009: the agent revoking its own access_token. The identity_assertion stays valid (Step 5 mints a new key). */
 export async function revokeAccessToken(accessToken: string): Promise<boolean> {
   const rec = await getJSON<{ reg: string; uid: string; keyId: string }>(`aa:tok:${sha256(accessToken)}`)
   if (!rec) return false
-  const user = await getHexclaveServerApp().getUser(rec.uid)
-  const key = user ? (await user.listApiKeys()).find((k) => k.id === rec.keyId) : undefined
-  // The agent revoking its own access_token (RFC 7009) is not the user's kill switch: unlink the key from the
-  // registration first, so the identity_assertion stays valid and Step 5 can mint a fresh key.
-  const reg = await getReg(rec.reg)
-  if (reg && reg.keyId === rec.keyId) {
-    reg.keyId = undefined
-    await putReg(reg)
+  const done = await withRegLock(rec.reg, async () => {
+    const reg = await getReg(rec.reg)
+    if (reg) await revokeOwnKey(reg, rec.keyId)
+    return Boolean(reg)
+  })
+  if (done === null) throw new Error("registration busy")
+  if (!done) {
+    const user = await getHexclaveServerApp().getUser(rec.uid)
+    const key = user ? (await user.listApiKeys()).find((k) => k.id === rec.keyId) : undefined
+    if (key && !key.manuallyRevokedAt) await key.revoke()
+    await invalidateUser(rec.uid)
   }
-  if (key && !key.manuallyRevokedAt) await key.revoke()
-  await invalidateUser(rec.uid)
   await redis("DEL", `aa:tok:${sha256(accessToken)}`)
   return true
 }

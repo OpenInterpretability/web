@@ -127,7 +127,7 @@ Content-Type: application/x-www-form-urlencoded
 grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=<identity_assertion>
 ```
 
-Response: `{ "access_token", "token_type": "Bearer", "expires_in": 86400, "scope": "ekbasis.api" }`. `invalid_grant` means the assertion expired, was superseded, or the user revoked your access: restart at Step 3.
+Response: `{ "access_token", "token_type": "Bearer", "expires_in": 86400, "scope": "ekbasis.api" }`. The new access_token replaces the previous one, which is revoked: switch to it right away. `invalid_grant` means the assertion expired, was superseded, or the user revoked your access: restart at Step 3.
 
 ## Step 6 — Use the access_token
 
@@ -159,9 +159,10 @@ The access_token is an ordinary Ekbasis API key: with the Python client, `EKBASI
 | `expired_token` | `/oauth2/token` | Re-initiate at `/agent/identity/claim`; if that says `claim_expired`, restart at Step 3. |
 | `invalid_grant` | `/oauth2/token` | Restart at Step 3. |
 | `unsupported_grant_type` | `/oauth2/token` | Use one of the two grants above. |
+| `server_error` (500) | `/oauth2/token` | Retry in a few seconds (same request). |
 | `402 insufficient_credits` | `/api/v1/...` | The user must add credits at /console. |
 
 ## Revocation
 
-- You can revoke an access_token (RFC 7009): `POST https://openinterp.org/oauth2/revoke` with `token=<access_token>` (form-encoded). 200, idempotent; your identity_assertion still works (Step 5).
-- The user can revoke your key (named `Agent via auth.md`) in the console. After that, Step 5 answers `invalid_grant`: restart at Step 3 only if the user asks you to.
+- You can revoke an access_token (RFC 7009): `POST https://openinterp.org/oauth2/revoke` with `token=<access_token>` (form-encoded). 200, idempotent; your identity_assertion still works (Step 5). `503` means it was not revoked: retry after `Retry-After`.
+- The user can revoke your key (named `Agent via auth.md`) in the console. After that, the API answers 401 and Step 5 answers `invalid_grant`: restart at Step 3 only if the user asks you to.

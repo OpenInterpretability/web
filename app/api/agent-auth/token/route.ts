@@ -3,11 +3,12 @@
  *   claim grant (urn:workos:agent-auth:grant-type:claim): poll until the user confirms the code; then, once, an
  *     access_token (a 24 h Ekbasis API key) and a service-signed identity_assertion. The claim_token is single-use.
  *   JWT-bearer grant (RFC 7523): re-exchange the identity_assertion for a fresh key until it expires, unless the user
- *     revoked this agent's key in the console (the kill switch) or a newer assertion superseded it.
+ *     revoked any of this agent's keys in the console (the kill switch) or a newer assertion superseded it. The new key
+ *     replaces the previous one (rotation), so a registration has at most one live key.
  */
 import {
   CLAIM_GRANT, INTERVAL, JWT_BEARER_GRANT, SCOPES, audit, clientIp, configured, getReg, issueKey, keyRevokedByUser,
-  now, oauthJson, putReg, regByClaimToken, signAssertion, verifyAssertion,
+  now, oauthJson, putReg, regByClaimToken, revokeOwnKey, signAssertion, verifyAssertion, withRegLock,
 } from "@/lib/agent-auth"
 import { redis, setNX } from "@/lib/crypto-pay/redis"
 
@@ -85,14 +86,29 @@ async function jwtBearerGrant(req: Request, body: Record<string, string>) {
   const reg = await getReg(v.sub)
   if (!reg || reg.status !== "issued") return oerr("invalid_grant", "The registration is gone or revoked. Restart at Step 3.")
   if (reg.jti !== v.jti) return oerr("invalid_grant", "This identity_assertion was superseded. Restart at Step 3.")
+  const r = await withRegLock(reg.id, () => renew(req, reg.id))
+  return r ?? oerr("server_error", "Another operation on this registration is in progress; retry in a few seconds.", 500)
+}
+
+async function renew(req: Request, regId: string) {
+  const reg = await getReg(regId) // re-read under the lock
+  if (!reg || reg.status !== "issued") return oerr("invalid_grant", "The registration is gone or revoked. Restart at Step 3.")
   if (await keyRevokedByUser(reg)) {
     reg.status = "revoked"
     await putReg(reg)
     await audit("registration.revoked_by_user", { reg: reg.id, uid: reg.userId })
     return oerr("invalid_grant", "The user revoked this agent's access. Restart at Step 3.")
   }
+  const previous = reg.keyId
   const key = await issueKey(reg)
   await putReg(reg)
-  await audit("token.issued", { reg: reg.id, uid: reg.userId, grant: "jwt-bearer", ip: clientIp(req) })
+  if (previous) {
+    try {
+      await revokeOwnKey(reg, previous)
+    } catch (e) {
+      console.warn("[agent-auth] rotation: revoking the previous key failed:", e)
+    }
+  }
+  await audit("token.issued", { reg: reg.id, uid: reg.userId, grant: "jwt-bearer", ip: clientIp(req), rotated: previous ? 1 : 0 })
   return oauthJson({ access_token: key.token, token_type: "Bearer", expires_in: key.expiresIn, scope: SCOPES.join(" ") })
 }

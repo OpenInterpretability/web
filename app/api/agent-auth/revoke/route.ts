@@ -1,6 +1,7 @@
 /**
  * POST /oauth2/revoke (rewritten here) — RFC 7009: revokes one access_token (an agent-issued Ekbasis API key).
- * Always 200, idempotent; unknown tokens are not an error. The identity_assertion stays valid.
+ * 200, idempotent; unknown tokens are not an error. The identity_assertion stays valid. 503 (RFC 7009 §2.2.1) when
+ * the revocation could not be done right now: the token is still valid, retry.
  */
 import { audit, clientIp, oauthJson, revokeAccessToken } from "@/lib/agent-auth"
 
@@ -19,6 +20,7 @@ export async function POST(req: Request) {
     if (await revokeAccessToken(token)) await audit("token.revoked", { ip: clientIp(req) })
   } catch (e) {
     console.warn("[agent-auth] revoke failed:", e)
+    return oauthJson({ error: "temporarily_unavailable", error_description: "Could not revoke right now; the token is still valid. Retry." }, 503, { "Retry-After": "5" })
   }
   return oauthJson({})
 }
