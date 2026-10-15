@@ -563,11 +563,14 @@ claude mcp add --scope user ekbasis -e EKBASIS_URL=http://127.0.0.1:8000 -- ekba
       </section>
 
       <section className="mt-16">
-        <h2 className="text-2xl font-semibold tracking-tight">Everything is open</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">What is open</h2>
         <p className="mt-4 text-ink-900/75 dark:text-ink-50/75 leading-relaxed">
-          The weights, the world generators, the git sandbox that executes commands in throwaway repositories, the
-          training code with the exact recipes, every evaluation with its predictions, and the full history of runs —
-          including the ones that did not work. The release evaluation was pre-registered before it was run.
+          The weights in every build; the training data (the rows of every training stage, except the replay rows whose
+          source does not allow redistribution, listed in the dataset card); the training code with the exact recipes;
+          the release evaluation and the published studies with their per-item predictions, including those of V42, the
+          candidate that was not released; and the pre-registrations, written before the evaluations they govern were
+          run. Not published: the world generators and the git sandbox that computed the training rows, and the
+          research runs that did not lead to a release.
         </p>
       </section>
 
