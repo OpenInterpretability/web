@@ -257,6 +257,16 @@ export const OPENAPI = {
           score: { description: "score: the most likely value." },
           expected: { type: "number", description: "score: the expected value under the probabilities." },
           probabilities: { type: "object", additionalProperties: { type: "number" }, description: "choice and score: every option's probability." },
+          calibrated: {
+            type: "object",
+            description: "The same answer at a temperature fit on held-out validation (since 2026-10-15): probabilities meant to be read as frequencies. The plain fields above stay the raw probabilities. Python client 0.1.41 / TypeScript SDK 0.2.5: answer.calibrated.",
+            properties: {
+              temperature: { type: "number" },
+              confidence: { type: "number", description: "Calibrated probability of the chosen answer." },
+              probability: { type: "number", description: "noul: calibrated probability of yes." },
+              probabilities: { type: "object", additionalProperties: { type: "number" }, description: "choice and score: every option's calibrated probability." },
+            },
+          },
         },
       },
       AskResponse: {
