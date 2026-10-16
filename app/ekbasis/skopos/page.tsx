@@ -231,7 +231,7 @@ export default function SkoposPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/ekbasis/skopos/chart_jev.png"
-            alt="Jev and Ekbasis on the same items: on the git guard's held-out command types, at the guard's 0.2 Jev catches 100% of work-losing commands with 93.6% false alarms (Ekbasis-27B 96.0% and 6.1%, Skopos INT4 97.4% and 3.1%); at Ekbasis-27B's false-alarm rate Jev catches 43.7% (Skopos 98.9%); accuracy git v3 90.0% vs 96.6% and 96.8%; Jev is confidently wrong 0 to 0.75 times per 100 answers, Ekbasis 2 to 14.5."
+            alt="Ekbasis-Skopos-27B and Jev on the same questions: knows what a git command will do, 98.4 vs 90.4 (known types), 95.3 vs 89.5 (types kept out of the git training set), 83.8 vs 74.8 (rule-based worlds); warns before you lose work at the same false-alarm rate, 97.3 vs 45.3 and 98.9 vs 43.7; false alarms on safe commands, 2.9 vs 84.9 and 3.1 vs 93.6. Not shown: Jev is rarely confidently wrong and costs about 4x less per check; the full table is below."
             className="mt-6 w-full rounded-xl ring-1 ring-ink-900/10 dark:ring-ink-50/10"
             loading="lazy"
           />
