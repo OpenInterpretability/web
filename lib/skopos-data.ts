@@ -13,13 +13,12 @@ export const skopos = {
     "World families it never saw: 83.4% instead of 81.8% on the 3,014 answers the actions change among 5,385 fresh items (+1.6 points, 95% CI [+0.7, +2.5]).",
     "On a real repository the guard flagged 3/3 work-losing scenarios with 1/13 false alarm, and answered \"will it fail?\" right 17/17 (Ekbasis-27B: 3/3, 1/13, 16/17)."
   ],
-  "status": "Every number on this page is read from the release's results files, with its pre-registration; the full report is linked below. Limits are at the bottom of the page.",
+  "status": "Every number on this page is read from the release's results files, with its pre-registration where there is one; the others are marked not pre-registered or added after review. the full report is linked below. Limits are at the bottom of the page.",
   "description": "Ekbasis-Skopos-27B, the next version of the open consequence model for agents: fewer false alarms in the git guard (26 vs 49 of 799), +1.6 points on fresh never-seen world families, calibrated answers in one pass. Open weights (Apache-2.0), data (per-row licences) and code.",
   "draft": true,
   "pending": [
     "the release and hosted switch dates, written at the go/no-go (site/release_config.json)",
-    "the MLX build's test on Apple hardware (D7, PREREG_ADDENDUM A4) (results/mlx_mac_test.json)",
-    "release and hosted-switch dates (site/release_config.json)"
+    "the MLX build's test on Apple hardware (D7, PREREG_ADDENDUM A4) (results/mlx_mac_test.json)"
   ],
   "links": {
     "model": "https://huggingface.co/caiovicentino1/Ekbasis-Skopos-27B",
@@ -389,7 +388,7 @@ export const upgrade = {
   "paragraphs": [
     "Self-hosted: download a build and point the client at it — the API, the client, the git and shell guards, the Claude Code hooks, check_plan, monitor() and simulate work unchanged.",
     "Hosted API: as our API policy promises, the served model changes only after this notice and its scorecard have been public for at least 14 days. It keeps serving Ekbasis-27B-INT4 until ⟨switch date: at least 14 days after the release⟩, then serves Ekbasis-Skopos-27B-INT4; every answer names its model in a response header. The hosted API reads text only; the open builds served with serve_vllm.sh also read images.",
-    "Certified mode of ekbasis.verify (thresholds certified on Ekbasis-27B): checked with Skopos on 1,400 fresh scenarios — INT4: 7 errors among 927 answers accepted without verifying (weighted 0.74%, 95% upper bound 1.41%; target at most 2%), 22.0% verified; bf16: 6 among 935 (bound 1.26%). The certificate carries over; a check, not a new certificate."
+    "Certified mode of ekbasis.verify (thresholds certified on Ekbasis-27B): checked with Skopos on 1,400 fresh scenarios — INT4: 7 errors among 927 answers accepted without verifying (weighted 0.74%, 95% upper bound 1.41%; target at most 2%), 22.0% verified; bf16: 6 among 935 (bound 1.26%). On the same scenarios Ekbasis-27B bf16 made 5 among 886 (weighted 0.47%, 25.4% verified): Skopos accepts more and errs slightly more often. Per rule node the check has little power (43 nodes, median 16 accepted answers; the weakest 2 errors in 12, p = 0.023 uncorrected, not significant after Bonferroni). The certificate carries over; a check, not a new certificate."
   ],
   "code": "hf download caiovicentino1/Ekbasis-Skopos-27B-INT4 --local-dir Ekbasis-Skopos-27B-INT4\nbash Ekbasis-Skopos-27B-INT4/serve_vllm.sh Ekbasis-Skopos-27B-INT4 8001\npython Ekbasis-Skopos-27B-INT4/serve.py --model Ekbasis-Skopos-27B-INT4 --vllm-url http://127.0.0.1:8001 --port 8000\npip install -U ekbasis && EKBASIS_URL=http://127.0.0.1:8000 ekbasis git-check -- \"git reset --hard\""
 }
@@ -398,6 +397,7 @@ export const training = {
   "paragraphs": [
     "Lineage: Qwen3.8-27B → Eikos-27B → Ekbasis-27B → the first Skopos (v49f_w50, not released) → Ekbasis-Skopos-27B.",
     "The first Skopos: Ekbasis-27B's adapter (rank 128) trained further for 900 steps, then the exact interpolation halfway between it and Ekbasis-27B's own adapter (WiSE, λ 0.5), merged; an intermediate checkpoint that was not released: its weights are archived privately, and the published code and data retrain it approximately. Then a new LoRA (rank 64, all linear layers of the language model, 1,200 steps, cross-entropy on the answer letter plus the JEPA-style hindsight term) trained on the first Skopos and merged into its weights.",
+    "λ 0.5 was chosen because the un-interpolated checkpoint failed the selection rule's accuracy and calibration criteria on a validation set of world-family questions (trained, held-out question types and never-trained families; ECE 0.061 against Ekbasis-27B's 0.048, tolerance +0.01), which the interpolation passed (ECE 0.051). The last stage's selection (R1 → R2 → R4) had no confident-error or world-family calibration criterion, and the released model shows more confident errors in never-trained families (Limits).",
     "Its training data: shell, git, SQLite, PostgreSQL and Python scenarios generated by our factories and executed in throwaway sandboxes; the last stage used the factory regenerated with fresh seeds; real git sequences of 4–16 commands executed in throwaway repositories, and guard-style git items with their executed labels; plan-level items in synthetic rule-based worlds, with exact answers from our simulators; a replay of Ekbasis-27B's training mixture (simulated worlds, git, and the eikos-decisions replay rows).",
     "Not in the training data: Vikunja rows built during development were all dropped by the overlap firewall; WebWorld transitions were excluded by rule.",
     "Open: the weights; the training rows of every stage (except 7,423 replay rows that are not part of the published eikos-decisions (as in ekbasis-data) and 31 more rows withheld by its privacy scan, 26 of them CWM rows (all listed by id)); the trainers and recipes as they ran; the generators that computed the rows; every evaluation with its per-item predictions (except the quantized builds' answers on the fresh confirmation, kept as summaries); the candidate runs that were not released and why; and the pre-registrations."
@@ -426,7 +426,7 @@ export const training = {
 
 export const audit = {
   "paragraphs": [
-    "Contamination audit of every evaluation set against every training row of the lineage: identical prompts (also against the hindsight prompt), and near-duplicates at word 8-gram Jaccard >= 0.5 against one training text after removing each set's own layout (Ekbasis-27B's audit rule, exact best match). Items flagged: multi_test_trainfam (reported only) 291 of 600; fac_val 105 of 3,983; fhorizon 547 of 1,375; image (new seeds) 5 of 400; confident-errors set 5,381 of 15,008. Numbers that use those sets are reported without the flagged items as well."
+    "Contamination audit of every evaluation set against every training row of the lineage: identical prompts (also against the hindsight prompt), and near-duplicates at word 8-gram Jaccard >= 0.5 against one training text after removing each set's own layout (Ekbasis-27B's audit rule, exact best match). Not covered: Eikos-27B's own decision data, Qwen's pretraining, T3c (its scenarios are not dataset items). Items flagged: multi_test_trainfam (reported only) 291 of 600; fac_val 105 of 3,983; fhorizon 547 of 1,375; image (new seeds) 5 of 400; confident-errors set 5,381 of 15,008. Numbers that use those sets are reported without the flagged items as well."
   ]
 }
 

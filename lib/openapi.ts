@@ -241,7 +241,7 @@ export const OPENAPI = {
           state: { type: "string", description: "The situation in plain text: rules, how things stand, the actions about to run." },
           questions: { type: "object", minProperties: 1, additionalProperties: { $ref: "#/components/schemas/Question" } },
           read_once: { type: "boolean", description: "Read the state once for all questions (models trained for it)." },
-          images: { type: "array", items: { type: "string" }, description: "Data URIs or base64 images, when the served model accepts them." },
+          images: { type: "array", items: { type: "string" }, description: "Data URIs or base64 images, when the served model accepts them. The hosted API currently serves text only and does not accept images; the open builds read images when served with serve_vllm.sh." },
         },
       },
       Answer: {

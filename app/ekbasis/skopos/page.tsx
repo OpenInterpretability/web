@@ -185,7 +185,7 @@ export default function SkoposPage() {
         </Section>
       )}
 
-      <Section id="data-and-code" title="Training data, code and checks — all open">
+      <Section id="data-and-code" title="Training data, code and checks — open, with the exceptions listed">
         {training.paragraphs.map((p) => (
           <P key={p}>{p}</P>
         ))}
