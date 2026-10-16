@@ -228,6 +228,13 @@ export default function SkoposPage() {
       {jev && (
         <Section id="general-evaluator" title="Against a general-purpose calibrated evaluator">
           <P>{jev.caption}</P>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/ekbasis/skopos/chart_jev.png"
+            alt="Jev and Ekbasis on the same items: on the git guard's held-out command types, at the guard's 0.2 Jev catches 100% of work-losing commands with 93.6% false alarms (Ekbasis-27B 96.0% and 6.1%, Skopos INT4 97.4% and 3.1%); at Ekbasis-27B's false-alarm rate Jev catches 43.7% (Skopos 98.9%); accuracy git v3 90.0% vs 96.6% and 96.8%; Jev is confidently wrong 0 to 0.75 times per 100 answers, Ekbasis 2 to 14.5."
+            className="mt-6 w-full rounded-xl ring-1 ring-ink-900/10 dark:ring-ink-50/10"
+            loading="lazy"
+          />
           <DataTable columns={jev.columns} rows={jev.rows} />
           <DataTable columns={jev.scColumns} rows={jev.scRows} />
           <P>{jev.reading}</P>
