@@ -5,7 +5,7 @@ import { site } from '@/lib/constants'
 import { DataTable, Stats } from '@/components/ekbasis/data-table'
 import {
   skopos, changed, confirm, guard, t3c, executed, confidentErrors, calibration, images, agentWorld, skoposBuilds, training,
-  audit, upgrade, skoposLimits, scorecard, prelaunch,
+  audit, upgrade, skoposLimits, scorecard, prelaunch, jev,
 } from '@/lib/skopos-data'
 
 const URL_ = `${site.url}/ekbasis/skopos`
@@ -222,6 +222,15 @@ export default function SkoposPage() {
           <DataTable columns={scorecard.calColumns} rows={scorecard.calRows} />
           <P>{scorecard.latCaption}</P>
           <DataTable columns={scorecard.latColumns} rows={scorecard.latRows} />
+        </Section>
+      )}
+
+      {jev && (
+        <Section id="general-evaluator" title="Against a general-purpose calibrated evaluator">
+          <P>{jev.caption}</P>
+          <DataTable columns={jev.columns} rows={jev.rows} />
+          <DataTable columns={jev.scColumns} rows={jev.scRows} />
+          <P>{jev.reading}</P>
         </Section>
       )}
 
