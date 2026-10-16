@@ -5,7 +5,7 @@ import { site } from '@/lib/constants'
 import { DataTable, Stats } from '@/components/ekbasis/data-table'
 import {
   skopos, changed, confirm, guard, t3c, executed, confidentErrors, calibration, images, agentWorld, skoposBuilds, training,
-  audit, upgrade, skoposLimits, scorecard,
+  audit, upgrade, skoposLimits, scorecard, prelaunch,
 } from '@/lib/skopos-data'
 
 const URL_ = `${site.url}/ekbasis/skopos`
@@ -154,6 +154,34 @@ export default function SkoposPage() {
         <P>{agentWorld.caption}</P>
         <DataTable columns={agentWorld.columns} rows={agentWorld.rows} />
       </Section>
+
+      {prelaunch && (
+        <Section id="pre-launch" title="Pre-launch evaluation">
+          <P>{prelaunch.intro}</P>
+          <p className="mt-4 rounded-xl bg-amber-500/10 p-4 text-sm text-amber-900 dark:text-amber-100 ring-1 ring-amber-500/30">
+            {prelaunch.blocker}
+          </p>
+          <h3 className="mt-6 text-sm font-semibold text-ink-900 dark:text-ink-50">No release blocker</h3>
+          <ul className="mt-2 space-y-1 text-sm text-ink-900/75 dark:text-ink-50/75 list-disc pl-5">
+            {prelaunch.noBlocker.map((x) => <li key={x}>{x}</li>)}
+          </ul>
+          {prelaunch.flagged.length > 0 && (<>
+            <h3 className="mt-6 text-sm font-semibold text-ink-900 dark:text-ink-50">Flagged (counts; Skopos worse by 2 or more)</h3>
+            <ul className="mt-2 space-y-1 text-sm text-ink-900/75 dark:text-ink-50/75 list-disc pl-5">
+              {prelaunch.flagged.map((x) => <li key={x}>{x}</li>)}
+            </ul>
+          </>)}
+          {prelaunch.borderline.length > 0 && (<>
+            <h3 className="mt-6 text-sm font-semibold text-ink-900 dark:text-ink-50">Intervals that touch 0 (not blockers)</h3>
+            <ul className="mt-2 space-y-1 text-sm text-ink-900/75 dark:text-ink-50/75 list-disc pl-5">
+              {prelaunch.borderline.map((x) => <li key={x}>{x}</li>)}
+            </ul>
+          </>)}
+          {prelaunch.running.length > 0 && (
+            <P>{`Still running at release; their results are appended to the evaluation report on completion: ${prelaunch.running.join('; ')}.`}</P>
+          )}
+        </Section>
+      )}
 
       <Section id="builds" title="Pick the build that fits your machine">
         <P>{skoposBuilds.caption}</P>
