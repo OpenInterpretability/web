@@ -5,7 +5,7 @@ import { site } from '@/lib/constants'
 import { DataTable, Stats } from '@/components/ekbasis/data-table'
 import {
   skopos, changed, confirm, guard, t3c, executed, confidentErrors, calibration, images, agentWorld, skoposBuilds, training,
-  audit, upgrade, skoposLimits,
+  audit, upgrade, skoposLimits, scorecard,
 } from '@/lib/skopos-data'
 
 const URL_ = `${site.url}/ekbasis/skopos`
@@ -168,6 +168,17 @@ export default function SkoposPage() {
           <code>{upgrade.code}</code>
         </pre>
       </Section>
+
+      {scorecard && (
+        <Section id="scorecard" title="Scorecard for the hosted API">
+          <P>{scorecard.caption}</P>
+          <DataTable columns={scorecard.columns} rows={scorecard.rows} />
+          <P>{scorecard.calCaption}</P>
+          <DataTable columns={scorecard.calColumns} rows={scorecard.calRows} />
+          <P>{scorecard.latCaption}</P>
+          <DataTable columns={scorecard.latColumns} rows={scorecard.latRows} />
+        </Section>
+      )}
 
       <Section id="data-and-code" title="Training data, code and checks — all open">
         {training.paragraphs.map((p) => (
