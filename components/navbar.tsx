@@ -73,7 +73,7 @@ export function Navbar() {
   const signedIn = useSignedIn()
   return (
     <header className="sticky top-0 z-40 w-full border-b border-black/5 dark:border-white/10 bg-ink-50/80 dark:bg-ink-950/80 backdrop-blur-md">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <Logo />
           <span className="text-sm sm:text-base">
@@ -112,7 +112,7 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <ThemeToggle />
           <Link
             href={site.github}

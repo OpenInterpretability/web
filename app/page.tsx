@@ -222,7 +222,7 @@ export default async function HomePage() {
         </p>
         <div className="mt-10 grid gap-5 lg:grid-cols-2">
           {WAYS.map((w) => (
-            <div key={w.title} className="card flex flex-col p-6">
+            <div key={w.title} className="card flex min-w-0 flex-col p-6">
               <div className="flex items-center gap-2">
                 <w.icon className="h-5 w-5 text-brand-600 dark:text-brand-400" />
                 <h3 className="font-semibold">{w.title}</h3>
