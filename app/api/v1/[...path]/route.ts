@@ -90,8 +90,8 @@ async function revalidateOnce(lock: string): Promise<boolean> {
 }
 
 // The model the hosted API serves (one at a time; a change is announced 14 days before, /ekbasis/api-policies).
-const MODEL_ID = process.env.EKBASIS_PUBLIC_MODEL || "ekbasis-27b-int4-v1.3"
-const MODEL_WEIGHTS = process.env.EKBASIS_PUBLIC_WEIGHTS || "caiovicentino1/Ekbasis-27B-INT4"
+const MODEL_ID = process.env.EKBASIS_PUBLIC_MODEL || "ekbasis-skopos-27b-int4-v1.3"
+const MODEL_WEIGHTS = process.env.EKBASIS_PUBLIC_WEIGHTS || "caiovicentino1/Ekbasis-Skopos-27B-INT4"
 
 async function handler(request: Request) {
   const t0 = Date.now()

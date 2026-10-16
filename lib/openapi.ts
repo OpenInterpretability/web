@@ -78,10 +78,12 @@ export const OPENAPI = {
               "application/json": {
                 schema: { $ref: "#/components/schemas/AskResponse" },
                 example: {
-                  model: "Ekbasis-27B-INT4",
+                  model: "Ekbasis-Skopos-27B-INT4",
                   answers: {
-                    lost: { type: "noul", noul: 0.967, probability: 0.967, value: true, confidence: 0.967 },
-                    kind: { type: "choice", choice: "reverted", probabilities: { kept: 0.06, reverted: 0.94 }, confidence: 0.94 },
+                    lost: { type: "noul", noul: 0.967, probability: 0.967, value: true, confidence: 0.967,
+                            calibrated: { temperature: 1.67, confidence: 0.883, probability: 0.883 } },
+                    kind: { type: "choice", choice: "reverted", probabilities: { kept: 0.06, reverted: 0.94 }, confidence: 0.94,
+                            calibrated: { temperature: 1.67, confidence: 0.839, probabilities: { kept: 0.161, reverted: 0.839 } } },
                   },
                   usage: { input_tokens: 372, output_tokens: 0 },
                   latency_s: 0.24,
@@ -121,7 +123,7 @@ export const OPENAPI = {
                       items: {
                         type: "object",
                         properties: {
-                          id: { type: "string", examples: ["ekbasis-27b-int4-v1.3"] },
+                          id: { type: "string", examples: ["ekbasis-skopos-27b-int4-v1.3"] },
                           object: { const: "model" },
                           owned_by: { type: "string" },
                           weights: { type: "string", description: "Hugging Face repository of the weights." },
@@ -144,7 +146,7 @@ export const OPENAPI = {
         responses: {
           "200": {
             description: "The model server is up.",
-            content: { "application/json": { example: { ok: true, model: "Ekbasis-27B-INT4", version: "1.3" } } },
+            content: { "application/json": { example: { ok: true, model: "Ekbasis-Skopos-27B-INT4", version: "1.3" } } },
           },
           "503": err("The model server is unreachable."),
         },
