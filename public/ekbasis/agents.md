@@ -278,10 +278,9 @@ curl -X POST https://openinterp.org/api/v1/feedback -H "Authorization: Bearer $E
 
 ## 9. Where it is strong and weak
 
-**It is not a git-only model.** It was trained on git, on rule-based worlds whose rules are written in the state and
-(since Ekbasis-Skopos-27B, served from ⟨swap date: at least 14 days after the notice⟩) on executed shell, SQL and Python scenarios, and it works in any
-domain where the state writes down the facts and rules that decide the outcome. Measured (cookbook, October 2026, on
-Ekbasis-27B-INT4, the hosted model before Skopos; not re-measured on Skopos):
+**It is not a git-only model.** It was trained on git and on rule-based worlds whose rules are written in the state, and
+it works in any domain where the state writes down the facts and rules that decide the outcome. Measured
+(cookbook, October 2026, Ekbasis-27B-INT4 on the hosted API):
 
 | domain | scenarios right | examples |
 |---|---|---|
