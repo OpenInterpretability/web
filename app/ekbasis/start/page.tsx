@@ -408,8 +408,10 @@ const FAQ: [string, React.ReactNode][] = [
     'Can I self-host it?',
     <>
       Yes. The weights are open under Apache-2.0 on{' '}
-      <a className="underline underline-offset-2" href={ekbasis.links.model}>Hugging Face</a>, with a GPU build (bf16, FP8, INT4) and an MLX
-      4-bit build for Apple Silicon. Same API, same client: set <code>EKBASIS_URL</code> to your server. A self-hosted server has no
+      <a className="underline underline-offset-2" href={ekbasis.links.model}>Hugging Face</a>: Ekbasis-Skopos-27B in bf16, FP8 and INT4
+      for GPUs; for Apple Silicon,{' '}
+      <a className="underline underline-offset-2" href="https://huggingface.co/caiovicentino1/Ekbasis-27B-MLX-4bit">Ekbasis-27B-MLX-4bit</a>{' '}
+      (Skopos&apos; MLX build ships after its test on Apple hardware). Same API, same client: set <code>EKBASIS_URL</code> to your server. A self-hosted server has no
       authentication, so keep it on a network you trust. Setup guides:{' '}
       <a className="underline underline-offset-2" href={`${COOKBOOK}/blob/main/docs/SETUP_GPU.md`}>GPU</a> ·{' '}
       <a className="underline underline-offset-2" href={`${COOKBOOK}/blob/main/docs/SETUP_MAC_MLX.md`}>Mac (MLX)</a>.

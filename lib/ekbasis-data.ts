@@ -24,7 +24,7 @@ export const ekbasis = {
     prereg: 'https://github.com/OpenInterpretability/ekbasis/blob/main/PREREG_release_eval.md',
     agentguard: '/agentguard',
   },
-  status: 'Every number on this page was measured on the exact release weights of Ekbasis-27B unless it is marked Skopos; both release evaluations were pre-registered.',
+  status: 'Every number on this page was measured on the exact release weights of Ekbasis-27B unless it is marked Skopos; Ekbasis-27B’s release evaluation was pre-registered, and Skopos’ own evaluation is on its page with what was and was not pre-registered.',
 }
 
 
@@ -147,10 +147,10 @@ export const builds = {
     'Ekbasis-27B, the previous version: every build that works is released, so each machine runs the one that fits. Each card shows its quality against bf16 on the same evaluation (the gate was pre-registered); speeds on one RTX PRO 6000; GPU sizes tested by capping vLLM memory and checking the answers match.',
   columns: ['Build', 'Size', 'Runs on', 'Speed', 'Against bf16'],
   rows: [
-    ['Ekbasis-27B (bf16)', '51 GB', 'GPUs with 80 GB', '0.09 s per check · 23 checks/s', 'the reference'],
-    ['Ekbasis-27B-FP8', '30 GB', 'GPUs with 48 GB; fastest with FP8 kernels (Ada, Hopper, Blackwell)', '0.07 s per check · 37 checks/s (1.6×)', 'within 0.5 points; one more work-losing case missed of 42 never-seen'],
-    ['Ekbasis-27B-INT4', '19 GB', 'GPUs with 32 GB; 24 GB with text only and a 4k context', 'about bf16', 'within 0.3 points; one more false alarm of 42 never-seen'],
-    ['Ekbasis-27B-MLX-4bit', '15 GB', 'Macs with Apple Silicon (32 GB or more recommended)', '—', 'within 1 point on git and multi-question worlds; 1.9 points lower on single-question never-seen worlds; 95% of answers the same'],
+    ['Ekbasis-27B (bf16)', '54.7 GB', 'GPUs with 80 GB', '0.09 s per check · 23 checks/s', 'the reference'],
+    ['Ekbasis-27B-FP8', '30.4 GB', 'GPUs with 48 GB; fastest with FP8 kernels (Ada, Hopper, Blackwell)', '0.07 s per check · 37 checks/s (1.6×)', 'within 0.5 points; one more work-losing case missed of 42 never-seen'],
+    ['Ekbasis-27B-INT4', '18.6 GB', 'GPUs with 32 GB; 24 GB with text only and a 4k context', 'about bf16', 'within 0.3 points; one more false alarm of 42 never-seen'],
+    ['Ekbasis-27B-MLX-4bit', '15.1 GB', 'Macs with Apple Silicon (32 GB or more recommended)', '—', 'within 1 point on git and multi-question worlds; 1.9 points lower on single-question never-seen worlds; 95% of answers the same'],
   ],
 }
 

@@ -36,7 +36,7 @@ const jsonLd = {
       url: URL_,
       isBasedOn: skopos.links.ekbasis27b,
     },
-    { '@type': 'Dataset', '@id': `${URL_}#data`, name: 'ekbasis-skopos-data', url: skopos.links.dataset, license: 'https://www.apache.org/licenses/LICENSE-2.0' },
+    { '@type': 'Dataset', '@id': `${URL_}#data`, name: 'ekbasis-skopos-data', url: skopos.links.dataset, license: `${skopos.links.dataset}#licenses-and-attribution` },
   ],
 }
 
@@ -71,7 +71,7 @@ export default function SkoposPage() {
       )}
 
       <span className="chip bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-brand-500/30 ring-inset">
-        NEW RELEASE · OPEN MODEL · OPEN DATA · OPEN CODE · APACHE-2.0
+        NEW RELEASE · OPEN MODEL (APACHE-2.0) · OPEN DATA (PER-ROW LICENSES) · OPEN CODE
       </span>
       <h1 className="mt-4 text-5xl sm:text-6xl font-semibold tracking-tight text-balance">
         Ekbasis-Skopos-27B <span className="text-ink-900/40 dark:text-ink-50/40 font-normal">{skopos.greek}</span>

@@ -14,7 +14,7 @@ export const skopos = {
     "On a real repository the guard flagged 3/3 work-losing scenarios with 1/13 false alarm, and answered \"will it fail?\" right 17/17 (Ekbasis-27B: 3/3, 1/13, 16/17)."
   ],
   "status": "Every number on this page is read from the release's results files, with its pre-registration; the full report is linked below. Limits are at the bottom of the page.",
-  "description": "Ekbasis-Skopos-27B, the next version of the open consequence model for agents: fewer false alarms in the git guard (26 vs 49 of 799), +1.6 points on fresh never-seen world families, calibrated answers in one pass. Open weights, data and code; Apache-2.0.",
+  "description": "Ekbasis-Skopos-27B, the next version of the open consequence model for agents: fewer false alarms in the git guard (26 vs 49 of 799), +1.6 points on fresh never-seen world families, calibrated answers in one pass. Open weights (Apache-2.0), data (per-row licences) and code.",
   "draft": true,
   "pending": [
     "the MLX build's test on Apple hardware (D7, PREREG_ADDENDUM A4) (results/mlx_mac_test.json)",
@@ -87,7 +87,7 @@ export const changed = {
     ]
   ],
   "notes": [
-    "The ftest_family criterion was missed on its 629 items (−1.6 points, more than the 1-point limit). As pre-registered, it was re-tested on fresh items of the same families, and the loss was not confirmed:",
+    "The pre-registered release read missed one criterion: ftest_family, on its 629 items (−1.6 points, beyond the 1-point limit), so the release read as registered did not pass. A confirmation was then registered (after that result, before any fresh item existed): the same families on fresh items, by trainer readout; it did not confirm the loss:",
     "\"Held-out\" command types are held out of the git-sandbox training rows; Skopos' shell and git factory rows include them, so for Skopos those rows are a weaker test than for Ekbasis-27B."
   ]
 }
@@ -317,7 +317,7 @@ export const images = {
 }
 
 export const agentWorld = {
-  "caption": "455 turns of real agent trajectories (54 of them fail), from Qwen's AgentWorldBench: will the next action fail? Ranking (AUROC) is level across the three models; at the fixed 0.5 threshold Skopos' balanced accuracy is lower, a shift of threshold rather than of ranking: choose the threshold for your false-alarm budget, as the guard does.",
+  "caption": "455 turns of real agent trajectories (54 of them fail), from Qwen's AgentWorldBench: will the next action fail? Ranking (AUROC): the three Ekbasis models are within 0.010 of each other, inside their confidence intervals. Balanced accuracy at the fixed 0.5 threshold: Skopos is the lowest of the three; choose the threshold for your false-alarm budget, as the guard does. AgentWorld-35B-A3B (thinking off) left 59 answers unparsed, counted wrong; Skopos minus AgentWorld, balanced accuracy: +0.057 [−0.025, +0.136]. AgentWorld's training data may include these tasks.",
   "columns": [
     "Model",
     "AUROC (95% CI)",
@@ -330,12 +330,17 @@ export const agentWorld = {
       "0.696 [0.631, 0.752]"
     ],
     [
+      "the first Skopos (unreleased)",
+      "0.840 [0.789, 0.884]",
+      "0.747 [0.687, 0.804]"
+    ],
+    [
       "Ekbasis-27B",
       "0.833 [0.783, 0.879]",
       "0.720 [0.653, 0.782]"
     ],
     [
-      "AgentWorld-35B-A3B (a reasoning model, 87 s per answer)",
+      "AgentWorld-35B-A3B (thinking off, 87 s per answer)",
       "—",
       "0.640 [0.570, 0.701]"
     ]
@@ -418,7 +423,7 @@ export const audit = {
 }
 
 export const scorecard = {
-  "caption": "Our API policy posts the new version and its scorecard at least 14 days before the hosted model changes. It Ekbasis-Skopos-27B-INT4 (what the hosted API will serve) against Ekbasis-27B-INT4 (what it serves now); the switch is on ⟨switch date: at least 14 days after the release⟩. Accuracy: served, the release protocol's sets (the same items for both).",
+  "caption": "Our API policy posts the new version and its scorecard at least 14 days before the hosted model changes. It compares Ekbasis-Skopos-27B-INT4 (what the hosted API will serve) against Ekbasis-27B-INT4 (what it serves now); the switch is on ⟨switch date: at least 14 days after the release⟩. Accuracy: served, the release protocol's sets (the same items for both).",
   "columns": [
     "Suite",
     "Ekbasis-Skopos-27B-INT4",
