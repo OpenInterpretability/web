@@ -173,6 +173,11 @@ export default function SkoposPage() {
         <Section id="scorecard" title="Scorecard for the hosted API">
           <P>{scorecard.caption}</P>
           <DataTable columns={scorecard.columns} rows={scorecard.rows} />
+          {scorecard.neverTrained && (
+            <p className="mt-4 rounded-xl bg-amber-500/10 p-4 text-sm text-amber-900 dark:text-amber-100 ring-1 ring-amber-500/30">
+              {scorecard.neverTrained.caption}
+            </p>
+          )}
           <P>{scorecard.calCaption}</P>
           <DataTable columns={scorecard.calColumns} rows={scorecard.calRows} />
           <P>{scorecard.latCaption}</P>
