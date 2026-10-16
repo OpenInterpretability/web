@@ -579,7 +579,26 @@ export const prelaunch = {
     "P9 both sets: plans that work — 99.2% vs 99.4% (−0.3 [−0.8, 0.0])",
     "P9 goals from 8-12-action plans: plans that work — 98.3% vs 98.9% (−0.6 [−1.7, 0.0])"
   ],
-  "running": []
+  "running": [],
+  "better": [
+    "P2 known command types: question type clean (all its questions) — 98.6% vs 95.9% (+2.7 [+0.7, +5.5])",
+    "P4 200 more chains, check0.9 (published table): looks per 100 actions — 10.18 vs 16.94 (−6.76 [−7.78, −5.72])",
+    "P4 200 more chains, conf0.5 (run, not in the published table): looks per 100 actions — 5.50 vs 8.38 (−2.88 [−3.45, −2.30])"
+  ],
+  "appended": [
+    "P5: speed pairing: Ekbasis-27B bf16 re-run on this machine",
+    "P6: item pairing: Ekbasis-27B bf16 re-run",
+    "P1: official identity re-run of Ekbasis-27B bf16",
+    "P8: official identity re-run of Ekbasis-27B bf16",
+    "P12: intent replay same-machine control: Ekbasis-27B INT4 served here",
+    "P12: preflight SUBSTITUTE, bf16 and INT4",
+    "P11: GPU memory caps",
+    "P9: Ekbasis-27B re-run on this machine, only if run"
+  ],
+  "notRun": [
+    "P12 preflight on 141 plans (plans' snapshots lost)"
+  ],
+  "onlyBlocker": true
 }
 
 export const og = {

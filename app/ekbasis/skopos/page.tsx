@@ -177,6 +177,18 @@ export default function SkoposPage() {
               {prelaunch.borderline.map((x) => <li key={x}>{x}</li>)}
             </ul>
           </>)}
+          {prelaunch.better.length > 0 && (<>
+            <h3 className="mt-6 text-sm font-semibold text-ink-900 dark:text-ink-50">Better than Ekbasis-27B beyond the interval</h3>
+            <ul className="mt-2 space-y-1 text-sm text-ink-900/75 dark:text-ink-50/75 list-disc pl-5">
+              {prelaunch.better.map((x) => <li key={x}>{x}</li>)}
+            </ul>
+          </>)}
+          {prelaunch.appended.length > 0 && (
+            <P>{`Supplementary checks that cannot block, appended to the evaluation report after release: ${prelaunch.appended.join('; ')}.`}</P>
+          )}
+          {prelaunch.notRun.length > 0 && (
+            <P>{`Not run as published: ${prelaunch.notRun.join('; ')}.`}</P>
+          )}
           {prelaunch.running.length > 0 && (
             <P>{`Still running at release; their results are appended to the evaluation report on completion: ${prelaunch.running.join('; ')}.`}</P>
           )}
