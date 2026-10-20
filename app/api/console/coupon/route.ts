@@ -1,3 +1,4 @@
+import { HOSTED_API_ON, discontinued } from "@/lib/hosted-api"
 import { changeQuantity } from "@/lib/credit-chunks"
 /** POST {code}: redeem a coupon on the signed-in account (10 attempts per hour against guessing). */
 import { getHexclaveServerApp } from "@/hexclave/server"
@@ -9,6 +10,7 @@ export const dynamic = "force-dynamic"
 const json = (obj: unknown, status = 200) => Response.json(obj, { status, headers: { "Cache-Control": "private, no-store" } })
 
 export async function POST(request: Request) {
+  if (!HOSTED_API_ON) return discontinued() // hosted API discontinued on 2026-10-20 (lib/hosted-api.ts)
   if (!redisConfigured()) return json({ error: "coupons are not available yet" }, 503)
   const user = await getHexclaveServerApp().getUser()
   if (!user) return json({ error: "sign in first" }, 401)

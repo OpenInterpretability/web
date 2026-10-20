@@ -1,3 +1,4 @@
+import { HOSTED_API_ON, discontinued } from "@/lib/hosted-api"
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { invalidateUser } from "@/lib/gateway-cache"
 
@@ -27,6 +28,7 @@ export async function GET() {
 }
 
 export async function POST() {
+  if (!HOSTED_API_ON) return discontinued() // hosted API discontinued on 2026-10-20 (lib/hosted-api.ts)
   const user = await getHexclaveServerApp().getUser()
   if (!user) return unauthorized()
   const apiKey = await user.createApiKey({ description: "Ekbasis API key", expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })

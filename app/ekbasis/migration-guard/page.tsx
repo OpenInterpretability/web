@@ -1,3 +1,5 @@
+import { HostedApiNotice } from '@/components/hosted-api-notice'
+import { MODEL_DOWNLOAD_URL } from '@/lib/hosted-api'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import localFont from 'next/font/local'
@@ -35,7 +37,7 @@ jobs:
           fetch-depth: 0        # the base branch's migrations build the schema
       - uses: OpenInterpretability/migration-guard@v1
         with:
-          api-key: \${{ secrets.EKBASIS_API_KEY }}
+          api-url: \${{ secrets.EKBASIS_URL }}   # your own Ekbasis server, reachable from the runner
           # db-stats-url: \${{ secrets.READ_REPLICA_URL }}   # optional: planner statistics only`
 
 function H2({ children }: { children: ReactNode }) {
@@ -56,6 +58,7 @@ const ROWS: [string, string, string][] = [
 export default function MigrationGuard() {
   return (
     <main className="mx-auto max-w-[760px] px-6 pb-24 pt-16 sm:pt-24">
+      <div className="mb-8"><HostedApiNotice compact /></div>
       <p className="text-sm text-ink-900/55 dark:text-ink-50/55">
         <Link href="/ekbasis" className="hover:underline">Ekbasis</Link> · client 0.1.19 · October 2026
       </p>
@@ -108,8 +111,8 @@ export default function MigrationGuard() {
       </pre>
       <p className="mt-3 text-sm text-ink-900/60 dark:text-ink-50/60">
         Supports PostgreSQL SQL migrations from Prisma, Diesel, golang-migrate, goose and plain <code>*.sql</code> folders.{' '}
-        <a href={DOCS} className="underline underline-offset-2">Documentation</a>. An API key is free to create at{' '}
-        <Link href="/console" className="underline underline-offset-2">/console</Link>.
+        <a href={DOCS} className="underline underline-offset-2">Documentation</a>. It needs an Ekbasis server: the hosted API was
+        discontinued on 2026-10-20, so run the open weights yourself and pass the address as <code>api-url</code>.
       </p>
 
       <H2>What we measured</H2>
@@ -156,7 +159,7 @@ export default function MigrationGuard() {
       <H2>Alembic and Django</H2>
       <P>
         With <code>framework: alembic</code> or <code>framework: django</code>, the framework itself renders the SQL. The
-        pull request&apos;s code runs only inside a container with no network and no secrets; the API key is used in a
+        pull request&apos;s code runs only inside a container with no network and no secrets; the Ekbasis server is called in a
         later step. A migration with code that is not SQL, such as a Django <code>RunPython</code>, cannot be foreseen:
         it is listed in the comment for review by hand and does not fail the check, unless you set{' '}
         <code>on-code: block</code>.
@@ -192,9 +195,9 @@ export default function MigrationGuard() {
       </P>
 
       <div className="mt-12 flex flex-wrap gap-3">
-        <Link href="/console" className="rounded-lg bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-ink-900/85 dark:bg-white dark:text-ink-900">
-          Get an API key
-        </Link>
+        <a href={MODEL_DOWNLOAD_URL} className="rounded-lg bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-ink-900/85 dark:bg-white dark:text-ink-900">
+          Download the model
+        </a>
         <a href={DOCS} className="rounded-lg px-5 py-2.5 text-sm font-semibold ring-1 ring-black/15 hover:bg-black/[0.04] dark:ring-white/20 dark:hover:bg-white/[0.06]">
           Read the docs
         </a>

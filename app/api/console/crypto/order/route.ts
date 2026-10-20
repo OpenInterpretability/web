@@ -2,6 +2,7 @@
  * POST: create a USDC/USDT order for a credit pack.  GET ?id= (or the caller's latest): status, scanning
  * the chain for the payment and crediting the buyer's input tokens once it confirms.
  */
+import { HOSTED_API_ON, discontinued } from "@/lib/hosted-api"
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { NETWORKS, PACKS, type NetworkId, type PackId, type TokenId } from "@/lib/crypto-pay/config"
 import { createOrder, getOrder, lastOrderId, publicOrder, refresh } from "@/lib/crypto-pay/orders"
@@ -18,6 +19,7 @@ async function signedIn() {
 }
 
 export async function POST(request: Request) {
+  if (!HOSTED_API_ON) return discontinued() // hosted API discontinued on 2026-10-20 (lib/hosted-api.ts)
   if (!redisConfigured()) return json({ error: "payments are not configured yet" }, 503)
   const user = await signedIn()
   if (!user) return json({ error: "sign in first" }, 401)

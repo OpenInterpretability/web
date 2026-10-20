@@ -1,15 +1,12 @@
 import { ImageResponse } from 'next/og'
-import { getPricePerM } from '@/lib/pricing'
-import { formatPrice } from '@/lib/price'
 
-// Node runtime (not edge) so the image can be regenerated like the pages that show the admin-editable price.
+// 2026-10-20: the hosted API was discontinued (lib/hosted-api.ts): no price, no console; the model is a download.
 export const revalidate = 60
 export const alt = 'OpenInterpretability — Know what an action will do before your agent runs it.'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 export default async function Image() {
-  const price = formatPrice(await getPricePerM())
   return new ImageResponse(
     (
       <div
@@ -88,7 +85,7 @@ export default async function Image() {
               lineHeight: 1.3,
             }}
           >
-            {`Ekbasis API — a consequence model: calibrated probabilities for what an action will do, in one call. ${price} per 1M input tokens · open weights · Apache-2.0.`}
+            {'Ekbasis — a consequence model: calibrated probabilities for what an action will do, in one forward pass. Open weights · Apache-2.0 · run it yourself.'}
           </div>
         </div>
 
@@ -104,7 +101,7 @@ export default async function Image() {
           }}
         >
           <span>openinterp.org</span>
-          <span>openinterp.org/console → get your API key</span>
+          <span>huggingface.co/caiovicentino1 → download the model</span>
         </div>
       </div>
     ),

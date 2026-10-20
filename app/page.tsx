@@ -1,23 +1,18 @@
 import Link from 'next/link'
 import {
-  ArrowRight, KeyRound, BookOpen, Terminal, Plug, Code2, Bot, GitBranch, FolderX, Database, Mail, Cloud,
-  Wallet, ShieldCheck, Lock, FlaskConical, Scale, FileText, Check,
+  ArrowRight, Download, BookOpen, Terminal, Plug, Code2, Bot, GitBranch, FolderX, Database, Mail, Cloud,
+  Wallet, ShieldCheck, Lock, FlaskConical, Scale, FileText,
 } from 'lucide-react'
 import examplesFile from '@/content/ekbasis-start-examples.json'
 import { ConsequenceDemo, type DemoExample } from '@/components/home/consequence-demo'
-import { getPricePerM } from '@/lib/pricing'
-import { formatPrice, perThousandChecksUsd } from '@/lib/price'
+import { HostedApiNotice } from '@/components/hosted-api-notice'
+import { HOSTED_API_DISCONTINUED_AT, MODEL_DOWNLOAD_URL } from '@/lib/hosted-api'
 
-// The price is admin-editable (lib/pricing): re-render at most every minute, and at once after a change.
-export const revalidate = 60
-
-export async function generateMetadata() {
-  const price = formatPrice(await getPricePerM())
-  return {
-    title: 'Ekbasis API — know what an action will do before your agent runs it',
-    description:
-      `Ekbasis is an open consequence model. Send the state and the action; get calibrated probabilities for what happens — lost work, a failed payment, a leaked file — in one call. ${price} per 1M input tokens, no output charge. Pay in USDC or USDT.`,
-  }
+// 2026-10-20: the hosted API was discontinued (lib/hosted-api.ts). Ekbasis is a download: no price, keys or credits.
+export const metadata = {
+  title: 'Ekbasis — know what an action will do before your agent runs it',
+  description:
+    'Ekbasis is an open consequence model. Send the state and the action; get calibrated probabilities for what happens — lost work, a failed payment, a leaked file. Open weights, Apache-2.0: download it from Hugging Face and run it yourself.',
 }
 
 type Rec = {
@@ -66,8 +61,7 @@ const WAYS = [
     title: 'Git and shell guard',
     note: 'One command. The CLI reads your repository and writes the state for you.',
     code: `pip install ekbasis
-export EKBASIS_URL=https://openinterp.org/api/v1
-export EKBASIS_API_KEY=ekb_...
+export EKBASIS_URL=http://127.0.0.1:8000   # your own server: see "Run it yourself"
 
 ekbasis git-check -- "git reset --hard"
 # Ekbasis: RISKY (lose uncommitted work: 99%)  → exit 2`,
@@ -86,8 +80,7 @@ ekbasis git-check -- "git reset --hard"
     title: 'MCP server',
     note: 'check_git_commands, predict_consequences and preflight_command for any MCP client.',
     code: `claude mcp add --scope user ekbasis \\
-  -e EKBASIS_URL=https://openinterp.org/api/v1 \\
-  -e EKBASIS_API_KEY=ekb_... -- ekbasis-mcp`,
+  -e EKBASIS_URL=http://127.0.0.1:8000 -- ekbasis-mcp`,
   },
   {
     icon: GitBranch,
@@ -96,7 +89,7 @@ ekbasis git-check -- "git reset --hard"
     href: '/ekbasis/migration-guard',
     code: `- uses: OpenInterpretability/ekbasis/actions/migration-guard@v0.1.12
   with:
-    api-key: \${{ secrets.EKBASIS_API_KEY }}
+    api-url: \${{ secrets.EKBASIS_URL }}   # your own server, reachable from the runner
 # Risky: …/05_add_visit_id — may fail on existing data (96%);
 #        nothing in the file would be applied`,
   },
@@ -104,8 +97,7 @@ ekbasis git-check -- "git reset --hard"
     icon: Code2,
     title: 'REST API',
     note: 'Any action, any language: describe the state, ask typed questions.',
-    code: `curl https://openinterp.org/api/v1/v1/systemone \\
-  -H "Authorization: Bearer $EKBASIS_API_KEY" \\
+    code: `curl http://127.0.0.1:8000/v1/systemone \\
   -H "Content-Type: application/json" \\
   -d '{"state": "Balance: $1,020.00. About to: wire $1,000 + $25 fee.",
        "questions": {"q": {"type": "choice",
@@ -125,7 +117,6 @@ const USES = [
 
 export default async function HomePage() {
   const examples = demoExamples()
-  const pricePerM = await getPricePerM()
   return (
     <>
       {/* ===== Hero ===== */}
@@ -134,11 +125,11 @@ export default async function HomePage() {
         <div className="absolute left-1/2 top-10 -z-10 h-[520px] w-[760px] -translate-x-1/2 rounded-full bg-brand-600/20 blur-[120px]" aria-hidden="true" />
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-10 text-center sm:pt-20">
           <Link
-            href="/news/ekbasis-api"
-            className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-3.5 py-1.5 text-xs font-medium text-brand-700 backdrop-blur-sm hover:bg-brand-500/15 dark:text-brand-300"
+            href={MODEL_DOWNLOAD_URL}
+            className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-3.5 py-1.5 text-xs font-medium text-amber-800 backdrop-blur-sm hover:bg-amber-500/15 dark:text-amber-300"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse-slow" />
-            Introducing the Ekbasis API · read the announcement
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+            The hosted API was discontinued on {HOSTED_API_DISCONTINUED_AT} · Ekbasis is now a download
           </Link>
           <h1 className="mx-auto mt-7 max-w-4xl text-4xl font-semibold leading-[1.05] tracking-tight text-balance sm:text-6xl lg:text-7xl">
             Know what an action will do <span className="gradient-text">before your agent runs it.</span>
@@ -149,10 +140,10 @@ export default async function HomePage() {
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/console"
+              href={MODEL_DOWNLOAD_URL}
               className="group inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 transition-all hover:bg-brand-700 hover:shadow-xl hover:shadow-brand-600/40"
             >
-              <KeyRound className="h-4 w-4" /> Get your API key
+              <Download className="h-4 w-4" /> Download the model
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
@@ -163,7 +154,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <p className="mt-5 text-sm text-ink-900/55 dark:text-ink-50/55">
-            {formatPrice(pricePerM)} per 1M input tokens · no output charge · pay in USDC or USDT · sign in with GitHub, Google or email
+            Open weights, Apache-2.0 · INT4 for vLLM, 4-bit MLX for Apple silicon · runs on your own GPU or Mac
           </p>
         </div>
         <div className="relative mx-auto max-w-5xl px-6 pb-6">
@@ -218,7 +209,7 @@ export default async function HomePage() {
       <section className="mx-auto mt-24 max-w-7xl px-6">
         <h2 className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">Plug it in where your agent acts</h2>
         <p className="mx-auto mt-3 max-w-2xl text-center text-ink-900/65 dark:text-ink-50/65">
-          Same key, same endpoint. Start with the guard in a minute; go to the API when the action is not a command.
+          One local server for all of them. Start with the guard; go to the API when the action is not a command.
         </p>
         <div className="mt-10 grid gap-5 lg:grid-cols-2">
           {WAYS.map((w) => (
@@ -263,38 +254,15 @@ export default async function HomePage() {
         </p>
       </section>
 
-      {/* ===== Pricing ===== */}
-      <section className="mx-auto mt-24 max-w-6xl px-6">
-        <div className="grid gap-6 rounded-2xl bg-gradient-to-br from-brand-600/10 via-transparent to-accent-500/10 p-8 ring-1 ring-brand-500/25 sm:p-10 lg:grid-cols-[1.1fr_1fr]">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700 dark:text-brand-300">Pricing</p>
-            <p className="mt-3 text-5xl font-semibold tracking-tight">{formatPrice(pricePerM)} <span className="text-xl font-medium text-ink-900/55 dark:text-ink-50/55">per 1M input tokens</span></p>
-            <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">
-              No output charge: the model only reads. A check is about 1,500 tokens, so roughly {perThousandChecksUsd(pricePerM)} per 1,000 checks.
-            </p>
-            <ul className="mt-5 space-y-2 text-sm">
-              {[
-                'Prepaid credit packs: $5 · $20 · $50 — no subscription, no minimum, credits never expire',
-                'Pay in USDC or USDT on Polygon, Arbitrum, Base or Ethereum — no card',
-                'Out of credits it fails closed: “cannot foresee”, treated as risky',
-                'Self-host the open weights for free (27B · FP8 · INT4 · MLX)',
-              ].map((t) => (
-                <li key={t} className="flex gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-600 dark:text-brand-400" />{t}</li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col justify-center gap-3 rounded-xl bg-white/70 p-6 ring-1 ring-black/10 dark:bg-ink-900/60 dark:ring-white/15">
-            <p className="font-semibold">Start in three steps</p>
-            <ol className="space-y-2 text-sm text-ink-900/75 dark:text-ink-50/75">
-              <li><b>1.</b> Sign in at the console with GitHub, Google or a one-time email code.</li>
-              <li><b>2.</b> Create an API key (shown once) and add credits.</li>
-              <li><b>3.</b> Run your first check with the CLI or one curl.</li>
-            </ol>
-            <Link href="/console" className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">
-              <KeyRound className="h-4 w-4" /> Open the console
-            </Link>
-            <Link href="/ekbasis/pricing" className="text-center text-sm text-brand-600 hover:underline dark:text-brand-400">Pricing details →</Link>
-          </div>
+      {/* ===== Run it yourself (2026-10-20: replaces Pricing; the hosted API was discontinued) ===== */}
+      <section id="run-it-yourself" className="mx-auto mt-24 max-w-4xl px-6">
+        <h2 className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">Run it yourself</h2>
+        <p className="mx-auto mt-3 max-w-2xl text-center text-ink-900/65 dark:text-ink-50/65">
+          The weights and the System One server are public. Four commands from the model card take you from download
+          to the first check.
+        </p>
+        <div className="mt-8">
+          <HostedApiNotice />
         </div>
       </section>
 
@@ -303,10 +271,10 @@ export default async function HomePage() {
         <h2 className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">Built to be checked</h2>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { icon: Scale, t: 'Open weights', d: 'Apache-2.0. Run it on your own GPU or Mac and nothing leaves your machine.' },
+            { icon: Scale, t: 'Open weights', d: 'Apache-2.0, on Hugging Face: INT4 for vLLM and 4-bit MLX for Apple silicon.' },
             { icon: FlaskConical, t: 'Pre-registered', d: 'Plans hashed before the runs. The studies that missed their bars are published next to the ones that held.' },
-            { icon: ShieldCheck, t: 'Fails closed', d: 'No key, no credits, no answer in time: “cannot foresee”, which every tool treats as risky.' },
-            { icon: Lock, t: 'Contents never stored', d: 'The API logs metadata to bill and operate (time, account, tokens, latency) — never your states or questions.' },
+            { icon: ShieldCheck, t: 'Fails closed', d: 'No answer in time: “cannot foresee”, which every tool treats as risky.' },
+            { icon: Lock, t: 'Your data stays with you', d: 'You run the model and the server: states and questions never leave your machine.' },
           ].map((x) => (
             <div key={x.t} className="card p-5">
               <x.icon className="h-5 w-5 text-brand-600 dark:text-brand-400" />
@@ -342,8 +310,8 @@ export default async function HomePage() {
       <section className="mx-auto mb-20 mt-20 max-w-4xl px-6 text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">Let your agent look before it leaps.</h2>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
-          <Link href="/console" className="group inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 hover:bg-brand-700">
-            <KeyRound className="h-4 w-4" /> Get your API key <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          <Link href={MODEL_DOWNLOAD_URL} className="group inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 hover:bg-brand-700">
+            <Download className="h-4 w-4" /> Download the model <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <Link href="/ekbasis" className="inline-flex items-center gap-2 rounded-lg border border-black/15 px-6 py-3 text-sm font-semibold hover:bg-black/[0.04] dark:border-white/20 dark:hover:bg-white/[0.06]">
             Results and models

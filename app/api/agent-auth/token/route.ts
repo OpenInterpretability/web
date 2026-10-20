@@ -6,6 +6,7 @@
  *     revoked any of this agent's keys in the console (the kill switch) or a newer assertion superseded it. The new key
  *     replaces the previous one (rotation), so a registration has at most one live key.
  */
+import { HOSTED_API_ON, discontinued } from "@/lib/hosted-api"
 import {
   CLAIM_GRANT, INTERVAL, JWT_BEARER_GRANT, SCOPES, audit, clientIp, configured, getReg, issueKey, keyRevokedByUser,
   now, oauthJson, putReg, regByClaimToken, revokeOwnKey, signAssertion, verifyAssertion, withRegLock,
@@ -30,6 +31,7 @@ async function readBody(req: Request): Promise<Record<string, string>> {
 }
 
 export async function POST(req: Request) {
+  if (!HOSTED_API_ON) return discontinued() // hosted API discontinued on 2026-10-20 (lib/hosted-api.ts)
   if (!configured()) return oerr("temporarily_unavailable", "Agent registration is not configured on this server.", 503)
   const body = await readBody(req)
   if (body.grant_type === CLAIM_GRANT) return claimGrant(req, body)

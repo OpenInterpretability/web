@@ -1,3 +1,4 @@
+import { HostedApiNotice } from '@/components/hosted-api-notice'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
@@ -61,6 +62,7 @@ function Table({ head, rows }: { head: [string, string]; rows: [string, string][
 export default function ApiPoliciesPage() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
+      <div className="mb-8"><HostedApiNotice compact /></div>
       <Link
         href="/ekbasis"
         className="flex w-fit items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 mb-8"

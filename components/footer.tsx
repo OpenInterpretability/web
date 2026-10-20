@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { site } from '@/lib/constants'
+import { MODEL_DOWNLOAD_URL } from '@/lib/hosted-api'
 
 export function Footer() {
   return (
@@ -11,23 +12,22 @@ export function Footer() {
             <span className="gradient-text">Interpretability</span>
           </div>
           <p className="mt-2 text-ink-900/60 dark:text-ink-50/60 leading-relaxed text-balance">
-            Ekbasis API: know what an action will do before your agent runs it. From an independent lab for
-            AI-agent safety. Open weights, Apache-2.0.
+            Ekbasis: know what an action will do before your agent runs it. From an independent lab for
+            AI-agent safety. Open weights, Apache-2.0: download it and run it yourself.
           </p>
           <Link
-            href="/console"
+            href={MODEL_DOWNLOAD_URL}
             className="mt-4 inline-flex items-center rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700"
           >
-            Get your API key
+            Download the model
           </Link>
         </div>
 
         <div>
-          <div className="font-medium text-ink-900 dark:text-ink-50 mb-3">Ekbasis API</div>
+          <div className="font-medium text-ink-900 dark:text-ink-50 mb-3">Ekbasis</div>
           <ul className="space-y-2 text-ink-900/60 dark:text-ink-50/60">
-            <li><Link href="/console" className="hover:text-brand-600">Console · sign in</Link></li>
             <li><Link href="/ekbasis/start" className="hover:text-brand-600">Getting started</Link></li>
-            <li><Link href="/ekbasis/pricing" className="hover:text-brand-600">Pricing</Link></li>
+            <li><Link href={MODEL_DOWNLOAD_URL} className="hover:text-brand-600">Download (Hugging Face)</Link></li>
             <li><a href="/ekbasis/agents.md" className="hover:text-brand-600">For agents (agents.md)</a></li>
             <li><Link href="/ekbasis" className="hover:text-brand-600">Results and models</Link></li>
             <li><Link href="https://github.com/OpenInterpretability/ekbasis" target="_blank" rel="noopener noreferrer" className="hover:text-brand-600">Client and CLI</Link></li>

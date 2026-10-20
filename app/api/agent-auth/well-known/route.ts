@@ -3,6 +3,7 @@
  * /.well-known/oauth-authorization-server): RFC 9728 Protected Resource Metadata and RFC 8414 Authorization Server
  * metadata with the auth.md `agent_auth` block. ?doc=prm | as.
  */
+import { HOSTED_API_ON, discontinued } from "@/lib/hosted-api"
 import { BASE, CLAIM_GRANT, JWT_BEARER_GRANT, PATHS, RESOURCE, SCOPES } from "@/lib/agent-auth"
 
 export const dynamic = "force-dynamic"
@@ -32,6 +33,7 @@ const as = {
 }
 
 export function GET(req: Request) {
+  if (!HOSTED_API_ON) return discontinued() // hosted API discontinued on 2026-10-20 (lib/hosted-api.ts)
   const doc = new URL(req.url).searchParams.get("doc")
   return Response.json(doc === "as" ? as : prm, {
     headers: { "Cache-Control": "public, max-age=300", "Access-Control-Allow-Origin": "*" },

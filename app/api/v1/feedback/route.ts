@@ -8,6 +8,7 @@
  * are accepted; anyone else's gets the same 404 as an unknown id. This static route takes precedence over the
  * gateway's catch-all, so feedback never reaches the model server or the request telemetry.
  */
+import { HOSTED_API_ON, discontinued } from "@/lib/hosted-api"
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { submitFeedback } from "@/lib/feedback"
 import { redisConfigured } from "@/lib/crypto-pay/redis"
@@ -25,6 +26,7 @@ function fail(status: number, code: string, message: string) {
 }
 
 export async function POST(request: Request) {
+  if (!HOSTED_API_ON) return discontinued() // hosted API discontinued on 2026-10-20 (lib/hosted-api.ts)
   const apiKey = (request.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "").trim()
   if (!apiKey) return fail(401, "missing_api_key", "unauthorized: send the Authorization: Bearer header")
   const user = await getHexclaveServerApp().getUser({ apiKey })
@@ -52,5 +54,6 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
+  if (!HOSTED_API_ON) return discontinued() // hosted API discontinued on 2026-10-20 (lib/hosted-api.ts)
   return json({ error: "use POST" }, 405)
 }

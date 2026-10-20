@@ -1,3 +1,4 @@
+import { HostedApiNotice } from '@/components/hosted-api-notice'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
@@ -124,6 +125,7 @@ export default async function StatusPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-16">
+      <div className="mb-8"><HostedApiNotice compact /></div>
       <Link href="/ekbasis" className="flex w-fit items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 mb-8">
         <ArrowLeft className="h-3.5 w-3.5" /> Back to Ekbasis
       </Link>

@@ -2,6 +2,7 @@
  * POST /agent/identity/claim (rewritten here) — auth.md Step 4a/4c re-initiation. For service_auth the first ceremony
  * comes with the registration; this mints a fresh user_code when that window closed. The email must match.
  */
+import { HOSTED_API_ON, discontinued } from "@/lib/hosted-api"
 import { audit, canReattempt, ceremonyBlock, clientIp, newAttempt, normEmail, now, putReg, regByClaimToken } from "@/lib/agent-auth"
 
 export const dynamic = "force-dynamic"
@@ -10,6 +11,7 @@ const err = (status: number, error: string, description: string) =>
   Response.json({ error, error_description: description }, { status, headers: { "Cache-Control": "no-store" } })
 
 export async function POST(req: Request) {
+  if (!HOSTED_API_ON) return discontinued() // hosted API discontinued on 2026-10-20 (lib/hosted-api.ts)
   let body: Record<string, unknown> | null = null
   try {
     body = (await req.json()) as Record<string, unknown>

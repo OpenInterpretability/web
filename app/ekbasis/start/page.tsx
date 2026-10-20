@@ -2,21 +2,19 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
   ArrowLeft, ArrowRight, ArrowDown, FileText, Zap, ListChecks, Gauge, Terminal, Bot, Code2, Check, X,
-  AlertTriangle, KeyRound, CreditCard, BookOpen, GitBranch, HardDrive, Database, AppWindow, Cloud,
+  AlertTriangle, Download, BookOpen, GitBranch, HardDrive, Database, AppWindow, Cloud,
 } from 'lucide-react'
 import { site } from '@/lib/constants'
 import { ekbasis } from '@/lib/ekbasis-data'
 import { CopyButton } from '@/components/copy-button'
 import recorded from '@/content/ekbasis-start-examples.json'
-import { getPricePerM } from '@/lib/pricing'
-import { formatPrice, perCheckUsd, perThousandChecksUsd } from '@/lib/price'
+import { HostedApiNotice } from '@/components/hosted-api-notice'
+import { MODEL_DOWNLOAD_URL } from '@/lib/hosted-api'
 
 const URL_ = `${site.url}/ekbasis/start`
 const COOKBOOK = 'https://github.com/OpenInterpretability/ekbasis-cookbook'
-const HOSTED = 'https://openinterp.org/api/v1'
-
-// The "What it costs" section shows the admin-editable price (lib/pricing).
-export const revalidate = 60
+// 2026-10-20: the hosted API was discontinued (lib/hosted-api.ts); every example runs against your own server.
+const LOCAL = 'http://127.0.0.1:8000'
 
 export const metadata: Metadata = {
   title: 'How to use Ekbasis — getting started with the consequence model',
@@ -98,7 +96,6 @@ function pct(p: number) {
 function curlFor(e: Example) {
   const body = JSON.stringify(e.request, null, 2).replace(/'/g, `'\\''`)
   return `curl -s "$EKBASIS_URL/v1/systemone" \\
-  -H "Authorization: Bearer $EKBASIS_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '${body}'`
 }
@@ -245,14 +242,14 @@ const IS_NOT = [
   },
 ]
 
-const QUICK_CLI = `# 1. get a key: ${site.url}/console → Create API key (then buy credits)
+const QUICK_CLI = `# 1. run the model yourself: the model card's quick start (the box at the top of this page)
+#    ${MODEL_DOWNLOAD_URL}
 # 2. install the client (Python ≥ 3.9, no dependencies)
 pip install ekbasis
 
-# 3. point it at the hosted API
-export EKBASIS_URL=${HOSTED}
-export EKBASIS_API_KEY=ekb_...          # the key from the console
-ekbasis health                         # setup check: free, needs no key
+# 3. point it at your server
+export EKBASIS_URL=${LOCAL}
+ekbasis health                         # setup check
 
 # 4. ask before you run
 cd your-repo
@@ -274,12 +271,12 @@ const HOOK_JSON = `{
 
 const MCP_CMD = `pip install "ekbasis[mcp]"   # Python ≥ 3.10
 claude mcp add --scope user ekbasis \\
-  -e EKBASIS_URL=${HOSTED} -e EKBASIS_API_KEY=ekb_... -- ekbasis-mcp`
+  -e EKBASIS_URL=${LOCAL} -- ekbasis-mcp`
 
 const EXIT_CODES: [string, string, string][] = [
   ['0', 'no risk found', 'run it'],
   ['2', 'RISKY: may lose work or file content', 'stop, read the reason, decide'],
-  ['3', 'cannot foresee (server unreachable, no key, no credits, unreadable repo, parts it cannot evaluate)', 'treat as risky'],
+  ['3', 'cannot foresee (server unreachable, unreadable repo, parts it cannot evaluate)', 'treat as risky'],
   ['1', 'usage error', 'fix the command'],
 ]
 
@@ -423,7 +420,7 @@ const FAQ: [string, React.ReactNode][] = [
   ],
   [
     'What happens to my data?',
-    'The hosted API logs request metadata to operate and bill the service (time, account, the last 4 characters of the key, IP address and country, path, status, input tokens, latency). The content of your requests (states, questions, images) is not stored. If nothing may leave your machines, self-host.',
+    'You run the model and the server, so nothing leaves your machines. (Until it was discontinued on 2026-10-20, the hosted API logged request metadata only — never the states, questions or images.)',
   ],
   [
     'Does it run my commands?',
@@ -503,7 +500,6 @@ function H2({ id, children }: { id: string; children: React.ReactNode }) {
 }
 
 export default async function EkbasisStartPage() {
-  const pricePerM = await getPricePerM()
   const mm = ex('money_transfer_fail')
   const mmAns = mm.response.answers!.q
   const py = ex('python_client')
@@ -521,6 +517,9 @@ export default async function EkbasisStartPage() {
         GETTING STARTED · FOR FIRST-TIME USERS
       </span>
       <h1 className="mt-4 text-4xl sm:text-6xl font-semibold tracking-tight text-balance">How to use Ekbasis</h1>
+      <div className="mt-6">
+        <HostedApiNotice />
+      </div>
       <p className="mt-5 text-lg text-ink-900/70 dark:text-ink-50/70 leading-relaxed max-w-2xl text-balance">
         Ekbasis does not chat. You give it a <strong>state</strong> (what the world looks like now), an{' '}
         <strong>action</strong> and a few <strong>typed questions</strong>, and it answers each question with{' '}
@@ -638,8 +637,8 @@ export default async function EkbasisStartPage() {
       <section className="mt-16">
         <H2 id="quickstart">Four ways to use it, fastest first</H2>
         <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">
-          All four use the same hosted endpoint and key. Get the key in the{' '}
-          <Link className="underline underline-offset-2" href="/console">console</Link> (sign in, create a key, buy credits).
+          All four talk to the same server: yours. Start it with the model card&apos;s quick start, in the box at the top of
+          this page.
         </p>
         <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">
           <strong>Where to start:</strong> an agent that changes production (<code>kubectl</code>, SQL, deploys, commands on servers)
@@ -688,7 +687,7 @@ export default async function EkbasisStartPage() {
             <h3 className="flex items-center gap-2 text-xl font-semibold"><Bot className="h-5 w-5 text-brand-600 dark:text-brand-400" /> b · For agents: hook or MCP</h3>
             <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70">
               <strong>Claude Code hook.</strong> Before every Bash call that runs git, the hook asks Ekbasis. If the command may lose
-              work, Claude Code asks you to confirm, with the reason. Put <code>EKBASIS_URL</code> and <code>EKBASIS_API_KEY</code> in your
+              work, Claude Code asks you to confirm, with the reason. Put <code>EKBASIS_URL</code> (your server) in your
               shell profile, then add to <code>~/.claude/settings.json</code>:
             </p>
             <Code label="~/.claude/settings.json" code={HOOK_JSON} />
@@ -977,8 +976,8 @@ export default async function EkbasisStartPage() {
         <p className="mt-3 text-ink-900/70 dark:text-ink-50/70">
           Most states below are scenarios from the cookbook’s{' '}
           <a className="underline underline-offset-2" href={`${COOKBOOK}/tree/main/examples`}>re-runnable suites</a>; the answers are
-          the hosted API’s. Open “Copy this request” on any card to run it yourself (with <code>EKBASIS_URL</code> and{' '}
-          <code>EKBASIS_API_KEY</code> exported).
+          the hosted API’s. Open “Copy this request” on any card to run it yourself against your server (with <code>EKBASIS_URL</code>{' '}
+          exported).
         </p>
         {DOMAINS.map((d) => (
           <div key={d.id} className="mt-10">
@@ -1059,17 +1058,14 @@ export default async function EkbasisStartPage() {
       <section className="mt-16">
         <H2 id="cost">What it costs</H2>
         <p className="mt-3 text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
-          <strong>{formatPrice(pricePerM)} per 1M input tokens</strong>, no output charges (it generates none), prepaid credits, no subscription. Pricing
-          assumes ~1.5k input tokens for a git-guard check, <strong>≈ {perCheckUsd(pricePerM)} per check</strong> ({perThousandChecksUsd(pricePerM)} per 1,000); the requests on this page used{' '}
-          {range(tokens, (x) => x.toLocaleString('en-US'))} input tokens each; every response reports <code>usage.input_tokens</code>. Self-hosting is free under Apache-2.0.
+          Nothing to us: Ekbasis is open weights under Apache-2.0 and you run it on your own GPU or Mac. The hosted API that
+          sold credits was discontinued on 2026-10-20. The requests on this page used{' '}
+          {range(tokens, (x) => x.toLocaleString('en-US'))} input tokens each; every response reports <code>usage.input_tokens</code>.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <Link href="/console" className="inline-flex items-center gap-1.5 rounded-lg bg-ink-900 text-white dark:bg-white dark:text-ink-900 px-4 py-2 text-sm font-medium">
-            <KeyRound className="h-4 w-4" /> Get an API key
-          </Link>
-          <Link href="/ekbasis/pricing" className="inline-flex items-center gap-1.5 rounded-lg ring-1 ring-black/15 dark:ring-white/20 px-4 py-2 text-sm font-medium">
-            <CreditCard className="h-4 w-4" /> Pricing
-          </Link>
+          <a href={MODEL_DOWNLOAD_URL} className="inline-flex items-center gap-1.5 rounded-lg bg-ink-900 text-white dark:bg-white dark:text-ink-900 px-4 py-2 text-sm font-medium">
+            <Download className="h-4 w-4" /> Download the model
+          </a>
           <a href={COOKBOOK} className="inline-flex items-center gap-1.5 rounded-lg ring-1 ring-black/15 dark:ring-white/20 px-4 py-2 text-sm font-medium">
             <BookOpen className="h-4 w-4" /> Cookbook
           </a>

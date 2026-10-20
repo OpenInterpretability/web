@@ -3,6 +3,18 @@
 > Read this before using Ekbasis from an agent. It is written for language models and agent frameworks: exact
 > formats, decision rules, failure handling. Human guide: https://openinterp.org/ekbasis/start
 
+> **2026-10-20: the hosted API was discontinued.** `https://openinterp.org/api/v1` answers HTTP 410
+> (`hosted_api_discontinued`); no keys, credits or agent registration. Ekbasis is download-only: run the open weights
+> on your own server and point `EKBASIS_URL` at it. Everything below about the request format, the questions and the
+> decision rules still holds; the parts about keys, credits, request ids and feedback were for the hosted API.
+>
+> ```bash
+> hf download caiovicentino1/Ekbasis-Skopos-27B-INT4 --local-dir Ekbasis-Skopos-27B-INT4
+> bash Ekbasis-Skopos-27B-INT4/serve_vllm.sh Ekbasis-Skopos-27B-INT4 8001
+> python Ekbasis-Skopos-27B-INT4/serve.py --model Ekbasis-Skopos-27B-INT4 --vllm-url http://127.0.0.1:8001 --port 8000
+> pip install ekbasis && EKBASIS_URL=http://127.0.0.1:8000 ekbasis git-check -- "git reset --hard"
+> ```
+
 Ekbasis is a **consequence model**. You give it a **state** (the facts of the world now) and the **action** you are
 about to take, plus **typed questions**; it returns **calibrated probabilities** in one forward pass. It does not
 write text, explain, plan or decide. It forecasts what an action will do. You (or the human) decide what to do with
@@ -30,15 +42,13 @@ human to click through warnings.
 
 | | value |
 |---|---|
-| Hosted API base | `https://openinterp.org/api/v1` (env `EKBASIS_URL`) |
-| Auth | `Authorization: Bearer ekb_…` (env `EKBASIS_API_KEY`); keys at https://openinterp.org/console |
+| Server | your own: `EKBASIS_URL=http://127.0.0.1:8000` (the hosted `https://openinterp.org/api/v1` was discontinued on 2026-10-20 and answers 410) |
+| Auth | none on your own server (the hosted API's keys are gone) |
 | Decision endpoint | `POST {EKBASIS_URL}/v1/systemone` |
 | Health | `GET {EKBASIS_URL}/health` (no key needed) |
 | Served model | `GET {EKBASIS_URL}/v1/models`; every answer carries `X-Ekbasis-Model` |
 | Spec | OpenAPI 3.1: `GET {EKBASIS_URL}/openapi.json` |
-| Limits, data kept | https://openinterp.org/ekbasis/api-policies · live status: https://openinterp.org/ekbasis/status |
-| Price | $0.30 per 1M **input** tokens; output is never charged (nothing is generated) |
-| Self-hosted | open weights (Apache-2.0); same API on your own server, e.g. `EKBASIS_URL=http://127.0.0.1:8000` |
+| Weights | open (Apache-2.0): https://huggingface.co/caiovicentino1/Ekbasis-Skopos-27B-INT4 |
 
 Send a descriptive `User-Agent` (for example `my-agent/1.0`). The official client sends `ekbasis/<version>`.
 
@@ -55,8 +65,7 @@ guard that asks too often teaches people to click through.
 
 ```bash
 pip install ekbasis
-export EKBASIS_URL=https://openinterp.org/api/v1
-export EKBASIS_API_KEY=ekb_...
+export EKBASIS_URL=http://127.0.0.1:8000   # your own server (quick start above)
 ekbasis git-check -- "git reset --hard"        # reads the repo itself; you write no state
 ekbasis shell-check -- "rm -r build/"          # prototype for shell lines
 ekbasis git-check -- "git checkout main" && git checkout main   # run only if the guard passes
@@ -68,7 +77,7 @@ foresee: `{"risky": true, "judged": false, "cannot_foresee": "<why>"}`).
 
 For Claude Code: the plugin bundles the hook (PreToolUse on Bash: asks the human when a command may lose work), this
 guidance as a skill and the MCP server — `claude plugin marketplace add OpenInterpretability/ekbasis --sparse .claude-plugin plugins`
-then `claude plugin install ekbasis@ekbasis`, and set `EKBASIS_API_KEY`. Or wire `ekbasis-claude-hook` by hand.
+then `claude plugin install ekbasis@ekbasis`, and set `EKBASIS_URL` to your server. Or wire `ekbasis-claude-hook` by hand.
 For any MCP client: `ekbasis-mcp` exposes `check_git_commands`, `predict_consequences` and `preflight_command`.
 Setup: https://github.com/OpenInterpretability/ekbasis-cookbook
 
@@ -325,8 +334,8 @@ warning layer that can be wrong, **not a security boundary**.
 ## Links
 
 - Human guide with real examples: https://openinterp.org/ekbasis/start
-- Pricing and console: https://openinterp.org/ekbasis/pricing · https://openinterp.org/console
+- Download the model (quick start in the card): https://huggingface.co/caiovicentino1/Ekbasis-Skopos-27B-INT4
 - Client and hook: https://github.com/OpenInterpretability/ekbasis (Python: `pip install ekbasis`; TypeScript: `npm install ekbasis`)
-- API: OpenAPI https://openinterp.org/api/v1/openapi.json · status https://openinterp.org/ekbasis/status
+- The hosted API (openinterp.org/api/v1) was discontinued on 2026-10-20.
 - Cookbook (measured use cases, skill, studies): https://github.com/OpenInterpretability/ekbasis-cookbook
 - Weights (27B · FP8 · INT4 · MLX): https://huggingface.co/caiovicentino1

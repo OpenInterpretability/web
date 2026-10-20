@@ -1,3 +1,5 @@
+import { MODEL_DOWNLOAD_URL } from '@/lib/hosted-api'
+import { HostedApiNotice } from '@/components/hosted-api-notice'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import localFont from 'next/font/local'
@@ -25,6 +27,7 @@ const K8S = 'https://github.com/OpenInterpretability/ekbasis-cookbook/blob/main/
 export default function EkbasisApiAnnouncement() {
   return (
     <main className="mx-auto max-w-[720px] px-6 pb-24 pt-16 sm:pt-24">
+      <div className="mb-8"><HostedApiNotice compact /></div>
       <p className="text-sm text-ink-900/55 dark:text-ink-50/55">
         <Link href="/ekbasis" className="hover:underline">Product</Link> · October 10, 2026
       </p>
@@ -165,9 +168,9 @@ ekbasis git-check -- "git reset --hard"
       </P>
 
       <div className="mt-12 flex flex-wrap gap-3">
-        <Link href="/console" className="rounded-lg bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-ink-900/85 dark:bg-white dark:text-ink-900">
-          Get an API key
-        </Link>
+        <a href={MODEL_DOWNLOAD_URL} className="rounded-lg bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-ink-900/85 dark:bg-white dark:text-ink-900">
+          Download the model
+        </a>
         <Link href="/ekbasis/start" className="rounded-lg px-5 py-2.5 text-sm font-semibold ring-1 ring-black/15 hover:bg-black/[0.04] dark:ring-white/20 dark:hover:bg-white/[0.06]">
           Read the guide
         </Link>

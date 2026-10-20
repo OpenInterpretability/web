@@ -11,6 +11,7 @@
  * Every call that reaches the model gets a request id, returned in X-Ekbasis-Request-Id and recorded with the
  * event, so the caller can attach feedback to it later (POST /api/v1/feedback).
  */
+import { HOSTED_API_ON, discontinued } from "@/lib/hosted-api"
 import { after } from "next/server"
 import { getHexclaveServerApp } from "@/hexclave/server"
 import { newRequestId, recordEvent, type TelemetryEvent } from "@/lib/telemetry"
@@ -368,5 +369,10 @@ async function handler(request: Request) {
   )
 }
 
-export const GET = handler
-export const POST = handler
+// 2026-10-20: the hosted API was discontinued (lib/hosted-api.ts). The handler stays for the record and for a switch back.
+export async function GET(request: Request) {
+  return HOSTED_API_ON ? handler(request) : discontinued()
+}
+export async function POST(request: Request) {
+  return HOSTED_API_ON ? handler(request) : discontinued()
+}

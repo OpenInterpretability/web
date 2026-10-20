@@ -3,6 +3,7 @@
  * account is the email the agent registered (verified), the attempt window and the try limit; then redirects back to
  * /claim with the outcome. Same-origin only (CSRF).
  */
+import { HOSTED_API_ON, discontinued } from "@/lib/hosted-api"
 import { audit, clientIp, confirmCode, regByAttemptToken } from "@/lib/agent-auth"
 import { getHexclaveServerApp } from "@/hexclave/server"
 
@@ -12,6 +13,7 @@ const back = (req: Request, params: Record<string, string>) =>
   Response.redirect(new URL(`/claim?${new URLSearchParams(params)}`, req.url), 303)
 
 export async function POST(req: Request) {
+  if (!HOSTED_API_ON) return discontinued() // hosted API discontinued on 2026-10-20 (lib/hosted-api.ts)
   const origin = req.headers.get("origin")
   if (origin && new URL(origin).host !== new URL(req.url).host) return new Response("forbidden", { status: 403 })
   const form = await req.formData().catch(() => null)

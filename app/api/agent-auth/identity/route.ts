@@ -2,6 +2,7 @@
  * POST /agent/identity (rewritten here) — auth.md Step 3. Phase 1 accepts only `service_auth`: the agent sends the
  * user's email and gets the claim ceremony (user_code + verification_uri) in the same response.
  */
+import { HOSTED_API_ON, discontinued } from "@/lib/hosted-api"
 import { BASE, PATHS, SCOPES, audit, ceremonyBlock, clientIp, configured, createRegistration, limited, normEmail } from "@/lib/agent-auth"
 
 export const dynamic = "force-dynamic"
@@ -10,6 +11,7 @@ const err = (status: number, error: string, description: string, extra: Record<s
   Response.json({ error, error_description: description }, { status, headers: { "Cache-Control": "no-store", ...extra } })
 
 export async function POST(req: Request) {
+  if (!HOSTED_API_ON) return discontinued() // hosted API discontinued on 2026-10-20 (lib/hosted-api.ts)
   if (!configured()) return err(503, "temporarily_unavailable", "Agent registration is not configured on this server.")
   let body: Record<string, unknown> | null = null
   try {

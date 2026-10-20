@@ -2,15 +2,16 @@
 
 import Link from 'next/link'
 import { site } from '@/lib/constants'
-import { Github, KeyRound, Menu, X } from 'lucide-react'
+import { Download, Github, Menu, X } from 'lucide-react'
+import { MODEL_DOWNLOAD_URL } from '@/lib/hosted-api'
 import { useEffect, useState } from 'react'
 import { ThemeToggle } from '@/components/theme-toggle'
 
-// Product-first navigation: the Ekbasis API leads; the lab and its research stay one click away.
+// Product-first navigation: Ekbasis leads; the lab and its research stay one click away.
+// 2026-10-20: the hosted API was discontinued (lib/hosted-api.ts): no Pricing, no API keys; the model is a download.
 const primaryNav = [
   { href: '/ekbasis', label: 'Ekbasis' },
   { href: '/ekbasis/start', label: 'Guide' },
-  { href: '/ekbasis/pricing', label: 'Pricing' },
   { href: '/research', label: 'Research' },
   { href: '/lab', label: 'Lab' },
 ]
@@ -124,18 +125,12 @@ export function Navbar() {
             <Github className="h-4 w-4" />
           </Link>
           <Link
-            href="/console"
-            className="hidden sm:inline-flex items-center rounded-lg px-3 py-1.5 text-sm font-medium text-ink-900/75 hover:bg-black/5 hover:text-ink-900 dark:text-ink-50/75 dark:hover:bg-white/5 dark:hover:text-ink-50 transition-colors"
-          >
-            {signedIn ? 'Console' : 'Sign in'}
-          </Link>
-          <Link
-            href="/console"
+            href={MODEL_DOWNLOAD_URL}
             className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
           >
-            <KeyRound className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">{signedIn ? 'Your API keys' : 'Get API key'}</span>
-            <span className="sm:hidden">API key</span>
+            <Download className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Download the model</span>
+            <span className="sm:hidden">Download</span>
           </Link>
           <button
             onClick={() => setOpen((o) => !o)}
@@ -153,14 +148,14 @@ export function Navbar() {
           <div className="mx-auto max-w-7xl px-6 py-4">
             <div className="grid gap-1">
               <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-900/40 dark:text-ink-50/40 mb-1.5 pt-2">
-                Ekbasis API
+                Ekbasis
               </div>
               <Link
-                href="/console"
+                href={MODEL_DOWNLOAD_URL}
                 onClick={() => setOpen(false)}
                 className="py-2 text-sm font-semibold text-brand-600 dark:text-brand-400"
               >
-                {signedIn ? 'Console · your API keys' : 'Sign in · get your API key'}
+                Download the model
               </Link>
               {primaryNav.map((item) => (
                 <Link
