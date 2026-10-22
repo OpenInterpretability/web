@@ -14,13 +14,9 @@ const nextConfig = {
       { source: '/oauth2/revoke', destination: '/api/agent-auth/revoke' },
     ]
   },
-  images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'raw.githubusercontent.com' },
-      { protocol: 'https', hostname: 'huggingface.co' },
-      { protocol: 'https', hostname: 'cdn-lfs.huggingface.co' },
-    ],
-  },
+  // 2026-10-22: no page uses next/image, so the Image Optimization API stays off (Next.js October 2026 security
+  // release: unauthenticated RCE in that API with SVG). Turn it back on only with next/image actually in use.
+  images: { unoptimized: true },
 }
 
 module.exports = nextConfig
