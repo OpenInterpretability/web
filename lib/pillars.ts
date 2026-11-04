@@ -217,7 +217,7 @@ export const roadmap = [
       'openinterp-mcp v0.1.0 live · 8 typed tools · bring-your-own-agent · privacy-first',
       'FabricationGuard v0.2.0 live · 0.88 AUROC cross-task hallucination · ~1ms',
       'agent-probe-guard v0.1 · capability + thinking detection · skip-21% @ 86% accuracy',
-      'ProbeBench v0.0.1 · 5 reference probes · 7-axis ProbeScore · anti-Goodhart norms',
+      'ProbeBench v0.0.2 · 5 reference probes · 8-axis ProbeScore · anti-Goodhart norms',
       'ICML MI Workshop paper-1 submitted · "Hallucination-Induction, Not Calibration"',
     ],
   },

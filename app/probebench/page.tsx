@@ -23,12 +23,13 @@ import { PROBESCORE_WEIGHTS } from '@/lib/probebench-scoring'
 import { LeaderboardTable } from '@/components/probebench/leaderboard-table'
 
 export const metadata = {
-  title: 'ProbeBench v0.0.1 — Activation Probe Leaderboard · OpenInterp',
+  title: 'ProbeBench v0.0.2 — Activation Probe Leaderboard · OpenInterp',
   description:
     'Categorical standardization for hallucination, deception, sandbagging, eval-awareness, reward-hacking probes. Cross-model Pearson_CE transfer. Eval-awareness corrected AUROC. Apache-2.0 reproducers.',
 }
 
-const PROBESCORE_VERSION = 'v0.0.1'
+const PROBESCORE_VERSION = 'v0.0.2'
+const SPEC_VERSION = '0.0.1'
 
 // Component-axis labels mirroring score-bar.tsx ordering
 const AXIS_LABELS: Array<{
@@ -43,6 +44,7 @@ const AXIS_LABELS: Array<{
   { key: 'ece_calibration',      label: 'Calibration',     blurb: 'expected calibration error',        dot: 'bg-emerald-500' },
   { key: 'cross_model_transfer', label: 'Transfer',        blurb: 'Pearson_CE across models',          dot: 'bg-amber-500' },
   { key: 'inference_efficiency', label: 'Latency',         blurb: '1 / log(latency_ms)',               dot: 'bg-rose-500' },
+  { key: 'goodhart_resistance',  label: 'Goodhart-res.',   blurb: 'survives use as a training reward', dot: 'bg-cyan-500' },
   { key: 'license_score',        label: 'License',         blurb: 'openness · commercial-friendliness', dot: 'bg-slate-500' },
 ]
 
@@ -142,9 +144,9 @@ export default function ProbeBenchPage() {
           </h1>
 
           <p className="mt-5 max-w-3xl text-lg text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
-            Eight alignment-relevant categories. Seven axes weighted into a single ProbeScore.
-            Every entry ships with a Colab reproducer, an SHA-256-hashed test set, and Pearson_CE
-            cross-model transfer numbers. We are publishing the slot we want our own probes to compete in.
+            Eight alignment-relevant categories. Eight axes weighted into a single ProbeScore.
+            Every entry ships with a Colab reproducer and Pearson_CE cross-model transfer numbers;
+            where a probe's artifact is not published yet, the entry says so. We are publishing the slot we want our own probes to compete in.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-ink-900/60 dark:text-ink-50/60 leading-relaxed">
             <Terminal className="mr-1.5 inline h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
@@ -174,7 +176,7 @@ export default function ProbeBenchPage() {
               <ScrollText className="h-4 w-4" /> Methodology
             </Link>
             <span className="text-xs text-ink-900/50 dark:text-ink-50/50 font-mono">
-              ProbeScore weights are versioned · PR a different set, we mint v0.0.2
+              ProbeScore weights are versioned · PR a different set, we mint v0.0.3
             </span>
           </div>
         </div>
@@ -339,7 +341,7 @@ export default function ProbeBenchPage() {
           </div>
 
           <p className="mt-3 max-w-3xl text-sm text-ink-900/70 dark:text-ink-50/70 leading-relaxed">
-            Seven axes, each in [0, 1], weighted to sum to 1.0. We report every component alongside
+            Eight axes, each in [0, 1], weighted to sum to 1.0. We report every component alongside
             the headline score so you can re-aggregate with your own weights.
           </p>
 
@@ -408,7 +410,7 @@ export default function ProbeBenchPage() {
               leaderboard.
             </p>
             <ul className="mt-4 space-y-1.5 text-xs text-ink-900/60 dark:text-ink-50/60">
-              <li>· <strong>GitHub PR</strong> — open a PR with the artifact + spec_version <code className="font-mono">{PROBESCORE_VERSION.replace('v', '')}</code></li>
+              <li>· <strong>GitHub PR</strong> — open a PR with the artifact + spec_version <code className="font-mono">{SPEC_VERSION}</code></li>
               <li>· <strong>Agent-callable</strong> — <code className="font-mono">openinterp-mcp</code> &gt; <code className="font-mono">publish_probe()</code> auto-opens the PR + mints a Zenodo DOI + creates an HF dataset</li>
               <li>· <code className="font-mono">predict_proba(X) -&gt; (n, 2)</code> + <code className="font-mono">StandardScaler</code> + metadata block</li>
             </ul>

@@ -85,7 +85,9 @@ const CATEGORY_LABEL: Record<string, string> = {
 }
 
 function truncateHash(hash: string): string {
-  if (!hash || hash.length <= 24) return hash
+  if (!hash) return 'not published'
+  if (hash === 'ARTIFACT-NOT-PUBLISHED') return 'not published'
+  if (hash.length <= 24) return hash
   return `${hash.slice(0, 12)}…${hash.slice(-8)}`
 }
 

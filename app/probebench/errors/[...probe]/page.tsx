@@ -808,10 +808,17 @@ failure_case:
                 Add a YAML file under <code className="font-mono text-[11px] bg-black/5 dark:bg-white/10 px-1 py-0.5 rounded">probebench/failures/</code> with the schema on the left.
               </li>
               <li>
-                Open a PR. CI re-runs the reproducer against the artifact at{' '}
-                <code className="font-mono text-[11px] bg-black/5 dark:bg-white/10 px-1 py-0.5 rounded">
-                  {probe.artifactSha256.slice(0, 12)}…
-                </code>
+                Open a PR. CI re-runs the reproducer against{' '}
+                {probe.artifactSha256 === 'ARTIFACT-NOT-PUBLISHED' ? (
+                  <>the artifact once it is published</>
+                ) : (
+                  <>
+                    the artifact at{' '}
+                    <code className="font-mono text-[11px] bg-black/5 dark:bg-white/10 px-1 py-0.5 rounded">
+                      {probe.artifactSha256.slice(0, 12)}…
+                    </code>
+                  </>
+                )}
                 .
               </li>
               <li>If reproduced, the failure case appears on this page in the next release.</li>
@@ -839,7 +846,11 @@ failure_case:
           Back to {probe.name} probe DNA
         </Link>
         <div className="flex flex-wrap items-center gap-3 text-[11px] text-ink-900/50 dark:text-ink-50/50">
-          <span>artifact sha256 {probe.artifactSha256.slice(0, 12)}…</span>
+          <span>
+            {probe.artifactSha256 === 'ARTIFACT-NOT-PUBLISHED'
+              ? 'artifact not published'
+              : `artifact sha256 ${probe.artifactSha256.slice(0, 12)}…`}
+          </span>
           <span aria-hidden>·</span>
           <span>license {probe.license}</span>
           <span aria-hidden>·</span>
