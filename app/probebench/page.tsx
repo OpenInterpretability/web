@@ -145,8 +145,9 @@ export default function ProbeBenchPage() {
 
           <p className="mt-5 max-w-3xl text-lg text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
             Eight alignment-relevant categories. Eight axes weighted into a single ProbeScore.
-            Every entry ships with a Colab reproducer and Pearson_CE cross-model transfer numbers;
-            where a probe's artifact is not published yet, the entry says so. We are publishing the slot we want our own probes to compete in.
+            Every entry ships with a Colab reproducer and Pearson_CE cross-model transfer numbers,
+            and says plainly when a probe&apos;s artifact or test split is not published yet. We are
+            publishing the slot we want our own probes to compete in.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-ink-900/60 dark:text-ink-50/60 leading-relaxed">
             <Terminal className="mr-1.5 inline h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />

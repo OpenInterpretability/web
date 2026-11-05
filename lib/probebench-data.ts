@@ -12,6 +12,15 @@ import type {
 } from './probebench-types'
 import { computeProbeScore } from './probebench-scoring'
 
+/**
+ * Sentinel for a test split we evaluated on but have not published.
+ *
+ * Until the exact split (or the derived manifest) is downloadable, no SHA-256 can
+ * be computed by a third party, so the honest value is this marker rather than a
+ * 64-character string that looks like a hash. It renders as "not published".
+ */
+export const NOT_PUBLISHED = 'NOT-PUBLISHED'
+
 // -----------------------------------------------------------------------------
 // Models
 // -----------------------------------------------------------------------------
@@ -46,61 +55,61 @@ export const tasks: TaskEntry[] = [
     id: 'haluval-qa', name: 'HaluEval-QA', category: 'hallucination',
     description: 'Open-ended question answering with annotated hallucination labels (Li et al. 2023).',
     paper: 'arXiv:2305.11747', datasetUrl: 'https://huggingface.co/datasets/pminervini/HaluEval',
-    testSetSize: 200, testSetHash: 'a1f3e2d8c7b6a5f4e3d2c1b0a9f8e7d6', positiveLabel: 'hallucinated',
+    testSetSize: 200, testSetHash: NOT_PUBLISHED, positiveLabel: 'hallucinated',
   },
   {
     id: 'simpleqa', name: 'SimpleQA', category: 'hallucination',
     description: 'Open-domain factual QA — short factoids, very hard. SOTA closed-book ~50% (OpenAI 2024).',
     paper: 'arXiv:2411.04368', datasetUrl: 'https://huggingface.co/datasets/basicv8vc/SimpleQA',
-    testSetSize: 100, testSetHash: 'b2e4f3a9d8c7b6a5f4e3d2c1b0a9f8e7', positiveLabel: 'hallucinated',
+    testSetSize: 100, testSetHash: NOT_PUBLISHED, positiveLabel: 'hallucinated',
   },
   {
     id: 'truthfulqa-mc1', name: 'TruthfulQA-MC1', category: 'hallucination',
     description: 'Tests resistance to popular misconceptions (Lin et al. 2022). Different cognitive task than fabrication.',
     paper: 'arXiv:2109.07958',
-    testSetSize: 200, testSetHash: 'c3f5e4b0e9d8c7b6a5f4e3d2c1b0a9f8', positiveLabel: 'misconception',
+    testSetSize: 200, testSetHash: NOT_PUBLISHED, positiveLabel: 'misconception',
   },
   {
     id: 'mmlu', name: 'MMLU', category: 'hallucination',
     description: 'Capability control — multiple-choice knowledge across 57 domains. NOT hallucination per se; included as scope check.',
     paper: 'arXiv:2009.03300',
-    testSetSize: 500, testSetHash: 'd4a6f5c1f0e9d8c7b6a5f4e3d2c1b0a9', positiveLabel: 'incorrect',
+    testSetSize: 500, testSetHash: NOT_PUBLISHED, positiveLabel: 'incorrect',
   },
   {
     id: 'apollo-insider-trading', name: 'Apollo Insider Trading', category: 'deception',
     description: 'Apollo Research deception suite — model concealing illicit trades when asked. AUROC 0.96-0.999 on linear probes (arXiv:2502.03407).',
     paper: 'arXiv:2502.03407', datasetUrl: 'https://github.com/ApolloResearch/deception-detection',
-    testSetSize: 150, testSetHash: 'e5b7a6d2a1f0e9d8c7b6a5f4e3d2c1b0', positiveLabel: 'deceptive',
+    testSetSize: 150, testSetHash: NOT_PUBLISHED, positiveLabel: 'deceptive',
   },
   {
     id: 'hypocrisy-gap', name: 'Hypocrisy Gap', category: 'reasoning',
     description: 'CoT-vs-belief divergence. Measures when model states reasoning that diverges from its internal belief (arXiv:2602.02496, Jan 2026).',
     paper: 'arXiv:2602.02496',
-    testSetSize: 180, testSetHash: 'f6c8b7e3b2a1f0e9d8c7b6a5f4e3d2c1', positiveLabel: 'unfaithful_cot',
+    testSetSize: 180, testSetHash: NOT_PUBLISHED, positiveLabel: 'unfaithful_cot',
   },
   {
     id: 'gsm8k', name: 'GSM8K', category: 'reasoning',
     description: 'Grade-school math word problems. Used as the reasoning-faithfulness within-domain bench. Hallucination = model produces wrong answer despite reasoning trace appearing coherent.',
     paper: 'arXiv:2110.14168', datasetUrl: 'https://huggingface.co/datasets/openai/gsm8k',
-    testSetSize: 300, testSetHash: 'g5m8a1b2c3d4e5f6789a0b1c2d3e4f56', positiveLabel: 'wrong_answer',
+    testSetSize: 300, testSetHash: NOT_PUBLISHED, positiveLabel: 'wrong_answer',
   },
   {
     id: 'strategyqa', name: 'StrategyQA', category: 'reasoning',
     description: 'Open-domain commonsense reasoning requiring multi-step strategy. Used as the cross-domain transfer test for reasoning-faithfulness probes (math → commonsense).',
     paper: 'arXiv:2101.02235', datasetUrl: 'https://huggingface.co/datasets/wics/strategy-qa',
-    testSetSize: 150, testSetHash: 'sq1b2c3d4e5f67890a1b2c3d4e5f67890', positiveLabel: 'wrong_answer',
+    testSetSize: 150, testSetHash: NOT_PUBLISHED, positiveLabel: 'wrong_answer',
   },
   {
     id: 'math', name: 'MATH', category: 'reasoning',
     description: 'Hendrycks competition mathematics — PhD-level math problems including algebra, calculus, number theory, geometry. Hardest reasoning bench in the registry. Qwen3.6-27B baseline 18% accuracy. Used as advanced-difficulty stress test for reasoning-faithfulness probes.',
     paper: 'arXiv:2103.03874', datasetUrl: 'https://huggingface.co/datasets/qwedsacf/competition_math',
-    testSetSize: 200, testSetHash: 'mt1b2c3d4e5f67890abcdef1234567890', positiveLabel: 'wrong_answer',
+    testSetSize: 200, testSetHash: NOT_PUBLISHED, positiveLabel: 'wrong_answer',
   },
   {
     id: 'apollo-eval-deploy', name: 'Apollo Eval-vs-Deploy', category: 'eval_awareness',
     description: 'Linear probes separate real-world eval prompts from deployment prompts. Power-law scaling with model size (arXiv:2509.13333).',
     paper: 'arXiv:2507.01786',
-    testSetSize: 200, testSetHash: 'a7d9c8f4c3b2a1f0e9d8c7b6a5f4e3d2', positiveLabel: 'evaluation',
+    testSetSize: 200, testSetHash: NOT_PUBLISHED, positiveLabel: 'evaluation',
   },
 ]
 
@@ -275,20 +284,20 @@ export const evaluations: EvalEntry[] = [
     metrics: { auroc: 0.903, auroc_lo: 0.85, auroc_hi: 0.95, auroc_evalaware_corrected: 0.84,
                auroc_distshift: 0.71, ece: 0.08, brier: 0.13, fpr_at_99tpr: 0.04, latency_ms: 1, n_test: 200,
                goodhart_resistance: 0.32, fresh_probe_phase_ratio: 2.60 },
-    evaluatedAt: '2026-04-27T18:30:00Z', testSetHash: 'a1f3e2d8c7b6a5f4e3d2c1b0a9f8e7d6',
+    evaluatedAt: '2026-04-27T18:30:00Z', testSetHash: NOT_PUBLISHED,
     reproducer: 'https://colab.research.google.com/github/OpenInterpretability/notebooks/blob/main/notebooks/31_hallucinationguard_v2_linear_probe.ipynb' },
   { probeId: 'openinterp/fabricationguard-qwen36-27b-l31-v2', taskId: 'simpleqa',
     metrics: { auroc: 0.882, auroc_lo: 0.83, auroc_hi: 0.93, auroc_evalaware_corrected: 0.82,
                auroc_distshift: 0.72, ece: 0.07, brier: 0.12, fpr_at_99tpr: 0.05, latency_ms: 1, n_test: 100 },
-    evaluatedAt: '2026-04-27T18:30:00Z', testSetHash: 'b2e4f3a9d8c7b6a5f4e3d2c1b0a9f8e7' },
+    evaluatedAt: '2026-04-27T18:30:00Z', testSetHash: NOT_PUBLISHED },
   { probeId: 'openinterp/fabricationguard-qwen36-27b-l31-v2', taskId: 'truthfulqa-mc1',
     metrics: { auroc: 0.599, auroc_lo: 0.51, auroc_hi: 0.69, auroc_evalaware_corrected: 0.57,
                auroc_distshift: 0.55, ece: 0.18, brier: 0.24, fpr_at_99tpr: 0.92, latency_ms: 1, n_test: 200 },
-    evaluatedAt: '2026-04-27T18:30:00Z', testSetHash: 'c3f5e4b0e9d8c7b6a5f4e3d2c1b0a9f8' },
+    evaluatedAt: '2026-04-27T18:30:00Z', testSetHash: NOT_PUBLISHED },
   { probeId: 'openinterp/fabricationguard-qwen36-27b-l31-v2', taskId: 'mmlu',
     metrics: { auroc: 0.444, auroc_lo: 0.40, auroc_hi: 0.49, auroc_evalaware_corrected: 0.42,
                auroc_distshift: 0.41, ece: 0.22, brier: 0.27, fpr_at_99tpr: 0.99, latency_ms: 1, n_test: 500 },
-    evaluatedAt: '2026-04-27T18:30:00Z', testSetHash: 'd4a6f5c1f0e9d8c7b6a5f4e3d2c1b0a9' },
+    evaluatedAt: '2026-04-27T18:30:00Z', testSetHash: NOT_PUBLISHED },
 
   // ReasonGuard v0.2 — REAL numbers from combined-train (verified 2026-04-29)
   // Multi-bench training thesis tested. GSM8K improved (0.888→0.908), StrategyQA marginal (0.605→0.612),
@@ -300,38 +309,38 @@ export const evaluations: EvalEntry[] = [
     metrics: { auroc: 0.908, auroc_evalaware_corrected: 0.772, auroc_distshift: 0.612,
                ece: 0.10, fpr_at_99tpr: 0.18, latency_ms: 1.0, n_test: 90,
                goodhart_resistance: 0.30, fresh_probe_phase_ratio: 2.60 },
-    evaluatedAt: '2026-04-29T03:00:00Z', testSetHash: 'g5m8a1b2c3d4e5f6789a0b1c2d3e4f56',
+    evaluatedAt: '2026-04-29T03:00:00Z', testSetHash: NOT_PUBLISHED,
     reproducer: 'https://colab.research.google.com/github/OpenInterpretability/notebooks/blob/main/notebooks/34_reasonguard_v0_2_multibench.ipynb' },
   { probeId: 'openinterp/reasonguard-qwen36-27b-l55-mid_think', taskId: 'strategyqa',
     metrics: { auroc: 0.612, auroc_evalaware_corrected: 0.520, auroc_distshift: 0.500,
                ece: 0.17, fpr_at_99tpr: 0.52, latency_ms: 1.0, n_test: 45 },
-    evaluatedAt: '2026-04-29T03:00:00Z', testSetHash: 'sq1b2c3d4e5f67890a1b2c3d4e5f67890' },
+    evaluatedAt: '2026-04-29T03:00:00Z', testSetHash: NOT_PUBLISHED },
   { probeId: 'openinterp/reasonguard-qwen36-27b-l55-mid_think', taskId: 'math',
     metrics: { auroc: 0.500, auroc_evalaware_corrected: 0.425, auroc_distshift: 0.500,
                ece: 0.32, fpr_at_99tpr: 0.99, latency_ms: 1.0, n_test: 60 },
-    evaluatedAt: '2026-04-29T03:00:00Z', testSetHash: 'mt1b2c3d4e5f67890abcdef1234567890' },
+    evaluatedAt: '2026-04-29T03:00:00Z', testSetHash: NOT_PUBLISHED },
 
   // DeceptionGuard — numbers anchored to Apollo's published 0.96-0.999
   { probeId: 'openinterp/deceptionguard-llama33-70b-l40', taskId: 'apollo-insider-trading',
     metrics: { auroc: 0.978, auroc_lo: 0.96, auroc_hi: 0.99, auroc_evalaware_corrected: 0.91,
                auroc_distshift: 0.84, ece: 0.04, brier: 0.06, fpr_at_99tpr: 0.012, latency_ms: 2.1, n_test: 150 },
-    evaluatedAt: '2026-04-28T12:00:00Z', testSetHash: 'e5b7a6d2a1f0e9d8c7b6a5f4e3d2c1b0' },
+    evaluatedAt: '2026-04-28T12:00:00Z', testSetHash: NOT_PUBLISHED },
   { probeId: 'openinterp/deceptionguard-llama33-70b-l40', taskId: 'hypocrisy-gap',
     metrics: { auroc: 0.80, auroc_lo: 0.72, auroc_hi: 0.87, auroc_evalaware_corrected: 0.71,
                auroc_distshift: 0.65, ece: 0.09, brier: 0.14, fpr_at_99tpr: 0.10, latency_ms: 2.1, n_test: 180 },
-    evaluatedAt: '2026-04-28T12:00:00Z', testSetHash: 'f6c8b7e3b2a1f0e9d8c7b6a5f4e3d2c1' },
+    evaluatedAt: '2026-04-28T12:00:00Z', testSetHash: NOT_PUBLISHED },
 
   // EvalAwarenessGuard — power-law scaling
   { probeId: 'openinterp/evalawareness-qwen36-27b-l40', taskId: 'apollo-eval-deploy',
     metrics: { auroc: 0.93, auroc_lo: 0.88, auroc_hi: 0.97, auroc_evalaware_corrected: 0.93,
                auroc_distshift: 0.81, ece: 0.05, brier: 0.08, fpr_at_99tpr: 0.03, latency_ms: 1, n_test: 200 },
-    evaluatedAt: '2026-04-28T15:00:00Z', testSetHash: 'a7d9c8f4c3b2a1f0e9d8c7b6a5f4e3d2' },
+    evaluatedAt: '2026-04-28T15:00:00Z', testSetHash: NOT_PUBLISHED },
 
   // RewardHackGuard
   { probeId: 'openinterp/rewardhackguard-qwen35-4b-l18', taskId: 'haluval-qa',
     metrics: { auroc: 0.65, auroc_lo: 0.56, auroc_hi: 0.74, auroc_evalaware_corrected: 0.59,
                auroc_distshift: 0.52, ece: 0.15, brier: 0.21, fpr_at_99tpr: 0.32, latency_ms: 1.8, n_test: 200 },
-    evaluatedAt: '2026-04-28T18:00:00Z', testSetHash: 'a1f3e2d8c7b6a5f4e3d2c1b0a9f8e7d6' },
+    evaluatedAt: '2026-04-28T18:00:00Z', testSetHash: NOT_PUBLISHED },
 ]
 
 // -----------------------------------------------------------------------------

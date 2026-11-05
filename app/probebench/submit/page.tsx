@@ -589,11 +589,15 @@ export default function ProbeBenchSubmitPage() {
               Reproducer notebook runs end-to-end — we run it on Colab T4 / L4.
             </CheckRow>
             <CheckRow>
-              Test set hash matches a registered task in{' '}
-              <code className="rounded bg-black/5 dark:bg-white/10 px-1.5 py-0.5 font-mono text-[12px]">
-                tasks.yaml
-              </code>{' '}
-              — OR you ship a new task with documented sourcing.
+              Declared test split matches a registered task — OR you ship a new task with documented
+              sourcing. Test-set hashes are not published yet, so we compare splits by hand; see{' '}
+              <Link
+                href="/probebench/about#integrity"
+                className="font-medium text-brand-600 dark:text-brand-400 hover:underline"
+              >
+                §5 of the protocol
+              </Link>
+              .
             </CheckRow>
             <CheckRow>
               License is OSI-approved (Apache-2.0 / MIT / BSD / CC-BY) or properly

@@ -17,6 +17,7 @@ import {
   categoryOrder,
   taskBy,
   probeBy,
+  NOT_PUBLISHED,
 } from '@/lib/probebench-data'
 import { scoreColor, fmtAuroc } from '@/lib/probebench-scoring'
 import { CopyButton } from '@/components/copy-button'
@@ -25,7 +26,7 @@ import type { TaskEntry, EvalEntry, ProbeCategory } from '@/lib/probebench-types
 export const metadata = {
   title: 'Tasks — ProbeBench',
   description:
-    '7 alignment-relevant benchmark tasks across 8 categories. SHA-256-hashed test sets, paper provenance, public probe evaluations.',
+    '10 alignment-relevant benchmark tasks across 8 categories. Paper provenance, published probe evaluations, and an explicit "not published" marker where a test split is not downloadable yet.',
 }
 
 // ---------------------------------------------------------------------------
@@ -49,8 +50,9 @@ function distinctProbeCount(taskId: string): number {
   return ids.size
 }
 
-/** Truncated hash like  a1f3e2d8c7b6 ... a9f8e7d6 */
+/** Truncated hash like  a1f3e2d8c7b6 ... a9f8e7d6, or the honest marker. */
 function hashShort(hash: string): string {
+  if (hash === NOT_PUBLISHED) return 'not published'
   if (hash.length <= 24) return hash
   return `${hash.slice(0, 12)}…${hash.slice(-8)}`
 }
@@ -224,11 +226,15 @@ function TaskCard({ task }: { task: TaskEntry }) {
         </div>
         <div className="rounded-xl border border-black/5 dark:border-white/10 bg-black/[0.015] dark:bg-white/[0.015] px-3 py-2.5">
           <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-ink-900/50 dark:text-ink-50/50">
-            <Hash className="h-3 w-3" /> SHA-256
+            <Hash className="h-3 w-3" /> Test set SHA-256
           </div>
           <div
             className="mt-0.5 font-mono text-[11px] text-ink-900/80 dark:text-ink-50/80 truncate"
-            title={task.testSetHash}
+            title={
+              task.testSetHash === NOT_PUBLISHED
+                ? 'The exact split we evaluated on is not published yet, so no hash can be computed.'
+                : task.testSetHash
+            }
           >
             {hashShort(task.testSetHash)}
           </div>
@@ -357,7 +363,7 @@ export default function ProbeBenchTasksPage() {
               ProbeBench Tasks
             </span>
             <span className="chip bg-accent-500/10 text-accent-700 dark:text-accent-300 ring-accent-500/30">
-              SHA-256 pinned
+              {tasks.length} tasks
             </span>
           </div>
 
@@ -366,9 +372,10 @@ export default function ProbeBenchTasksPage() {
           </h1>
 
           <p className="mt-4 max-w-3xl text-base sm:text-lg text-ink-900/70 dark:text-ink-50/70 leading-relaxed text-balance">
-            {tasks.length} tasks across {categoryOrder.length} categories. Each test set is
-            SHA-256-hashed and version-pinned. Probes that train on a test set get caught at
-            validation time.
+            {tasks.length} tasks across {categoryOrder.length} categories. Each entry names the
+            upstream paper and dataset; where we have not published the exact split we evaluated
+            on, the hash reads <span className="font-mono text-[13px]">not published</span> instead
+            of showing a number nobody can check.
           </p>
 
           {/* Stats */}
@@ -459,8 +466,9 @@ export default function ProbeBenchTasksPage() {
           </div>
           <p className="mt-3 max-w-3xl text-sm text-ink-900/75 dark:text-ink-50/75 leading-relaxed">
             Every test set referenced here is publicly available under the dataset's original
-            license. We pin a SHA-256 hash so probes can be validated against the exact bytes we
-            evaluated on.
+            license. When we also publish the exact split we evaluated on, we pin its SHA-256 so a
+            probe can be checked against the same bytes; until then the row says{' '}
+            <span className="font-mono text-[12px]">not published</span>.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-ink-900/75 dark:text-ink-50/75 leading-relaxed">
             If a dataset is gated (e.g., requires HF agreement), we link to the canonical source

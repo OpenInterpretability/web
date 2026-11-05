@@ -9,7 +9,7 @@ import {
   Award,
   FileCode,
 } from 'lucide-react'
-import { models, tasks, probes, categoryOrder } from '@/lib/probebench-data'
+import { models, tasks, probes, categoryOrder, NOT_PUBLISHED } from '@/lib/probebench-data'
 import { PROBESCORE_WEIGHTS } from '@/lib/probebench-scoring'
 import { CopyButton } from '@/components/copy-button'
 
@@ -565,7 +565,7 @@ export default function ProbeBenchAboutPage() {
             definition="Mean AUROC across all evaluated tasks for the probe's category. Standard threshold-free classification metric on the held-out positive/negative pairs from each test set."
             rationale="Highest weight because it remains the most informative single number — but capped at 30% to prevent any single-axis optimization from dominating. A perfect AUROC = 0.30 contribution, ceiling."
             computation="auroc_total = mean over taskᵢ of AUROC(probe, taskᵢ.test_split)"
-            gaming="Train on test data → caught by SHA-256 hash registry (Section §5). Fit a probe that exploits prompt format → caught by the eval-awareness corrected axis below."
+            gaming="Train on test data → caught at the next quarterly re-eval, where the declared split is checked against the one we keep. Test-set hashes are not published yet (Section §5), so today this check is manual, not automatic. Fit a probe that exploits prompt format → caught by the eval-awareness corrected axis below."
           />
           <FormulaComponent
             axisKey="auroc_evalaware"
@@ -581,7 +581,7 @@ export default function ProbeBenchAboutPage() {
             definition="AUROC measured on long-context and out-of-distribution variants of the same task: prompts re-formatted, instruction wrappers stripped, context length doubled. Methodology follows DeepMind 2601.11516."
             rationale="15% — captures the gap between &quot;works in the lab&quot; and &quot;works in deployment&quot;. Probes that overfit to short, eval-style prompts get caught here."
             computation="auroc_DS = AUROC on dist-shift split (avg over taskᵢ); if not declared, impute 0.7 × raw"
-            gaming="Hand-pick easy distribution-shift variants → flagged by reviewers because the dist-shift split is fixed in tasks.yaml with a hash."
+            gaming="Hand-pick easy distribution-shift variants → the declared split has to match the task's own and is re-run at the next quarterly re-eval. With the split unpublished, this is a manual review, not a hash check."
           />
           <FormulaComponent
             axisKey="ece_calibration"
@@ -691,21 +691,26 @@ export default function ProbeBenchAboutPage() {
         <SectionHeading number="5" title="Test set integrity" Icon={FileCode} />
         <div className="mt-6 space-y-5 text-[15px] leading-relaxed text-ink-900/80 dark:text-ink-50/80">
           <p>
-            The composite is only as honest as the test sets. ProbeBench v0.0.1 enforces three
-            integrity protocols, all auditable from the registry alone.
+            The composite is only as honest as the test sets. ProbeBench v0.0.2 states three
+            integrity rules. Two are auditable from the registry alone today; the test-set hashes
+            are <strong>not published yet</strong>, and the site says so instead of showing a number.
           </p>
 
           <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white/60 dark:bg-white/[0.03] p-6">
             <h3 className="text-sm font-semibold tracking-tight text-ink-900 dark:text-ink-50">
-              SHA-256 hashes pinned in the registry
+              Test set hashes — not published yet
             </h3>
             <p className="mt-2 text-[14px] text-ink-900/75 dark:text-ink-50/75">
-              Every test set has a SHA-256 hash committed alongside its entry in{' '}
+              We evaluated on fixed splits, but we have not published those exact splits, nor a
+              manifest of them: there is no{' '}
               <code className="font-mono text-[12.5px] rounded bg-black/5 dark:bg-white/10 px-1 py-0.5">
                 tasks.yaml
-              </code>
-              . Probes that train on the test set get caught at the next quarterly re-eval, where
-              we recompute the hash and verify the split.
+              </code>{' '}
+              in the repository. A SHA-256 over a split nobody can download cannot be checked by
+              anyone, so every task row shows{' '}
+              <span className="font-mono text-[12.5px]">not published</span> rather than a
+              64-character string that looks like a hash. Once the manifest ships, the hash takes
+              the marker&apos;s place and the quarterly re-eval can verify it mechanically.
             </p>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               {tasks.slice(0, 4).map((t) => (
@@ -715,7 +720,7 @@ export default function ProbeBenchAboutPage() {
                 >
                   <div className="text-ink-900/60 dark:text-ink-50/60">{t.name}</div>
                   <div className="mt-0.5 text-ink-900/40 dark:text-ink-50/40 truncate">
-                    {t.testSetHash}
+                    {t.testSetHash === NOT_PUBLISHED ? 'not published' : t.testSetHash}
                   </div>
                 </div>
               ))}
@@ -724,13 +729,14 @@ export default function ProbeBenchAboutPage() {
 
           <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white/60 dark:bg-white/[0.03] p-6">
             <h3 className="text-sm font-semibold tracking-tight text-ink-900 dark:text-ink-50">
-              Held-out splits never re-shuffled
+              Held-out splits stay fixed between re-evals
             </h3>
             <p className="mt-2 text-[14px] text-ink-900/75 dark:text-ink-50/75">
-              HaluEval-QA, SimpleQA, MMLU, and TruthfulQA-MC1 use fixed splits, hashed once and
-              never re-shuffled. If we ever need to refresh a split (e.g. because of leakage in the
-              upstream dataset), we mint a new task ID and run both side-by-side for one quarter
-              before deprecating the old one.
+              We keep one evaluation split per task and do not re-shuffle it between quarterly
+              re-evals, so numbers stay comparable across submissions. If an upstream split turns
+              out to leak, we mint a new task ID and run both side-by-side for one quarter before
+              deprecating the old one. That is the policy we apply; because the splits are not
+              published, you cannot verify it from the site today — only ask us to show the split.
             </p>
           </div>
 
