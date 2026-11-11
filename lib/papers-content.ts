@@ -635,14 +635,15 @@ export function getPaper(slug: string): PaperMeta | undefined {
 /**
  * The paper's permanent DOI link, when its artifacts list one.
  *
- * Single definition of "has a DOI" for every count on the site: a Zenodo record
- * or a doi.org link in `artifacts`. Adding a DOI to an entry changes the counts
- * everywhere at once.
+ * Single definition of "has a DOI" for every count on the site: a doi.org,
+ * dx.doi.org or Zenodo record link (both `/record/<id>` and the current
+ * `/records/<id>`, plus `/doi/` concept links) in `artifacts`. Adding a DOI to
+ * an entry changes the counts everywhere at once.
  */
+const PERMANENT_DOI = /^https?:\/\/(?:dx\.doi\.org|doi\.org|zenodo\.org\/(?:records?|doi))\/\S+$/;
+
 export function paperDoi(p: PaperMeta): string | undefined {
-  return p.artifacts
-    ?.map((a) => a.href)
-    .find((href) => /^https:\/\/(doi\.org|zenodo\.org\/record)\//.test(href));
+  return p.artifacts?.map((a) => a.href).find((href) => PERMANENT_DOI.test(href));
 }
 
 export const paperCount = papers.length;

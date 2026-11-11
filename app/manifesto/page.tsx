@@ -60,7 +60,7 @@ export default function ManifestoPage() {
           That is the gap OpenInterp fills. We don&rsquo;t train more SAEs — frontier labs already do
           that better than we ever could. We build the <strong className="text-ink-900 dark:text-white">layer
           that decides whether to believe the microscope</strong>: an agent-trajectory capture
-          pipeline, a confound auditor, and a {arcBeats}-paper arc of pre-registered findings — every probe
+          pipeline, a confound auditor, and an {arcBeats}-paper arc of pre-registered findings — every probe
           inspectable, every methodology re-runnable, every claim citable. Apache-2.0 throughout.
           Anti-Goodhart by construction.
         </p>
