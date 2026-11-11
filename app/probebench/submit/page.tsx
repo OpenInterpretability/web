@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { PROBESCORE_WEIGHTS } from '@/lib/probebench-scoring'
 import { CopyButton } from '@/components/copy-button'
+import { EmailSafeCode } from '@/components/email-safe-code'
 
 export const metadata = {
   title: 'Submit a Probe — ProbeBench',
@@ -195,7 +196,7 @@ function CodeBlock({
         <CopyButton text={code} />
       </div>
       <pre className="overflow-x-auto px-4 py-3 text-[12.5px] leading-relaxed font-mono text-ink-900/85 dark:text-ink-50/85">
-        <code>{code}</code>
+        <EmailSafeCode code={code} />
       </pre>
     </div>
   )

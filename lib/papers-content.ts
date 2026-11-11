@@ -633,17 +633,34 @@ export function getPaper(slug: string): PaperMeta | undefined {
 }
 
 /**
- * The paper's permanent DOI link, when its artifacts list one.
+ * True for a link that resolves to a DOI record.
  *
- * Single definition of "has a DOI" for every count on the site: a doi.org,
- * dx.doi.org or Zenodo record link (both `/record/<id>` and the current
- * `/records/<id>`, plus `/doi/` concept links) in `artifacts`. Adding a DOI to
- * an entry changes the counts everywhere at once.
+ * Accepts doi.org and dx.doi.org with a DOI-shaped path, and Zenodo record or
+ * concept-DOI URLs with a numeric id. Rejects file links under /files/, empty
+ * paths, non-numeric ids, and a doi.org path that is not a DOI. `new URL` also
+ * trims spaces and ignores host case and a leading www.
  */
-const PERMANENT_DOI = /^https?:\/\/(?:dx\.doi\.org|doi\.org|zenodo\.org\/(?:records?|doi))\/\S+$/;
+export function isPermanentDoi(href: string): boolean {
+  let url: URL
+  try {
+    url = new URL(href.trim())
+  } catch {
+    return false
+  }
+  if (url.protocol !== 'https:' && url.protocol !== 'http:') return false
+  const host = url.hostname.toLowerCase().replace(/^www\./, '')
+  const path = url.pathname.replace(/\/+$/, '')
+  if (host === 'doi.org' || host === 'dx.doi.org') {
+    return /^\/10\.\d{4,9}\/\S+$/.test(path)
+  }
+  if (host === 'zenodo.org') {
+    return /^\/(?:record|records)\/\d+$/.test(path) || /^\/doi\/10\.\d{4,9}\/\S+$/.test(path)
+  }
+  return false
+}
 
 export function paperDoi(p: PaperMeta): string | undefined {
-  return p.artifacts?.map((a) => a.href).find((href) => PERMANENT_DOI.test(href));
+  return p.artifacts?.map((a) => a.href).find((href) => isPermanentDoi(href))
 }
 
 export const paperCount = papers.length;
