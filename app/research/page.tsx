@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import { ExternalLink, FileText, BookOpen, ScrollText } from 'lucide-react'
-import { paperTopics, paperCount } from '@/lib/papers'
+import { paperTopics } from '@/lib/papers'
 import { papers as ownPapers } from '@/lib/papers-content'
+import { readingListPapers, sitePapers, sitePapersWithDoi } from '@/lib/paper-stats'
 
 export const metadata = {
   title: 'Research — OpenInterp',
   description:
-    `Published artifacts + canonical reading list (${paperCount} papers across SAE foundations, circuits, steering, probing, lenses, safety).`,
+    `Published artifacts + canonical reading list (${readingListPapers} external papers across SAE foundations, circuits, steering, probing, lenses, safety), plus ${sitePapers} papers of our own.`,
 }
 
 const artifacts = [
@@ -202,7 +203,7 @@ export default function ResearchPage() {
             Our papers
           </h2>
           <span className="text-xs font-mono text-ink-900/50 dark:text-ink-50/50">
-            {ownPapers.length} hosted on site · full text
+            {sitePapers} papers on site · {sitePapersWithDoi} with a DOI
           </span>
         </div>
         <p className="text-sm text-ink-900/70 dark:text-ink-50/70 max-w-3xl mb-6 leading-relaxed">
@@ -293,7 +294,7 @@ export default function ResearchPage() {
             Further reading
           </h2>
           <span className="text-xs font-mono text-ink-900/50 dark:text-ink-50/50">
-            {paperCount} canonical papers · curated
+            {readingListPapers} external papers · curated
           </span>
         </div>
         <p className="mt-2 text-sm text-ink-900/70 dark:text-ink-50/70 max-w-3xl leading-relaxed">

@@ -5,7 +5,7 @@ import {
 } from 'lucide-react'
 import { heroNew } from '@/lib/pillars'
 import { arc, findings, discipline, secondLine, researchTools, credibility } from '@/lib/arc'
-import { papers } from '@/lib/papers-content'
+import { arcBeats, sitePapers, sitePapersWithDoi } from '@/lib/paper-stats'
 import { safetyStack } from '@/lib/safety-stack'
 
 export const metadata = {
@@ -63,7 +63,7 @@ export default function LabPage() {
               className="inline-flex items-center gap-2 rounded-lg border border-black/15 dark:border-white/20 bg-white/50 dark:bg-white/5 px-6 py-3 text-sm font-semibold backdrop-blur-sm hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
             >
               <Library className="h-3.5 w-3.5" />
-              {papers.length} papers · permanent DOIs
+              {sitePapers} papers · {sitePapersWithDoi} with DOIs
             </Link>
             <a
               href="https://github.com/OpenInterpretability"
@@ -196,7 +196,7 @@ export default function LabPage() {
             The WANDERING arc
           </span>
           <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-balance">
-            One question, followed honestly for {arc.length} papers.
+            One question, followed honestly for {arcBeats} papers.
           </h2>
           <p className="mt-4 text-lg text-ink-900/70 dark:text-ink-50/70 text-balance leading-relaxed">
             Why do capable LLM agents loop forever and never finish — and can their internals tell us, or change it?

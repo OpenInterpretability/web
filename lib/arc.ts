@@ -1,6 +1,8 @@
 // The agent-safety research arc (WANDERING -> felt-not-granted), the homepage spine.
 // Each beat links to its permanent Zenodo DOI. Findings are one-line, honest.
 
+import { paperCount, papersWithDoi } from './papers-content'
+
 const Z = (id: string) => `https://zenodo.org/record/${id}`
 
 export interface ArcBeat {
@@ -171,6 +173,6 @@ export const credibility = {
   notes: [
     'Accepted — ICML 2026 Mechanistic Interpretability Workshop (poster)',
     'NVIDIA Inception · AWS Activate',
-    '10 papers, permanent Zenodo DOIs, indexed on Google Scholar',
+    `${paperCount} papers, ${papersWithDoi} with permanent Zenodo DOIs`,
   ],
 }

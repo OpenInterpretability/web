@@ -632,4 +632,22 @@ export function getPaper(slug: string): PaperMeta | undefined {
   return papers.find((p) => p.slug === slug);
 }
 
+/**
+ * The paper's permanent DOI link, when its artifacts list one.
+ *
+ * Single definition of "has a DOI" for every count on the site: a Zenodo record
+ * or a doi.org link in `artifacts`. Adding a DOI to an entry changes the counts
+ * everywhere at once.
+ */
+export function paperDoi(p: PaperMeta): string | undefined {
+  return p.artifacts
+    ?.map((a) => a.href)
+    .find((href) => /^https:\/\/(doi\.org|zenodo\.org\/record)\//.test(href));
+}
+
 export const paperCount = papers.length;
+
+/** Papers with a permanent DOI; the rest are drafts without one yet. */
+export const papersWithDoi = papers.filter((p) => paperDoi(p) !== undefined).length;
+
+export const papersWithoutDoi = paperCount - papersWithDoi;

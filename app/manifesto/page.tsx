@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, Quote } from 'lucide-react'
 import { arc, discipline } from '@/lib/arc'
+import { arcBeats } from '@/lib/paper-stats'
 import { site } from '@/lib/constants'
 
 export const metadata = {
@@ -59,7 +60,7 @@ export default function ManifestoPage() {
           That is the gap OpenInterp fills. We don&rsquo;t train more SAEs — frontier labs already do
           that better than we ever could. We build the <strong className="text-ink-900 dark:text-white">layer
           that decides whether to believe the microscope</strong>: an agent-trajectory capture
-          pipeline, a confound auditor, and a 15-paper arc of pre-registered findings — every probe
+          pipeline, a confound auditor, and a {arcBeats}-paper arc of pre-registered findings — every probe
           inspectable, every methodology re-runnable, every claim citable. Apache-2.0 throughout.
           Anti-Goodhart by construction.
         </p>
@@ -71,7 +72,7 @@ export default function ManifestoPage() {
         <p>
           We studied one hard problem deeply: <strong className="text-ink-900 dark:text-white">why
           capable LLM agents loop forever and never finish</strong>, and whether their internals can
-          tell us — or change it. Nine beats, each a permanent Zenodo DOI, each an honest one-liner:
+          tell us — or change it. {arcBeats} beats, each a permanent Zenodo DOI, each an honest one-liner:
         </p>
 
         <div className="not-prose card divide-y divide-ink-900/[0.06] dark:divide-ink-50/[0.08]">
@@ -245,7 +246,7 @@ export default function ManifestoPage() {
             <div>
               <div className="font-semibold">Read the research arc</div>
               <div className="mt-0.5 text-sm text-ink-900/60 dark:text-ink-50/60">
-                Nine beats, permanent DOIs, honest one-liners. The full WANDERING arc.
+                {arcBeats} beats, permanent DOIs, honest one-liners. The full WANDERING arc.
               </div>
             </div>
             <ArrowRight className="h-4 w-4 text-brand-600 dark:text-brand-400" />
