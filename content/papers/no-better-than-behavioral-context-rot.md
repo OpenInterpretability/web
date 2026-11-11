@@ -2,9 +2,9 @@
 ### A Residual Velocity-Freezing Fingerprint Predicts Agent WANDERING No Better Than the Cheap Tool-Entropy Detector
 
 **Caio Vicentino · OpenInterpretability · Published 2026-06-01.**
-**Zenodo · CC-BY-4.0 · [DOI 10.5281/zenodo.20500053](https://doi.org/10.5281/zenodo.20500053) · companion note to the WANDERING arc.**
+**Zenodo · CC-BY-4.0 · [DOI 10.5281/zenodo.20500052](https://doi.org/10.5281/zenodo.20500052) · companion note to the WANDERING arc.**
 
-> A pre-registered negative attached to the four-paper WANDERING arc. The full note (with both result tables and the pre-registration) is the **[Zenodo record](https://doi.org/10.5281/zenodo.20500053)** (pre-registration + code on [GitHub](https://github.com/OpenInterpretability/openinterp-swebench-harness/tree/main/paper/context_rot)) — this page is the on-site summary.
+> A pre-registered negative attached to the four-paper WANDERING arc. The full note (with both result tables and the pre-registration) is the **[Zenodo record](https://doi.org/10.5281/zenodo.20500052)** (pre-registration + code on [GitHub](https://github.com/OpenInterpretability/openinterp-swebench-harness/tree/main/paper/context_rot)) — this page is the on-site summary.
 
 ---
 

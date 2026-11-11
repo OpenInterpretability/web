@@ -92,6 +92,10 @@ ekbasis git-check -- "git reset --hard"
     api-url: \${{ secrets.EKBASIS_URL }}   # your own server, reachable from the runner
 # Risky: …/05_add_visit_id — may fail on existing data (96%);
 #        nothing in the file would be applied`,
+    // Cloudflare's Email Obfuscation reads "migration-guard@v0.1.12" as an
+    // address and rewrites it to "[email protected]" for anything without JS.
+    // Cloudflare skips whatever sits between these comments.
+    protectFromEmailObfuscation: true,
   },
   {
     icon: Code2,
@@ -223,7 +227,11 @@ export default async function HomePage() {
                 {'href' in w && w.href ? <> <Link href={w.href} className="text-brand-600 underline underline-offset-2 dark:text-brand-400">How it works and what we measured →</Link></> : null}
               </p>
               <pre className="mt-4 flex-1 overflow-x-auto rounded-xl bg-ink-950 p-4 text-[12.5px] leading-relaxed text-ink-50/90 ring-1 ring-white/10">
-                <code>{w.code}</code>
+                {'protectFromEmailObfuscation' in w && w.protectFromEmailObfuscation ? (
+                  <code dangerouslySetInnerHTML={{ __html: `<!--email_off-->${w.code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}<!--/email_off-->` }} />
+                ) : (
+                  <code>{w.code}</code>
+                )}
               </pre>
             </div>
           ))}

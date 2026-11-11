@@ -21,3 +21,10 @@ export const sitePapersWithDoi = papersWithDoi;
 export const sitePapersWithoutDoi = papersWithoutDoi;
 export const arcBeats = arc.length;
 export const readingListPapers = readingListCount;
+
+/**
+ * "a" or "an" for the arc count, so the sentence survives the number changing:
+ * eight, eleven and eighteen are the numbers in reach that take "an".
+ */
+export const arcArticle =
+  String(arcBeats).startsWith('8') || arcBeats === 11 || arcBeats === 18 ? 'an' : 'a';

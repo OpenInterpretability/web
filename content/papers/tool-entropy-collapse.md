@@ -38,4 +38,4 @@ The paper's §13 advances the mechanism the rest of the arc tests: the **mid-lay
 
 - Paper + harness + reproducible code: [openinterp-swebench-harness](https://github.com/OpenInterpretability/openinterp-swebench-harness)
 - As an Inspect eval (UK AISI `inspect_evals` submission): [inspect-tool-entropy-collapse](https://github.com/OpenInterpretability/inspect-tool-entropy-collapse)
-- The full arc: [#2 Right Locus](https://doi.org/10.5281/zenodo.20490278) · [#3 Multi-Channel](https://doi.org/10.5281/zenodo.20490284) · [#4 Modality Matters](https://doi.org/10.5281/zenodo.20490286) · [#5 Verdict Circuit](https://doi.org/10.5281/zenodo.20532769) · [#6 The Lever Is Late](https://doi.org/10.5281/zenodo.20534219) · [companion note](https://doi.org/10.5281/zenodo.20500053)
+- The full arc: [#2 Right Locus](https://doi.org/10.5281/zenodo.20490278) · [#3 Multi-Channel](https://doi.org/10.5281/zenodo.20490284) · [#4 Modality Matters](https://doi.org/10.5281/zenodo.20490286) · [#5 Verdict Circuit](https://doi.org/10.5281/zenodo.20532769) · [#6 The Lever Is Late](https://doi.org/10.5281/zenodo.20534219) · [companion note](https://doi.org/10.5281/zenodo.20500052)

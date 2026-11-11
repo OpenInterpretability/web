@@ -33,4 +33,4 @@ Single model (*n*=99, Qwen3.6-27B), single task family (SWE-bench Pro). Stage 0 
 
 - Paper + pre-registrations + all-stage results + the causal-test notebook (CC-BY-4.0 / Apache-2.0): [paper/verdict_circuit](https://github.com/OpenInterpretability/openinterp-swebench-harness/tree/main/paper/verdict_circuit)
 - Transcripts + labels + fidelity residuals: [caiovicentino1/swebench-phase6-verdict-circuit](https://huggingface.co/datasets/caiovicentino1/swebench-phase6-verdict-circuit)
-- The full arc: [#1 Tool-Entropy](https://doi.org/10.5281/zenodo.20368601) · [#2 Right Locus](https://doi.org/10.5281/zenodo.20490278) · [#3 Multi-Channel](https://doi.org/10.5281/zenodo.20490284) · [#4 Modality Matters](https://doi.org/10.5281/zenodo.20490286) · [companion note](https://doi.org/10.5281/zenodo.20500053)
+- The full arc: [#1 Tool-Entropy](https://doi.org/10.5281/zenodo.20368601) · [#2 Right Locus](https://doi.org/10.5281/zenodo.20490278) · [#3 Multi-Channel](https://doi.org/10.5281/zenodo.20490284) · [#4 Modality Matters](https://doi.org/10.5281/zenodo.20490286) · [companion note](https://doi.org/10.5281/zenodo.20500052)
