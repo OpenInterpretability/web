@@ -192,7 +192,7 @@ export const paperTopics: PaperTopic[] = [
             year: 2026,
             url: 'https://arxiv.org/abs/2611.13548',
             what: 'Massive activations put up to 99.9% of the activation variance on PC1, so each SAE run rebuilds that component from a different set of features: on average 47 of the 50 most important features by ablation do not match a separate run, against about 27 for a random 50. Training with PC1 removed raises top-50 sharing from 4–39.5% to 73–99.5%.',
-            why: 'The "0.98 that hides a 0.52" problem one level down: before ranking features, ask how much of what the SAE explains is just PC1. Their dictionaries are small (width 4d, 5M tokens) and steering stays weak after the fix — preprint, not peer-reviewed.',
+            why: 'The "0.98 that hides a 0.52" problem one level down: before ranking features, ask how much of what the SAE explains is just PC1. Their dictionaries are small (width 4d, 5M tokens) and steering stays weak after the fix (NeurIPS 2026 poster).',
           },
         ],
       },
